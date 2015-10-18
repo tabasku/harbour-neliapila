@@ -40,7 +40,7 @@ def get_pins_db(post_no=None,board=None):
 
             print("GETTIng INFO BOUT {}".format(pin['POSTNO']))
 
-            pins_list.append({'no':pin['POSTNO'],'pinBoardId':pin['BOARD'],'com':short_com,'postCount':post_count,
+            pins_list.append({'no':pin['POSTNO'],'board':pin['BOARD'],'com':short_com,'postCount':post_count,
                               'thumbUrl':filename,'threadArchived':archived,'threadDead':thread_dead,
                               'now':now,'has_file':1,'pin':1,'name':'','closed':0,'images':0,'sticky':0,'replies':0})
             #pins_list.append({'postNo':pin['POSTNO'],'pinFromBoard':pin['BOARD'],'shortCom':short_com,'postCount':post_count,'pinnedThumbSource':filename,'threadArchived':archived,'threadDead':thread_dead})

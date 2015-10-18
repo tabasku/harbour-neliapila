@@ -356,7 +356,7 @@ AbstractPage {
         }
 
         function unpin(postNo,boardId){
-            console.log("UNPIN: "+postNo+" board:"+boardId)
+            //console.log("UNPIN: "+postNo+" board:"+boardId)
             call('pinned.delete_pins', [postNo,boardId],function() {
                 pinned = false
                 updateItem(pinned)

@@ -114,7 +114,7 @@ def parse_posts(list,post_replies=None):
         post['threadDead'] = False
         post['threadArchived'] = False
         post['postCount'] = 0
-        post['pinBoardId'] = ''
+        post['board'] = ''
 
     return list
 

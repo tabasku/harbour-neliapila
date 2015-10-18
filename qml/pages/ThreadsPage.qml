@@ -108,7 +108,7 @@ AbstractPage {
             Rectangle{
                 //This is for appIcon placement. Anyone got better solution?
                 id: headerSeparator
-                color:"transparent"
+                color:"red"
                 width: parent.width*0.02
                 height:parent.height
                 anchors.left: parent.left
@@ -185,6 +185,8 @@ AbstractPage {
                 property var thisPostNo
                 property var modelToStrip
                 property bool pinned
+                property int index
+                property string boardId
 
                 MenuItem {
                     visible: pinned ? true : false
@@ -199,6 +201,7 @@ AbstractPage {
                     text: qsTr("Add pin")
                     onClicked:{
                         console.log("Add pin" +thisPostNo)
+                        pyt.pin(thisPostNo,boardId,index)
                     }
                 }
 
@@ -428,6 +431,35 @@ AbstractPage {
 
 
             call('pinned.data.thread_this', ['get_all',{}],function() {});
+        }
+
+        function pin(postNo,boardId,index){
+
+            var model = currentModel
+
+
+            //var postNo = model.get(index)['no']
+            //var boardId = model.get(index)['board']
+            var com = model.get(index)['com']
+            var thumbUrl = model.get(index)['thumbUrl']
+            var time = model.get(index)['time']
+            var replies = model.get(index)['replies_count']
+            console.log(postNo,boardId,index,thumbUrl,time,replies)
+
+            call('pinned.add_pin', [postNo,boardId,com,thumbUrl,time,replies],function() {
+                //pinned = true
+                //updateItem(pinned)
+            });
+
+        }
+
+        function unpin(postNo,boardId){
+            //console.log("UNPIN: "+postNo+" board:"+boardId)
+            call('pinned.delete_pins', [postNo,boardId],function() {
+                //pinned = false
+                //updateItem(pinned)
+            });
+
         }
 
         onError: {

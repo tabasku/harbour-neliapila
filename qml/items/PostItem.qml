@@ -476,12 +476,12 @@ BackgroundItem {
 
         case "thread":
 
-            contextMenu = contextMenuComponent.createObject(listView, {pinned: pin, thisPostNo: no})
+            contextMenu = contextMenuComponent.createObject(listView, {pinned: pin, thisPostNo: no, boardId:boardId, index:index})
             contextMenu.show(delegate)
             break;
 
         case "pinned":
-            contextMenu = contextMenuComponent.createObject(listView, {pinned: pin, thisPostNo: no})
+            contextMenu = contextMenuComponent.createObject(listView, {pinned: pin, thisPostNo: no, index:index})
             contextMenu.show(delegate)
             break;
 
