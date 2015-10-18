@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from os.path import expanduser,exists
+from os.path import expanduser,exists,isfile
 from os import makedirs,remove
 from savefile import save
 import sqlite3 as lite
@@ -290,7 +290,7 @@ class Storage:
 
         return pins
 
-    def delete_pins(self,post_no=None):
+    def delete_pins(self,post_no=None,board=None):
 
         if not self.table_exist('PINNED'):
             self.create_pinned_table()
@@ -298,28 +298,25 @@ class Storage:
         cmd = None
         query = None
 
-        def remove_thumb(pin_thumbs):
+        def remove_thumbnail(pin_thumbs):
             dir = self.get_thumb_dir()
             for thumb in pin_thumbs:
                 file_name = re.findall(r'\d+s.jpg',thumb['THUMB_URL'])
-                if len(file_name):
-                    file = dir + '/' + file_name[0]
+                #if len(file_name):
+                file = dir + '/' + file_name[0]
+                if isfile(file):
                     remove(file)
                     #print(file)
 
         if post_no is None:
             query = 'SELECT THUMB_URL FROM PINNED;'
             pin_thumbs = self.db_query(query,"all",True)
-            remove_thumb(pin_thumbs)
+            remove_thumbnail(pin_thumbs)
             cmd = 'DELETE FROM PINNED;'
         else:
             query = 'SELECT THUMB_URL FROM PINNED WHERE POSTNO="{}";'.format(post_no)
             pin_thumbs = self.db_query(query,"all",True)
-            remove_thumb(pin_thumbs)
-            cmd = 'DELETE FROM PINNED WHERE POSTNO = {};'.format(post_no)
+            remove_thumbnail(pin_thumbs)
+            cmd = 'DELETE FROM PINNED WHERE POSTNO = "{post_no}" AND BOARD = "{board}";'.format(post_no=post_no,board=board)
 
         self.db_commit(cmd)
-
-
-
-        #print("DELETED {}".format(post_no))

@@ -111,9 +111,10 @@ def add_pin(post_no,board,short_com,thumb_url,time_created,replies_count):
     short_com = short_com.encode()
     database.add_pin(post_no,board,short_com,thumb_url,timestamp,time_created,replies_count)
 
-def delete_pins(post_no=None):
+def delete_pins(post_no=None,board=None):
     database = storage.Storage()
-    database.delete_pins(post_no)
+    database.delete_pins(post_no,board)
+
 
 class Pinned:
     def __init__(self):
@@ -159,3 +160,5 @@ data = Pinned()
 #get_pins_db()
 #postno = postno[0]['postNo']
 #board = postno[0]['board']
+#add_pin('39894014','g','>fem, 19','http://i.4cdn.org/g/1390842451744s.jpg','39894014','100')
+#delete_pins("39894014",'g')

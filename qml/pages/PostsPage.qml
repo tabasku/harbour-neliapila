@@ -59,7 +59,7 @@ AbstractPage {
                 visible: pinned && pageStack.depth === 2
                 onClicked: {
                     //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
-                    pyp.unpin(postNo)
+                    pyp.unpin(postNo,boardId)
                 }
             }
             MenuItem {
@@ -347,21 +347,17 @@ AbstractPage {
             var thumbUrl = postsModel.get(0)['thumbUrl']
             var time = postsModel.get(0)['time']
             var replies = postsModel.get(0)['replies_count']
-//            console.log("tim " + thumbUrl)
-//            console.log("com " + com)
-//            console.log("now " + time)
 
             call('pinned.add_pin', [postNo,boardId,com,thumbUrl,time,replies],function() {
-                //console.log("Pinned " + postNo + " from board " + boardId)
                 pinned = true
                 updateItem(pinned)
             });
 
         }
 
-        function unpin(postNo){
-            call('pinned.delete_pins', [postNo],function() {
-                //console.log("Removed pin " + postNo + " from board " + boardId)
+        function unpin(postNo,boardId){
+            console.log("UNPIN: "+postNo+" board:"+boardId)
+            call('pinned.delete_pins', [postNo,boardId],function() {
                 pinned = false
                 updateItem(pinned)
             });
