@@ -481,7 +481,7 @@ BackgroundItem {
             break;
 
         case "pinned":
-            contextMenu = contextMenuComponent.createObject(listView, {pinned: pin, thisPostNo: no, index:index})
+            contextMenu = contextMenuComponent.createObject(listView, {pinned: pin, thisPostNo: no, boardId:boardId, index:index})
             contextMenu.show(delegate)
             break;
 

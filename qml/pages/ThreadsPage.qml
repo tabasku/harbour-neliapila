@@ -104,22 +104,12 @@ AbstractPage {
             id: pageHeader
             title: threadPage.title //<b>/"+boardId+"/</b>"
 
-
-            Rectangle{
-                //This is for appIcon placement. Anyone got better solution?
-                id: headerSeparator
-                color:"red"
-                width: parent.width*0.02
-                height:parent.height
-                anchors.left: parent.left
-                anchors.top: parent.top
-            }
-
             Image {
                 id: appIcon
                 anchors{
-                    left: headerSeparator.right
+                    left: parent.left
                     verticalCenter: parent.verticalCenter
+                    leftMargin: pageMargin
                 }
                 width: parent.height*0.6;
                 height: width
@@ -193,6 +183,7 @@ AbstractPage {
                     text: qsTr("Remove pin")
                     onClicked:{
                         console.log("Remove pin" +thisPostNo)
+                        pyt.unpin(thisPostNo,boardId,index)
                     }
                 }
 
@@ -448,17 +439,42 @@ AbstractPage {
 
             call('pinned.add_pin', [postNo,boardId,com,thumbUrl,time,replies],function() {
                 //pinned = true
-                //updateItem(pinned)
+                updateItem(true,index)
             });
 
         }
 
-        function unpin(postNo,boardId){
+        function unpin(postNo,boardId,index){
             //console.log("UNPIN: "+postNo+" board:"+boardId)
             call('pinned.delete_pins', [postNo,boardId],function() {
                 //pinned = false
-                //updateItem(pinned)
+                updateItem(false,index)
             });
+
+        }
+
+        function updateItem(pinned,index){
+
+            var model = currentModel
+
+            //console.log(postsModel.get(0)['no'])
+
+
+                var pin
+                if(pinned){
+                    pin = 1
+                }
+                else{
+                    pin = 0
+                }
+
+
+
+                var updateItem
+                updateItem = model.get(index)
+                updateItem.pin = pin
+
+
 
         }
 
