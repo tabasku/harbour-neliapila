@@ -10,8 +10,8 @@ BackgroundItem {
     property Item contextMenu
     property bool menuOpen: contextMenu != null && contextMenu.parent === delegate
 
-    property int ratio: Math.round(parent.width/3)
-    property int commentAreaWidth: Math.round(2*ratio-2*pageMargin)
+    property int ratio: mode === "pinned" ? Math.round(parent.width/5):Math.round(parent.width/3)
+    //property int commentAreaWidth: Math.round(2*ratio-2*pageMargin)
     property int infoAreaHeight: Math.round(Theme.paddingLarge*2)
     property int contentAreaHeight: ratio
 
@@ -35,7 +35,6 @@ BackgroundItem {
         anchors{
             left:parent.left
             right:parent.right
-            // margins: padding
             leftMargin: pageMargin
             rightMargin: pageMargin
         }
@@ -43,8 +42,6 @@ BackgroundItem {
         spacing: padding
 
         Item {
-            //            color: "lightblue";
-            //            radius: 10.0
             width: parent.width;
             height: infoAreaHeight;
 
@@ -73,11 +70,8 @@ BackgroundItem {
                     id: postNoArea
                     width: parent.width-timeArea.width-padding
                     height: postNoText.contentHeight
-                    //                    radius: 20.0
-                    //                    color: "#42a51c"
                     anchors{
                         verticalCenter: parent.verticalCenter
-                        //anchors.fill: parent
                     }
 
                     Image{
@@ -117,8 +111,6 @@ BackgroundItem {
                             right: parent.right
                         }
                     }
-
-
                 }
             }
         }
@@ -153,16 +145,14 @@ BackgroundItem {
                     id: thumbNailArea
                     width: has_file ? ratio : 0;
                     height: ratio
-                    //                    radius: 20.0
-                    //                    color: "#024c1c"
 
                     Image {
                         id: thumbImg
                         fillMode: Image.PreserveAspectCrop
-                        smooth: true
+//                        smooth: true
                         asynchronous : true
                         source: !has_file ? "" : thumbUrl
-                        clip: true
+//                        clip: true
 
                         anchors{
                             fill: parent
@@ -214,6 +204,7 @@ BackgroundItem {
                                         to: 1.0
                                         loops: Animation.Infinite
                                         easing {type: Easing.OutBack; overshoot: 500}
+                                        running: true
                                     }
                                 }
                             }
@@ -252,27 +243,17 @@ BackgroundItem {
                         anchors.fill: thumbImg
                         onClicked: {
 
-                            if(ext === ".webm"){
-
+                            switch(ext){
+                            case ".webm":
                                 pageStack.push(Qt.resolvedUrl("OpenLinkDialog.qml"),
                                                {
                                                    "imgUrl": imgUrl,
                                                    "thumbUrl": thumbUrl,
                                                    "title": "Open WebM"
                                                });
+                                break;
 
-
-                                //infoBanner.alert("Opening '"+filename+".webm' in external browser...");
-                                //Qt.openUrlExternally(imgUrl);
-                                //WebMview is broken
-                                /*
-                                        pageStack.push(Qt.resolvedUrl("../pages/WebmView.qml"),
-                                                       {
-                                                           "imgUrl": imgUrl
-                                                       });*/
-
-                            }
-                            else{
+                            default:
                                 pageStack.push(Qt.resolvedUrl("../pages/ImageViewPage.qml"),
                                                {
                                                    "imgUrl": imgUrl,
@@ -281,12 +262,34 @@ BackgroundItem {
                                                    "filename": filename
                                                });
                             }
+
+
+//                            if(ext === ".webm"){
+
+//                                pageStack.push(Qt.resolvedUrl("OpenLinkDialog.qml"),
+//                                               {
+//                                                   "imgUrl": imgUrl,
+//                                                   "thumbUrl": thumbUrl,
+//                                                   "title": "Open WebM"
+//                                               });
+
+//                            }
+//                            else{
+//                                pageStack.push(Qt.resolvedUrl("../pages/ImageViewPage.qml"),
+//                                               {
+//                                                   "imgUrl": imgUrl,
+//                                                   "thumbUrl": thumbUrl,
+//                                                   "ext"    : ext,
+//                                                   "filename": filename
+//                                               });
+//                            }
                         }
                     }
                 }
                 Item {
                     id: commentArea
-                    width: has_file ? commentAreaWidth : parent.width;
+
+                    width: has_file ? parent.width-thumbNailArea.width : parent.width;
                     height: mode === "post" ? postText.contentHeight :  contentAreaHeight;
 
                     Text {
@@ -299,7 +302,7 @@ BackgroundItem {
                         wrapMode: Text.Wrap
                         font.pixelSize: postFontSize
                         color: Theme.primaryColor
-//                        color: listView.isCurrentItem ? Theme.highlightColor : Theme.primaryColor
+                        //                        color: listView.isCurrentItem ? Theme.highlightColor : Theme.primaryColor
                         clip: mode === "post" ? false : true
                         linkColor : Theme.highlightColor
                         verticalAlignment: Text.AlignTop
@@ -325,19 +328,6 @@ BackgroundItem {
                             }
                         }
                     }
-
-//                    MouseArea {
-//                        anchors.fill: parent
-//                        enabled: mode === "thread" ? true : false
-//                        onClicked: {
-//                            if(pin){
-//                                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: boardId, pinned: pin } )
-//                            }
-//                            else{
-//                                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: boardId} )
-//                            }
-//                        }
-//                    }
                 }
             }
         }
@@ -350,12 +340,13 @@ BackgroundItem {
 
                 Item {
                     id: nameArea
-                    width: commentAreaWidth
+                    width: parent.width - infoArea.width
                     height: nameText.contentHeight
                     //                    radius: 20.0
                     //                    color: "#024c1c"
                     anchors{
                         verticalCenter: parent.verticalCenter
+                        left: parent.left
                     }
                     Label{
                         id: nameText
@@ -367,7 +358,7 @@ BackgroundItem {
                 }
                 Item {
                     id: infoArea
-                    width: ratio;
+                    width: parent.width-nameArea.width;
                     height: parent.height;
                     anchors{
                         verticalCenter: parent.verticalCenter
@@ -375,24 +366,30 @@ BackgroundItem {
 
                     Image {
                         id: pinIndicator
+                        anchors{
+                            right: imgchecker.left
+                            rightMargin: imgcount.contentWidth
+                            bottom: parent.bottom
+                        }
                         visible: pin || mode === 'pinned'  ? true : false
                         height:parent.height
                         width:pin || mode === 'pinned' ? parent.height : false
                         fillMode: Image.PreserveAspectFit
-                        anchors.bottom: parent.bottom
-                        anchors.right: imgchecker.left
-                        anchors.rightMargin: imgcount.contentWidth
+
+
                         source: "image://theme/icon-s-attach"
                     }
 
                     Image {
                         id: imgchecker
+                        anchors{
+                            right: replychecker.left
+                            bottom: parent.bottom
+                            rightMargin: repcount.contentWidth
+                        }
                         height:parent.height
                         width: imgcount.text === "0" || mode === "post" ? 0 : parent.height
                         fillMode: Image.PreserveAspectFit
-                        anchors.bottom: parent.bottom
-                        anchors.right: replychecker.left
-                        anchors.rightMargin: repcount.contentWidth
                         source: "image://theme/icon-m-image"
                         visible: mode === "post" || mode === "pinned" ? false : true
                         Label {
@@ -408,11 +405,13 @@ BackgroundItem {
 
                     Image {
                         id: replychecker
+                        anchors{
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
                         height:parent.height
                         width: repcount.text === "0" && mode === "post"  ? 0 : parent.height
                         fillMode: Image.PreserveAspectFit
-                        anchors.bottom: parent.bottom
-                        anchors.right: parent.right
                         visible: repcount.text === "0" && mode === "post" ? false : true
                         source: "image://theme/icon-m-chat"
                         Label {
@@ -433,7 +432,7 @@ BackgroundItem {
 
         switch(mode){
         case "pinned":
-            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: pin } )
+            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: true } )
             break;
         case "thread":
             if(pin){
@@ -453,13 +452,10 @@ BackgroundItem {
 
     onPressAndHold: {
 
-
         switch(mode){
         case "post":
             var postReplies
             if(replies){
-                //postReplies = postsModel.get(index).repliesList.split(",");
-                //console.log("TYPE " +postReplies.length+" "+ postReplies)
                 postReplies = postsModel.get(index).repliesList
             }
 
@@ -471,40 +467,19 @@ BackgroundItem {
             contextMenu.show(delegate)
             break;
 
-        case "thread":
+            //        case "thread":
+            //            contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
+            //            contextMenu.show(delegate)
+            //            break;
 
-            contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
-            contextMenu.show(delegate)
-            break;
-
-        case "pinned":
-            contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
-            contextMenu.show(delegate)
-            break;
+            //        case "pinned":
+            //            contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
+            //            contextMenu.show(delegate)
+            //            break;
 
         default:
-            console.log("no case")
+            contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
+            contextMenu.show(delegate)
         }
-
-
-        //        if (mode === "post") {
-        //            var postReplies
-        //            if(replies){
-        //                //postReplies = postsModel.get(index).repliesList.split(",");
-        //                //console.log("TYPE " +postReplies.length+" "+ postReplies)
-        //                postReplies = postsModel.get(index).repliesList
-        //            }
-
-        //            var pP = pageStack.find(function(page) { return page.objectName === "postsPage"; });
-        //            if (pP)
-        //                var modelToStrip = pP.returnModel()
-
-        //            contextMenu = contextMenuComponent.createObject(listView, {postReplies: postReplies, thisPostNo: no, modelToStrip : modelToStrip,com: com})
-        //            contextMenu.show(delegate)
-        //        }
-        //        else if(mode === "thread" || mode === "pinned" ){
-        //            console.log("DONT PUSH ME")
-        //        }
-
     }
 }
