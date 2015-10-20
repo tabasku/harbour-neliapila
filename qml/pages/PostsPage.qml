@@ -228,7 +228,7 @@ AbstractPage {
         }
 
         add: Transition {
-            NumberAnimation { property: "opacity"; easing.type: Easing.InQuad; from: 0; to: 1.0; duration: 500 }
+            NumberAnimation { property: "opacity"; easing.type: Easing.InQuad; from: 0; to: 1.0; duration: 300 }
             //NumberAnimation { properties: "y"; duration: 700; easing.type: Easing.OutBounce }
         }
 

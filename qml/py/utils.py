@@ -100,7 +100,6 @@ def parse_posts(list,post_replies=None):
 
                 if str(post['no']) in post_replies:
                     replies = post_replies[str(post['no'])]
-
                     post['replies'] = len(replies)
                     post['repliesList'] = str(replies)
 

@@ -52,7 +52,6 @@ AbstractPage {
             MenuItem {
                 text: qsTr("Settings")
                 onClicked: {
-
                     pageStack.push("SettingsPage.qml");
                 }
             }
@@ -118,10 +117,8 @@ AbstractPage {
                 source: "../img/neliapila.png"
                 MouseArea {
                     anchors.fill: parent
-
                     onClicked: {
                         pageStack.push("AboutPage.qml")
-
                     }
                 }
 
@@ -161,61 +158,56 @@ AbstractPage {
 
         delegate: PostItem{
             id: delegate
-
         }
 
         Component {
             id: contextMenuComponent
 
             ContextMenu {
-                property string postReplies
-                //property var postReplies : []
-                property string com
-                property var quote
-                property var thisPostNo
-                property var modelToStrip
-                property bool pinned
+
                 property int index
-                property string board
+                property bool pin
 
                 MenuItem {
-                    visible: pinned ? true : false
+                    visible: pin ? true : false
                     text: qsTr("Remove pin")
                     onClicked:{
-                        console.log("Remove pin" +thisPostNo)
                         pyt.unpin(index)
                     }
                 }
 
                 MenuItem {
-                    visible: pinned ? false : true
+                    visible: pin ? false : true
                     text: qsTr("Add pin")
                     onClicked:{
-                        console.log("Add pin" +thisPostNo)
                         pyt.pin(index)
                     }
                 }
 
-                MenuItem {
-                    text: qsTr("Open thread in browser")
-                    onClicked: {
-
-                        var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo
-                        infoBanner.alert("Opening thread in browser");
-                        Qt.openUrlExternally(url)
-                    }
-                }
-
+//                MenuItem {
+//                    text: qsTr("Open thread in browser")
+//                    onClicked: {
+//                        var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo
+//                        infoBanner.alert("Opening thread in browser");
+//                        Qt.openUrlExternally(url)
+//                    }
+//                }
             }
         }
 
         add: Transition {
-            NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 500 }
+            NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 300 }
             //NumberAnimation { property: "scale"; easing.type: Easing.InQuint; from: 0; to: 1.0; duration: 500 }
 
         }
+
         remove: Transition {
-            NumberAnimation { property: "opacity"; from: 1.0; to: 0; duration: 500 }
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0; duration: 300 }
+            //NumberAnimation { property: "scale"; easing.type: Easing.InQuint; from: 1.0; to: 0; duration: 1000 }
+        }
+
+        displaced: Transition {
+            NumberAnimation { properties: "x,y"; duration: 800; easing.type: Easing.InSine }
         }
 
         footer: ThreadPageFooter{
@@ -225,7 +217,6 @@ AbstractPage {
     }
 
     Component.onCompleted: {
-
 
         if(boardId){
             pyt.getThreads(boardId,1)
@@ -277,9 +268,6 @@ AbstractPage {
             pyt.getPinned()
         }
     }
-
-
-
 
     Python {
         id: pyt
@@ -355,8 +343,6 @@ AbstractPage {
             });
 
             setHandler('pinned_all', function(result) {
-                //To silence onReceived from posts
-                console.log("Pinned all Handler!")
 
                 for (var i=0; i<result.length; i++) {
                     pinModel.append(result[i]);
@@ -381,6 +367,8 @@ AbstractPage {
 
                     for (var i=0; i<result.length; i++) {
                         updateItem.postCount = result[i]['postCount']
+                        //updateItem.threadDead = result[i]['threadDead']
+                        //updateItem.closed = result[i]['closed']
                     }
 
                 }
@@ -425,48 +413,48 @@ AbstractPage {
         function pin(index){
 
             var model = currentModel
+
             var postNo = model.get(index)['no']
-            var board = model.get(index)['board']
+            var board = model.get(index)['post_board']
             var com = model.get(index)['com']
             var thumbUrl = model.get(index)['thumbUrl']
             var time = model.get(index)['time']
             var replies = model.get(index)['replies_count']
-            console.log("PIN: "+postNo+" board:"+board+" boardID"+boardId)
 
             call('pinned.add_pin', [postNo,board,com,thumbUrl,time,replies],function() {
-                //pinned = true
-                updateItem(true,index)
+                updateItem(1,index)
             });
 
         }
 
         function unpin(index){
             var model = currentModel
+
             var postNo = model.get(index)['no']
-            var board = model.get(index)['board']
-            console.log("UNPIN: "+postNo+" board:"+board+" boardID"+boardId)
+            var board = model.get(index)['post_board']
+
             call('pinned.delete_pins', [postNo,board],function() {
-                //pinned = false
-                updateItem(false,index)
+                updateItem(0,index)
             });
 
         }
 
-        function updateItem(pinned,index){
+        function updateItem(pin,index){
 
             var model = currentModel
 
-            var pin
-            if(pinned){
-                pin = 1
-            }
-            else{
-                pin = 0
+            switch(mode){
+            case "thread":
+                var updateItem
+                updateItem = model.get(index)
+                updateItem.pin = pin
+                break;
+            case "pinned":
+                model.remove(index)
+                break;
             }
 
-            var updateItem
-            updateItem = model.get(index)
-            updateItem.pin = pin
+
         }
 
         onError: {

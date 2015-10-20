@@ -36,6 +36,7 @@ Page {
     property variant infoFontColor: Theme.secondaryHighlightColor
     property int postFontSize: Theme.fontSizeMedium
     property int pageMargin : Theme.horizontalPageMargin
+    property bool animations : false
 
 
     allowedOrientations : Orientation.All

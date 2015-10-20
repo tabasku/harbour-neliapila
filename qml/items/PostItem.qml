@@ -53,13 +53,10 @@ BackgroundItem {
                 anchors.fill: parent
                 spacing: padding
 
-
                 Item {
                     id: timeArea
                     width: timeText.contentWidth
                     height: timeText.contentHeight
-                    //                    radius: 20.0
-                    //                    color: "#024c1c"
                     anchors{
                         verticalCenter: parent.verticalCenter
                     }
@@ -113,7 +110,7 @@ BackgroundItem {
 
                     Label{
                         id: postNoText
-                        text: no
+                        text: mode === "pinned" ? "<b>/"+post_board+"/</b>"+no : no
                         font.pixelSize: infoFontSize
                         color: infoFontColor
                         anchors{
@@ -126,7 +123,6 @@ BackgroundItem {
             }
         }
         Item {
-            //            color: "gold"; radius: 10.0
             width: parent.width;
             //                    height: mode === "post" && !has_file ? postText.contentHeight :  contentAreaHeight;
             height: {
@@ -142,7 +138,7 @@ BackgroundItem {
                         postText.contentHeight
                     }
 
-                    break
+                    break;
                 default:
                     contentAreaHeight
                 }
@@ -363,7 +359,8 @@ BackgroundItem {
                     }
                     Label{
                         id: nameText
-                        text: name
+                        //text: mode === "pinned" ? "READ: "+last_read : name
+                        text : name
                         font.pixelSize: infoFontSize
                         color: infoFontColor
                     }
@@ -436,14 +433,14 @@ BackgroundItem {
 
         switch(mode){
         case "pinned":
-            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: boardId, pinned: pin } )
+            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: pin } )
             break;
         case "thread":
             if(pin){
-                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: boardId, pinned: pin } )
+                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: true } )
             }
             else{
-                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: boardId} )
+                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: false} )
             }
             break;
 
@@ -476,12 +473,12 @@ BackgroundItem {
 
         case "thread":
 
-            contextMenu = contextMenuComponent.createObject(listView, {pinned: pin, thisPostNo: no, boardId:board, index:index})
+            contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
             contextMenu.show(delegate)
             break;
 
         case "pinned":
-            contextMenu = contextMenuComponent.createObject(listView, {pinned: pin, thisPostNo: no, boardId:board, index:index})
+            contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
             contextMenu.show(delegate)
             break;
 

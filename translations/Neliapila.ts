@@ -71,9 +71,5 @@
         <source>Add pin</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Open thread in browser</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 </TS>

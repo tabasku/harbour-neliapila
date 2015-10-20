@@ -37,13 +37,13 @@ def get_pins_db(post_no=None,board=None):
             post_count = 0
 
             now = epoch_to_readable(pin['TIME_CREATED'])
+            #last_read = epoch_to_readable(pin['TIME_CREATED'])
 
             print("GETTIng INFO BOUT {}".format(pin['POSTNO']))
 
-            pins_list.append({'no':pin['POSTNO'],'board':pin['BOARD'],'com':short_com,'postCount':post_count,
+            pins_list.append({'no':pin['POSTNO'],'post_board':pin['BOARD'],'thisBoard':pin['BOARD'],'com':short_com,'postCount':post_count,
                               'thumbUrl':filename,'threadArchived':archived,'threadDead':thread_dead,
                               'now':now,'has_file':1,'pin':1,'name':'','closed':0,'images':0,'sticky':0,'replies':0})
-            #pins_list.append({'postNo':pin['POSTNO'],'pinFromBoard':pin['BOARD'],'shortCom':short_com,'postCount':post_count,'pinnedThumbSource':filename,'threadArchived':archived,'threadDead':thread_dead})
             #POSTNO,BOARD,SHORT_COM,THUMB_URL,TIME_ADDED,TIME_READ,TIME_CREATED
 
         pyotherside.send('pinned_all', pins_list)
