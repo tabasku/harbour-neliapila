@@ -176,14 +176,14 @@ AbstractPage {
                 property var modelToStrip
                 property bool pinned
                 property int index
-                property string boardId
+                property string board
 
                 MenuItem {
                     visible: pinned ? true : false
                     text: qsTr("Remove pin")
                     onClicked:{
                         console.log("Remove pin" +thisPostNo)
-                        pyt.unpin(thisPostNo,boardId,index)
+                        pyt.unpin(index)
                     }
                 }
 
@@ -192,7 +192,7 @@ AbstractPage {
                     text: qsTr("Add pin")
                     onClicked:{
                         console.log("Add pin" +thisPostNo)
-                        pyt.pin(thisPostNo,boardId,index)
+                        pyt.pin(index)
                     }
                 }
 
@@ -419,34 +419,33 @@ AbstractPage {
             helpTxt.enabled = false
             mode = "pinned"
             title = "Pinned posts"
-
-
             call('pinned.data.thread_this', ['get_all',{}],function() {});
         }
 
-        function pin(postNo,boardId,index){
+        function pin(index){
 
             var model = currentModel
-
-
-            //var postNo = model.get(index)['no']
-            //var boardId = model.get(index)['board']
+            var postNo = model.get(index)['no']
+            var board = model.get(index)['board']
             var com = model.get(index)['com']
             var thumbUrl = model.get(index)['thumbUrl']
             var time = model.get(index)['time']
             var replies = model.get(index)['replies_count']
-            console.log(postNo,boardId,index,thumbUrl,time,replies)
+            console.log("PIN: "+postNo+" board:"+board+" boardID"+boardId)
 
-            call('pinned.add_pin', [postNo,boardId,com,thumbUrl,time,replies],function() {
+            call('pinned.add_pin', [postNo,board,com,thumbUrl,time,replies],function() {
                 //pinned = true
                 updateItem(true,index)
             });
 
         }
 
-        function unpin(postNo,boardId,index){
-            //console.log("UNPIN: "+postNo+" board:"+boardId)
-            call('pinned.delete_pins', [postNo,boardId],function() {
+        function unpin(index){
+            var model = currentModel
+            var postNo = model.get(index)['no']
+            var board = model.get(index)['board']
+            console.log("UNPIN: "+postNo+" board:"+board+" boardID"+boardId)
+            call('pinned.delete_pins', [postNo,board],function() {
                 //pinned = false
                 updateItem(false,index)
             });
@@ -457,32 +456,22 @@ AbstractPage {
 
             var model = currentModel
 
-            //console.log(postsModel.get(0)['no'])
+            var pin
+            if(pinned){
+                pin = 1
+            }
+            else{
+                pin = 0
+            }
 
-
-                var pin
-                if(pinned){
-                    pin = 1
-                }
-                else{
-                    pin = 0
-                }
-
-
-
-                var updateItem
-                updateItem = model.get(index)
-                updateItem.pin = pin
-
-
-
+            var updateItem
+            updateItem = model.get(index)
+            updateItem.pin = pin
         }
 
         onError: {
             // when an exception is raised, this error handler will be called
             console.log('threads python error: ' + traceback);
-
-
             busy=false
             Utils.tracebackCatcher(traceback,helpTxt)
 
