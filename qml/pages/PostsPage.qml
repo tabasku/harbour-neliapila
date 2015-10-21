@@ -258,18 +258,25 @@ AbstractPage {
             addImportPath(pythonpath);
             //console.log("Threads: "+pythonpath);
 
-            setHandler('pinned_postno', function(result) {
-                if(result.length){
-                    //console.log("THIS BOARD IS PINNED")
-                    pinned = true
-                    updateItem(pinned)
-                }
-                else{
-                    //console.log("THIS BOARD IS NOT PINNED")
-                    pinned = false
-                    updateItem(pinned)
-                }
-            });
+//            setHandler('pinned_postno', function(result) {
+////                if(result.length){
+////                    console.log("THIS BOARD IS PINNED")
+////                    pinned = true
+////                    updateItem(true)
+
+//////                    var replies_count = postsModel.count-1
+
+//////                    call('pinned.update_pin', [postNo,boardId,replies_count],function() {
+//////                        console.log("update pin " + postNo,boardId + " reply count now " + replies_count)
+//////                    });
+
+////                }
+////                else{
+////                    //console.log("THIS BOARD IS NOT PINNED")
+////                    pinned = false
+////                    updateItem(pinned)
+////                }
+//            });
 
             setHandler('posts', function(result) {
 //                console.log("POSTS HANDLER")
@@ -279,6 +286,14 @@ AbstractPage {
 
                 busy = false
                 updateItem(pinned)
+
+                if(pinned){
+                    var replies_count = postsModel.count-1
+
+                    call('pinned.update_pin', [postNo,boardId,replies_count],function() {
+                        console.log("update pin " + postNo,boardId + " reply count now " + replies_count)
+                    });
+                }
 
                 //If needed, we can get post pin status here and pinned_postno handler will update status
                 // But for now, previous model handles status

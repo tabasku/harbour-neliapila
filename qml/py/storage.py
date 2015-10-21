@@ -273,6 +273,17 @@ class Storage:
         file_name = re.findall(r'\d+s.jpg',thumb_url)[0]
         save(dir, file_name, thumb_url)
 
+    def update_pin(self,post_no,board,time,replies_count):
+
+        if not self.table_exist('PINNED'):
+            self.create_pinned_table()
+
+        cmd = '''UPDATE PINNED SET TIME_READ = "{time_read}",
+         REPLIES_COUNT = "{replies_count}" WHERE POSTNO = "{post_no}" AND BOARD = "{board}";
+         '''.format(post_no=post_no,board=board,time_read=time,replies_count=replies_count)
+
+        self.db_commit(cmd)
+
     def get_pins(self,post_no=None,board=None):
 
         if not self.table_exist('PINNED'):

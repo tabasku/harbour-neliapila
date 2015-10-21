@@ -111,6 +111,13 @@ def add_pin(post_no,board,short_com,thumb_url,time_created,replies_count):
     short_com = short_com.encode()
     database.add_pin(post_no,board,short_com,thumb_url,timestamp,time_created,replies_count)
 
+
+def update_pin(post_no,board,replies_count):
+    timestamp = int(time.time())
+    database = storage.Storage()
+    database.update_pin(post_no,board,timestamp,replies_count)
+
+
 def delete_pins(post_no=None,board=None):
     database = storage.Storage()
     database.delete_pins(post_no,board)
@@ -146,7 +153,7 @@ class Pinned:
 #get_pins_db()
 
 data = Pinned()
-#delete_pins(61167)
+#delete_pins()
 #data.thread_this('add',{'postno':123,'board':'b'})
 #get_pins_db()
 #add_pin(34166621,'g','''I'm 5 episodes into this edgy sick dude anime and I find out they made a reboot of the entire show that is more faithful to the manga.<br><br>Is it worth it to finish the original anime or just start over with hellsing ultimate?''')
@@ -155,10 +162,11 @@ data = Pinned()
 #get_threads_info("g",50665689)
 #add_pin('0','au','''Didn't see one time''','https://t.4cdn.org/adv/1444302443728s.jpg',1444302443)
 #add_pin('16329228','adv','>fem, 19','http://i.4cdn.org/adv/1444386618975s.jpg','1444386618','100')
-#add_pin('645629001','b','YLYL','http://i.4cdn.org/b/1444483625544s.jpg','1444483661','5')
+#add_pin('2470783','hr','Anything about the Vietman War','http://i.4cdn.org/hr/1440155625130s.jpg','1444483661','5')
 #data.thread_this('get_all',{})
 #get_pins_db()
 #postno = postno[0]['postNo']
 #board = postno[0]['board']
 #add_pin('39894014','g','>fem, 19','http://i.4cdn.org/g/1390842451744s.jpg','39894014','100')
 #delete_pins("39894014",'g')
+#update_pin(2470783,'hr','60')
