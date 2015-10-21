@@ -16,9 +16,7 @@ AbstractPage {
     function getBackToPost(){
         pageStack.pop(pageStack.find( function(page){ return(page._depth === 1)} ), PageStackAction.Immediate)
     }
-    //    function getBackToBoard(){
-    //        pageStack.pop(pageStack.find( function(page){ return(page._depth === 0)} ), PageStackAction.Immediate)
-    //    }
+
     function returnModel(){
         return postsModel
     }
@@ -30,13 +28,12 @@ AbstractPage {
         model: postsModel
         anchors.fill: parent
         focus: true
-        contentHeight: postsPage.height
+        VerticalScrollDecorator {}
 
         PullDownMenu {
             id: postsPullDownMenu
             busy : busy
 
-            //https://boards.4chan.org/trv/thread/1013661
             MenuItem {
                 text: qsTr("Open thread in browser")
                 onClicked: {
@@ -79,19 +76,6 @@ AbstractPage {
                     infoBanner.alert("Refreshing...")
                 }
             }
-
-            //            MenuItem {
-            //                id: backToBoard
-            //                text: qsTr("Back to <b>/"+boardId+"/</b>" )
-            //                visible: false
-            //                onClicked: {
-            //                    getBackToBoard()
-            //                }
-            //            }
-
-
-
-
         }
 
         Button{
@@ -229,16 +213,13 @@ AbstractPage {
 
         add: Transition {
             NumberAnimation { property: "opacity"; easing.type: Easing.InQuad; from: 0; to: 1.0; duration: 300 }
-            //NumberAnimation { properties: "y"; duration: 700; easing.type: Easing.OutBounce }
         }
 
         populate: Transition {
             NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
-            //NumberAnimation { properties: "y"; duration: 700; easing.type: Easing.OutBounce }
         }
 
         footer:PostsPageFooter{
-
         }
 
     }
@@ -309,6 +290,8 @@ AbstractPage {
                 postViewPlaceholder.text= "404: Page not found"
                 postViewPlaceholder.enabled = true
             });
+
+            setHandler('pinned_all_update', function(result){});
 
             importModule('posts', function() {});
             importModule('pinned', function() {});

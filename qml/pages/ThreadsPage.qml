@@ -14,13 +14,11 @@ AbstractPage {
     property int pages
     property bool showPinnedPage: false
 
-
     title: boardId ? "<b>/"+boardId+"/</b>" : "Neliapila"
 
     function replacePage(){
         showPinnedPage = true
     }
-
 
     function change_board(boardId){
         if(helpTxt.enabled){
@@ -41,8 +39,8 @@ AbstractPage {
         id: listView
         model: currentModel
         anchors.fill: parent
-        contentHeight: threadPage.height
         focus: true
+        VerticalScrollDecorator {}
 
         PullDownMenu {
             id: mainPullDownMenu
@@ -183,27 +181,15 @@ AbstractPage {
                         pyt.pin(index)
                     }
                 }
-
-//                MenuItem {
-//                    text: qsTr("Open thread in browser")
-//                    onClicked: {
-//                        var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo
-//                        infoBanner.alert("Opening thread in browser");
-//                        Qt.openUrlExternally(url)
-//                    }
-//                }
             }
         }
 
         add: Transition {
             NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 300 }
-            //NumberAnimation { property: "scale"; easing.type: Easing.InQuint; from: 0; to: 1.0; duration: 500 }
-
         }
 
         remove: Transition {
             NumberAnimation { property: "opacity"; from: 1.0; to: 0; duration: 300 }
-            //NumberAnimation { property: "scale"; easing.type: Easing.InQuint; from: 1.0; to: 0; duration: 1000 }
         }
 
         displaced: Transition {
@@ -233,7 +219,6 @@ AbstractPage {
                     pageNo = 1
                     pyt.getThreads(result,1)
                 }
-
             });
         }
     }
@@ -313,15 +298,6 @@ AbstractPage {
                     }
 
                 }
-
-                //                for (var i=0; i<result.length; i++) {
-                //                    //model.append(result[i]);
-                //                    console.log(result[i]['postNo'])
-                //                    model.get()
-
-                //                }
-
-                //To silence onReceived from pinned
             });
 
             setHandler('threads', function(result) {
@@ -335,9 +311,7 @@ AbstractPage {
                 call('pinned.data.thread_this', ['get_by_board',{'board':boardId}],function() {});
 
                 call('threads.get_pages', [boardId],function(pages) {
-                    //console.log(threadPage.pages)
                     threadPage.pages = pages
-                    //console.log(threadPage.pages)
                 });
 
             });
@@ -401,7 +375,6 @@ AbstractPage {
 
         function getPinned(){
             busy=true
-            //model.clear()
             pinModel.clear()
             currentModel = pinModel
             helpTxt.enabled = false

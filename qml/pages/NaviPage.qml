@@ -21,6 +21,7 @@ AbstractPage {
         anchors.fill: parent
 
 
+
         PullDownMenu {
             id: postsPullDownMenu
             busy : busy
@@ -37,7 +38,6 @@ AbstractPage {
 
         header: PageHeader {
                 width: parent.width
-
 
                                 Label{
 
@@ -315,6 +315,12 @@ AbstractPage {
 
             BackgroundItem {
                 id: contentItem
+                anchors{
+                    left:parent.left
+                    right:parent.right
+                    leftMargin: pageMargin
+                    rightMargin: pageMargin
+                }
 
                 highlighted: {
                     if (board === boardId){
