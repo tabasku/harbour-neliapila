@@ -19,10 +19,8 @@ AbstractPage {
         sourceComponent: {
             switch (imageItem.status) {
             case Image.Ready : {
-                //imageViewMenu.busy=false
                 imagePage.busy=false
                 thumbnail_streched.visible = false
-                //infoBanner.alert("Image loading complete");
                 return undefined
             }
 
@@ -47,28 +45,31 @@ AbstractPage {
                 width: imagePage.width
                 height: Theme.paddingLarge * 2
                 visible: imagePage.busy
+
                 BusyIndicator {
                     id: imageLoaderIndicator
                     size: BusyIndicatorSize.Small
                     running: true
                     anchors {
-                        left: parent.left
+//                            left: parent.left
                         verticalCenter: parent.verticalCenter
-                        leftMargin: Theme.paddingSmall
+//                            leftMargin: Theme.paddingSmall
+                        right : imageLoaderText.left
+                        rightMargin: Theme.paddingSmall
+
                     }
                 }
+
                 Text {
-                    text: qsTr("Loading image "+Math.round(imageItem.progress * 100) + "%")
-                    //                    anchors {
-                    //                        left: imageLoaderIndicator.right
-                    //                        verticalCenter: parent.verticalCenter
-                    //                        leftMargin: Theme.paddingSmall
-                    //                    }
+                    id: imageLoaderText
+
+                    text: "Loading image "+Math.round(imageItem.progress * 100) + "%"
                     anchors {
-                        left: imageLoaderIndicator.right; right: parent.right; margins: Theme.paddingMedium
+                        //left: imageLoaderIndicator.right; right: parent.right; margins: Theme.paddingMedium
                         verticalCenter: parent.verticalCenter
+                        horizontalCenter: parent.horizontalCenter
                     }
-                    elide: Text.ElideRight
+                    //elide: Text.ElideRight
                     font.pixelSize: Theme.fontSizeSmall
                     color: Theme.primaryColor
                 }
@@ -80,7 +81,7 @@ AbstractPage {
         Component { id: failedLoading; Label { text: qsTr("Error") } }
     }
 
-    title : filename+ext
+    title : filename
 
     SilicaFlickable {
         id: picFlick
@@ -100,7 +101,7 @@ AbstractPage {
             MenuItem {
                 text: qsTr("Open in browser")
                 onClicked: {
-                    infoBanner.alert("Launching web browser...");
+                    infoBanner.alert("Launching external web browser...");
                     Qt.openUrlExternally(imgUrl)
                 }
             }

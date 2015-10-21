@@ -6,7 +6,7 @@ Rectangle{
     color: "transparent"
     height: Screen.height*0.1
     width: parent.width
-    visible : postsModel.count === 0 || busy ? false : true
+    visible : postsModel.count === 0 || busy || pageStack.depth >= 2 ? false : true
 
     Button{
         id : footerRefreshButton

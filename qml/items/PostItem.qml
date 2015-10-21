@@ -208,9 +208,6 @@ BackgroundItem {
                                     }
                                 }
                             }
-
-
-
                         }
                         Component {
                             id: failedLoading;
@@ -240,6 +237,7 @@ BackgroundItem {
 
                     MouseArea {
                         id: thumbNailTouchArea
+                        enabled: mode !== "pinned" ? true : false
                         anchors.fill: thumbImg
                         onClicked: {
 
@@ -258,31 +256,9 @@ BackgroundItem {
                                                {
                                                    "imgUrl": imgUrl,
                                                    "thumbUrl": thumbUrl,
-                                                   "ext"    : ext,
                                                    "filename": filename
                                                });
                             }
-
-
-//                            if(ext === ".webm"){
-
-//                                pageStack.push(Qt.resolvedUrl("OpenLinkDialog.qml"),
-//                                               {
-//                                                   "imgUrl": imgUrl,
-//                                                   "thumbUrl": thumbUrl,
-//                                                   "title": "Open WebM"
-//                                               });
-
-//                            }
-//                            else{
-//                                pageStack.push(Qt.resolvedUrl("../pages/ImageViewPage.qml"),
-//                                               {
-//                                                   "imgUrl": imgUrl,
-//                                                   "thumbUrl": thumbUrl,
-//                                                   "ext"    : ext,
-//                                                   "filename": filename
-//                                               });
-//                            }
                         }
                     }
                 }
@@ -375,8 +351,6 @@ BackgroundItem {
                         height:parent.height
                         width:pin || mode === 'pinned' ? parent.height : false
                         fillMode: Image.PreserveAspectFit
-
-
                         source: "image://theme/icon-s-attach"
                     }
 
@@ -429,7 +403,6 @@ BackgroundItem {
     }
 
     onClicked: {
-
         switch(mode){
         case "pinned":
             pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: true } )
@@ -446,8 +419,6 @@ BackgroundItem {
         default:
             console.log("clicked "+ index)
         }
-
-
     }
 
     onPressAndHold: {

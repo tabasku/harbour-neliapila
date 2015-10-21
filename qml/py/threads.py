@@ -55,7 +55,9 @@ def get_threads(board_id,page_no):
             thread_values['images'] = int(topic.has_file)
         thread_values['semantic_url'] = topic.semantic_url
         thread_values['thumbUrl'] = topic.thumbnail_url
+        thread_values['thumbnail_url'] = topic.thumbnail_url
         thread_values['imgUrl'] = topic.file_url
+        thread_values['file_url'] = topic.file_url
         thread_values['filename'] = topic.filename
         thread_values['has_file'] = int(topic.has_file)
 
