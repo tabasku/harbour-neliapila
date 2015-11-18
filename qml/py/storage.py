@@ -17,7 +17,7 @@ class Storage:
         if sys.platform is 'win32':
             home = expanduser("~")+"\\.Neliapila\\pinned_thumbs"
         else:
-            home = expanduser("~")+"/.Neliapila/pinned_thumbs"
+            home = expanduser("~")+"/.local/share/neliapila/pinned_thumbs"
 
         if not exists(home):
             makedirs(home)
@@ -29,7 +29,7 @@ class Storage:
         if sys.platform is 'win32':
             home = expanduser("~")+"\\.Neliapila\\"
         else:
-            home = expanduser("~")+"/.Neliapila/"
+            home = expanduser("~")+"/.local/share/neliapila/"
 
 
         if not exists(home):
@@ -262,6 +262,13 @@ class Storage:
         if not self.table_exist('PINNED'):
             self.create_pinned_table()
 
+        if thumb_url is not None:
+            file_name = re.findall(r'\d+s.jpg',thumb_url)[0]
+            thumb_dir = self.get_thumb_dir()
+            save(thumb_dir, file_name, thumb_url)
+        else:
+            thumb_url="none"
+
         cmd = '''INSERT OR IGNORE INTO PINNED(POSTNO,BOARD,SHORT_COM,THUMB_URL,TIME_ADDED,TIME_READ,TIME_CREATED,REPLIES_COUNT) VALUES''' \
               '''("{post_no}","{board}","{short_com}","{thumb_url}","{time_added}","{time_read}","{time_created}","{replies_count}");'''\
             .format(post_no=post_no,board=board,short_com=short_com,thumb_url=thumb_url,time_added=time,time_read=time,time_created=time_created,replies_count=replies_count)
@@ -270,8 +277,7 @@ class Storage:
 
         dir = self.get_thumb_dir()
 
-        file_name = re.findall(r'\d+s.jpg',thumb_url)[0]
-        save(dir, file_name, thumb_url)
+
 
     def update_pin(self,post_no,board,time,replies_count):
 
@@ -312,12 +318,13 @@ class Storage:
         def remove_thumbnail(pin_thumbs):
             dir = self.get_thumb_dir()
             for thumb in pin_thumbs:
+
                 file_name = re.findall(r'\d+s.jpg',thumb['THUMB_URL'])
-                #if len(file_name):
-                file = dir + '/' + file_name[0]
-                if isfile(file):
-                    remove(file)
-                    #print(file)
+                if len(file_name) != 0:
+                    file = dir + '/' + file_name[0]
+                    if isfile(file):
+                        remove(file)
+                        #print(file)
 
         if post_no is None:
             query = 'SELECT THUMB_URL FROM PINNED;'

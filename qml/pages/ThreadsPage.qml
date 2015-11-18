@@ -47,10 +47,17 @@ AbstractPage {
 
             busy : busy
 
+//            MenuItem {
+//                text: qsTr("Settings")
+//                onClicked: {
+//                    pageStack.push("SettingsPage.qml");
+//                }
+//            }
+
             MenuItem {
-                text: qsTr("Settings")
+                text: qsTr("About")
                 onClicked: {
-                    pageStack.push("SettingsPage.qml");
+                    pageStack.push("AboutPage.qml");
                 }
             }
 

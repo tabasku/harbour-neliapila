@@ -16,7 +16,6 @@ import os,sys,inspect
 cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe() ))[0],"lib")))
 if cmd_subfolder not in sys.path:
     sys.path.insert(0, cmd_subfolder)
-#import utils
 
 def check_pinned(pinned_list):
     print(pinned_list)
@@ -27,11 +26,14 @@ def get_pins_db(post_no=None,board=None):
 
     pins_list=[]
 
-    if post_no == None and board == None:
+    if post_no is None and board is None:
 
         for pin in pins:
             short_com = pin['SHORT_COM'][2:-1].replace("&#039;","'")
-            filename = database.get_thumb_dir() + "/" + re.findall(r'\d+s.jpg',pin['THUMB_URL'])[0]
+            if len(re.findall(r'\d+s.jpg',pin['THUMB_URL'])) != 0:
+                filename = database.get_thumb_dir() + "/" + re.findall(r'\d+s.jpg',pin['THUMB_URL'])[0]
+            else:
+                filename = None
             thread_dead = False
             archived = False
             post_count = 0
@@ -63,9 +65,7 @@ def get_pins_db(post_no=None,board=None):
 
         pyotherside.send('pinned_all_update', pins_list)
 
-
-
-    elif post_no and board == None:
+    elif post_no and board is None:
 
         for pin in pins:
             pins_list.append({'postNo':pin['POSTNO'],'board':pin['BOARD']})
@@ -74,7 +74,7 @@ def get_pins_db(post_no=None,board=None):
         if sys.platform != 'win32':
             pyotherside.send('pinned_postno', pins_list)
 
-    elif board and post_no == None:
+    elif board and post_no is None:
         #pin_dict = {}
         for pin in pins:
             pins_list.append(pin['POSTNO'])
@@ -109,6 +109,13 @@ def add_pin(post_no,board,short_com,thumb_url,time_created,replies_count):
     short_com = short_com.replace("'","&#039;")
 
     short_com = short_com.encode()
+
+
+    try:
+        thumb_url
+    except NameError:
+        thumb_url = None
+
     database.add_pin(post_no,board,short_com,thumb_url,timestamp,time_created,replies_count)
 
 

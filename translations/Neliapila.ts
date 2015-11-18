@@ -52,10 +52,6 @@
 <context>
     <name>ThreadsPage</name>
     <message>
-        <source>Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
@@ -69,6 +65,10 @@
     </message>
     <message>
         <source>Add pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
