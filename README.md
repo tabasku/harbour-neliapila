@@ -14,14 +14,16 @@ https://github.com/kennethreitz/requests
 
 -----------------------------------------------------------------------
 
-Features:
--Browse all boards on 4chan.org
--Raise boards in list by starring them
--Set default starting board
--Pin threads you want to go back later
+Features
+--------
+- Browse all boards on 4chan.org
+- Raise boards in list by starring them
+- Set default starting board
+- Pin threads you want to go back later
 
-TODO:
--Replying posts
--Settings
--4chan pass
--destroy bugs
+TODO
+--------
+- Replying posts
+- Settings
+- 4chan pass
+- destroy bugs
