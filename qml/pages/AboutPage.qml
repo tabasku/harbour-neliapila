@@ -47,7 +47,7 @@ Page {
                 id:github_button
                 anchors { top: diipadaapa.bottom; horizontalCenter: parent.horizontalCenter; margins: Theme.paddingLarge }
                 text: "Github"
-                onClicked: Qt.openUrlExternally("google.com");
+                onClicked: Qt.openUrlExternally("https://github.com/tabasku/harbour-neliapila");
             }
             Button {
                 anchors { top: github_button.bottom; horizontalCenter: parent.horizontalCenter; margins: Theme.paddingLarge }

@@ -12,12 +12,12 @@ Name:       Neliapila
 %{!?qtc_qmake5:%define qtc_qmake5 %qmake5}
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
-Summary:    Neliapila
+Summary:    Neliapila 4chan.org browser
 Version:    0.1
 Release:    1
 Group:      Qt/Qt
-License:    LICENSE
-URL:        http://example.org/
+License:    GPLv3+
+URL:        https://github.com/tabasku/harbour-neliapila
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  Neliapila.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
