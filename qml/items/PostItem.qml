@@ -243,11 +243,9 @@ BackgroundItem {
 
                             switch(ext){
                             case ".webm":
-                                pageStack.push(Qt.resolvedUrl("OpenLinkDialog.qml"),
+                                pageStack.push(Qt.resolvedUrl("VideoViewPage.qml"),
                                                {
-                                                   "imgUrl": imgUrl,
-                                                   "thumbUrl": thumbUrl,
-                                                   "title": "Open WebM"
+                                                   "imgUrl": imgUrl
                                                });
                                 break;
 
