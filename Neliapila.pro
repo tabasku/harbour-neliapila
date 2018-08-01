@@ -183,7 +183,8 @@ OTHER_FILES += qml/Neliapila.qml \
     qml/pages/NaviPage.qml \
     qml/items/PageDialog.qml \
     qml/pages/TextPage.qml \
-    qml/items/PostItem.qml
+    qml/items/PostItem.qml \
+    qml/items/VideoViewPage.qml 
 
 # to disable building translations every time, comment out the
 # following CONFIG line
