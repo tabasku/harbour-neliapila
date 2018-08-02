@@ -10,19 +10,19 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = Neliapila
+TARGET = harbour-neliapila
 
 CONFIG += sailfishapp
 
-SOURCES += src/Neliapila.cpp
+SOURCES += src/harbour-neliapila.cpp
 
-OTHER_FILES += qml/Neliapila.qml \
+OTHER_FILES += qml/harbour-neliapila.qml \
     qml/cover/CoverPage.qml \
-    rpm/Neliapila.changes.in \
-    rpm/Neliapila.spec \
-    rpm/Neliapila.yaml \
+    rpm/harbour-neliapila.changes.in \
+    rpm/harbour-neliapila.spec \
+    rpm/harbour-neliapila.yaml \
     translations/*.ts \
-    Neliapila.desktop \
+    harbour-neliapila.desktop \
     qtlogo.png \
     qml/pages/PostsPage.qml \
     qml/pages/SettingsPage.qml \
