@@ -19,7 +19,7 @@ Group:      Qt/Qt
 License:    GPLv3+
 URL:        https://github.com/tabasku/harbour-neliapila
 Source0:    %{name}-%{version}.tar.bz2
-Source100:  Neliapila.yaml
+Source100:  harbour-neliapila.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   pyotherside-qml-plugin-python3-qt5
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
