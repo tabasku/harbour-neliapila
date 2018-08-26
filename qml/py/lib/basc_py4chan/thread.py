@@ -10,6 +10,10 @@ class Thread(object):
     Attributes:
         closed (bool): Whether the thread has been closed.
         sticky (bool): Whether this thread is a 'sticky'.
+        archived (bool): Whether the thread has been archived.
+        bumplimit (bool): Whether the thread has hit the bump limit.
+        imagelimit (bool): Whether the thread has hit the image limit.
+        custom_spoiler (int): Number of custom spoilers in the thread (if the board supports it)
         topic (:class:`basc_py4chan.Post`): Topic post of the thread, the OP.
         posts (list of :class:`basc_py4chan.Post`): List of all posts in the thread, including the OP.
         all_posts (list of :class:`basc_py4chan.Post`): List of all posts in the thread, including the OP and any omitted posts.
@@ -19,7 +23,7 @@ class Thread(object):
     """
     def __init__(self, board, id):
         self._board = board
-        self._url = Url(board=board.name, https=board.https)       # 4chan URL generator
+        self._url = Url(board_name=board.name, https=board.https)       # 4chan URL generator
         self.id = self.number = self.num = self.no = id
         self.topic = None
         self.replies = []
@@ -44,6 +48,22 @@ class Thread(object):
     @property
     def sticky(self):
         return self.topic._data.get('sticky') == 1
+
+    @property
+    def archived(self):
+        return self.topic._data.get('archived') == 1
+
+    @property
+    def imagelimit(self):
+        return self.topic._data.get('imagelimit') == 1
+
+    @property
+    def bumplimit(self):
+        return self.topic._data.get('bumplimit') == 1
+
+    @property
+    def custom_spoiler(self):
+        return self.topic._data.get('custom_spoiler', 0)
 
     @classmethod
     def _from_request(cls, board, res, id):
@@ -85,34 +105,42 @@ class Thread(object):
     def files(self):
         """Returns the URLs of all files attached to posts in the thread."""
         if self.topic.has_file:
-            yield self.topic.file_url
+            yield self.topic.file.file_url
         for reply in self.replies:
             if reply.has_file:
-                yield reply.file_url
+                yield reply.file.file_url
 
     def thumbs(self):
         """Returns the URLs of all thumbnails in the thread."""
         if self.topic.has_file:
-            yield self.topic.thumbnail_url
+            yield self.topic.file.thumbnail_url
         for reply in self.replies:
             if reply.has_file:
-                yield reply.thumbnail_url
+                yield reply.file.thumbnail_url
 
     def filenames(self):
         """Returns the filenames of all files attached to posts in the thread."""
         if self.topic.has_file:
-            yield self.topic.filename
+            yield self.topic.file.filename
         for reply in self.replies:
             if reply.has_file:
-                yield reply.filename
+                yield reply.file.filename
 
     def thumbnames(self):
         """Returns the filenames of all thumbnails in the thread."""
         if self.topic.has_file:
-            yield self.topic.thumbnail_fname
+            yield self.topic.file.thumbnail_fname
         for reply in self.replies:
             if reply.has_file:
-                yield reply.thumbnail_fname
+                yield reply.file.thumbnail_fname
+
+    def file_objects(self):
+        """Returns the :class:`basc_py4chan.File` objects of all files attached to posts in the thread."""
+        if self.topic.has_file:
+            yield self.topic.file
+        for reply in self.replies:
+            if reply.has_file:
+                yield reply.file
 
     def update(self, force=False):
         """Fetch new posts from the server.

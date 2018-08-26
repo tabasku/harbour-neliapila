@@ -1,0 +1,17 @@
+LICENSE
+MANIFEST.in
+README.rst
+setup.cfg
+setup.py
+BASC_py4chan.egg-info/PKG-INFO
+BASC_py4chan.egg-info/SOURCES.txt
+BASC_py4chan.egg-info/dependency_links.txt
+BASC_py4chan.egg-info/requires.txt
+BASC_py4chan.egg-info/top_level.txt
+basc_py4chan/__init__.py
+basc_py4chan/board.py
+basc_py4chan/file.py
+basc_py4chan/post.py
+basc_py4chan/thread.py
+basc_py4chan/url.py
+basc_py4chan/util.py

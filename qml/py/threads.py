@@ -47,19 +47,22 @@ def get_threads(board_id,page_no):
         thread_values['closed'] = int(thread.closed)
         thread_values['name'] = topic.name
         thread_values['time'] = topic.timestamp
-        thread_values['ext'] = topic.file_extension
-        thread_values['file_deleted'] = int(topic.file_deleted)
+        thread_values['semantic_url'] = topic.semantic_url
         if thread.omitted_images:
             thread_values['images'] = thread.omitted_images
         else:
             thread_values['images'] = int(topic.has_file)
-        thread_values['semantic_url'] = topic.semantic_url
-        thread_values['thumbUrl'] = topic.thumbnail_url
-        thread_values['thumbnail_url'] = topic.thumbnail_url
-        thread_values['imgUrl'] = topic.file_url
-        thread_values['file_url'] = topic.file_url
-        thread_values['filename'] = topic.filename
+
         thread_values['has_file'] = int(topic.has_file)
+
+        if topic.has_file:
+            thread_values['ext'] = topic.file_extension
+            thread_values['file_deleted'] = int(topic.file_deleted)
+            thread_values['thumbUrl'] = topic.thumbnail_url
+            thread_values['thumbnail_url'] = topic.thumbnail_url
+            thread_values['imgUrl'] = topic.file_url
+            thread_values['file_url'] = topic.file_url
+            thread_values['filename'] = topic.filename
 
         if topic.subject and topic.comment:
             thread_values['com'] = '<b>{}</b><br>'.format(topic.subject) + topic.comment

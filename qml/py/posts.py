@@ -36,8 +36,6 @@ def get_posts(board_id,postno):
     if thread != None:
         all_posts = thread.all_posts
 
-
-
         for post in all_posts:
 
             post_values = {}
@@ -54,14 +52,16 @@ def get_posts(board_id,postno):
             post_values['closed'] = int(thread.closed)
             post_values['name'] = post.name
             post_values['time'] = post.timestamp
-            post_values['ext'] = post.file_extension
-            post_values['file_deleted'] = int(post.file_deleted)
-            post_values['images'] = int(post.has_file)
             post_values['semantic_url'] = post.semantic_url
-            post_values['thumbUrl'] = post.thumbnail_url
-            post_values['imgUrl'] = post.file_url
-            post_values['filename'] = post.filename
+            post_values['images'] = int(post.has_file)
             post_values['has_file'] = int(post.has_file)
+
+            if post.has_file:
+                post_values['ext'] = post.file_extension
+                post_values['thumbUrl'] = post.thumbnail_url
+                post_values['imgUrl'] = post.file_url
+                post_values['filename'] = post.filename
+                post_values['file_deleted'] = int(post.file_deleted)
 
             if post.comment:
                 replies = utils.collect_replies(post.comment)
