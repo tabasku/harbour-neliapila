@@ -433,7 +433,7 @@ BackgroundItem {
                 var modelToStrip = pP.returnModel()
 
             contextMenu = contextMenuComponent.createObject(listView, {postReplies: postReplies, thisPostNo: no, modelToStrip : modelToStrip,com: com})
-            contextMenu.show(delegate)
+            contextMenu.open(delegate)
             break;
 
             //        case "thread":
@@ -448,7 +448,7 @@ BackgroundItem {
 
         default:
             contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
-            contextMenu.show(delegate)
+            contextMenu.open(delegate)
         }
     }
 }

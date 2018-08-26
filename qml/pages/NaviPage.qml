@@ -246,7 +246,7 @@ AbstractPage {
 
                 onPressAndHold: {
                     contextMenu = boardContextMenuComponent.createObject(boardListView, {board: board, title: title,favorite: favorite,default_board:!default_board,index:index})
-                    contextMenu.show(parent)
+                    contextMenu.open(parent)
                 }
 
             }
