@@ -266,7 +266,7 @@ AbstractPage {
 
         Component.onCompleted: {
             // Add the Python library directory to the import path
-            var pythonpath = Qt.resolvedUrl('../py/').substr('file://'.length);
+            var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
             //var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
             addImportPath(pythonpath);
             //console.log("Threads: "+pythonpath);
