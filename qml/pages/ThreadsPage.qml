@@ -83,6 +83,17 @@ AbstractPage {
             }
 
             MenuItem {
+                id:newThread
+                text: qsTr("Start a New Thread")
+                enabled: boardId ? true: false
+
+
+                onClicked: {
+                    pageStack.push("NewPost.qml");
+                }
+            }
+
+            MenuItem {
                 id:menuRefresh
                 text: qsTr("Refresh")
                 enabled: false

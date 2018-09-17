@@ -344,4 +344,6 @@ DISTFILES += \
     py/storage.py \
     py/threads.py \
     py/utils.py \
+    qml/pages/NewPost.qml \
+    qml/pages/Captcha2Page.qml
 

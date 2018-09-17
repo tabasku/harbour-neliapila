@@ -243,9 +243,10 @@ BackgroundItem {
 
                             switch(ext){
                             case ".webm":
-                                pageStack.push(Qt.resolvedUrl("VideoViewPage.qml"),
+                                pageStack.push(Qt.resolvedUrl("../pages/VideoViewPage.qml"),
                                                {
-                                                   "imgUrl": imgUrl
+                                                   "imgUrl": imgUrl,
+                                                   "filename": filename
                                                });
                                 break;
 

@@ -28,7 +28,10 @@ Page {
  
 
     property string imgUrl
- 
+    property string title
+    property string ext
+    property string filename
+    title : filename
 
     property bool error: false
 
@@ -36,6 +39,32 @@ Page {
         id: videoFlickable
         anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom }
 
+        PullDownMenu {
+            id: videoViewMenu
+            MenuItem {
+                text: qsTr("Open in browser")
+                onClicked: {
+                    //infoBanner.alert("Launching external web browser...");
+                    Qt.openUrlExternally(imgUrl)
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Save as")
+                onClicked: pageStack.push(Qt.resolvedUrl("SaveFilePage.qml"), {uri: imgUrl})
+            }
+            Label{
+                text: title
+                //wrapMode: Text.WordWrap
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSizeExtraSmall
+                color: Theme.secondaryHighlightColor
+                clip: true
+                smooth: true
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+        }
     
 
         MouseArea {

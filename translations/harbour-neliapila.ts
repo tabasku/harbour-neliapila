@@ -28,6 +28,19 @@
     </message>
 </context>
 <context>
+    <name>NewPost</name>
+    <message>
+        <location filename="../qml/pages/NewPost.qml" line="27"/>
+        <source>Post</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/NewPost.qml" line="39"/>
+        <source>Save draft</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PostsPage</name>
     <message>
         <location filename="../qml/pages/PostsPage.qml" line="38"/>
@@ -72,16 +85,21 @@
     </message>
     <message>
         <location filename="../qml/pages/ThreadsPage.qml" line="87"/>
+        <source>Start a New Thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/ThreadsPage.qml" line="98"/>
         <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ThreadsPage.qml" line="178"/>
+        <location filename="../qml/pages/ThreadsPage.qml" line="189"/>
         <source>Remove pin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/pages/ThreadsPage.qml" line="186"/>
+        <location filename="../qml/pages/ThreadsPage.qml" line="197"/>
         <source>Add pin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -89,12 +107,22 @@
 <context>
     <name>VideoViewPage</name>
     <message>
-        <location filename="../qml/items/VideoViewPage.qml" line="97"/>
+        <location filename="../qml/pages/VideoViewPage.qml" line="45"/>
+        <source>Open in browser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/VideoViewPage.qml" line="53"/>
+        <source>Save as</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/VideoViewPage.qml" line="126"/>
         <source>Error loading video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/items/VideoViewPage.qml" line="178"/>
+        <location filename="../qml/pages/VideoViewPage.qml" line="207"/>
         <source>Problem finding stream URL</source>
         <translation type="unfinished"></translation>
     </message>
