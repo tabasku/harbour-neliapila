@@ -187,7 +187,8 @@ Page {
                     right: parent.right
                     bottom: parent.bottom
                 }
-                url: "captcha2.html"
+                //url: "captcha2.html"
+                url: "https://httpbin.org/headers"
             }
         }
     }

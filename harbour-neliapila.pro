@@ -12,9 +12,12 @@
 # The name of your application
 TARGET = harbour-neliapila
 
+QT += qml quick network
+
 CONFIG += sailfishapp
 
-SOURCES += src/harbour-neliapila.cpp
+SOURCES += src/harbour-neliapila.cpp \
+    src/neliapilanam.cpp
 
 DEPLOYMENT_PATH = /usr/share/$${TARGET}
 
@@ -22,46 +25,6 @@ py.files = py
 py.path = $${DEPLOYMENT_PATH}
 
 INSTALLS += py
-
-OTHER_FILES += qml/harbour-neliapila.qml \
-    qml/cover/CoverPage.qml \
-    rpm/harbour-neliapila.changes.in \
-    rpm/harbour-neliapila.spec \
-    rpm/harbour-neliapila.yaml \
-    translations/*.ts \
-    harbour-neliapila.desktop \
-    qml/pages/PostsPage.qml \
-    qml/pages/SettingsPage.qml \
-    qml/pages/AbstractPage.qml \
-    qml/pages/AboutPage.qml \
-    qml/items/ThreadPageFooter.qml \
-    qml/items/InfoBanner.qml \
-    qml/items/PostsPageFooter.qml \
-    qml/pages/ThreadsPage.qml \
-    qml/pages/SaveFilePage.qml \
-    qml/pages/ImageViewPage.qml \
-    qml/items/OpenLinkDialog.qml \
-    qml/js/stripper.js \
-    qml/js/utils.js \
-    qml/pages/TextPage.qml \
-    qml/pages/NaviPage.qml \
-    qml/items/PageDialog.qml \
-    qml/pages/TextPage.qml \
-    qml/items/PostItem.qml \
-    qml/items/VideoViewPage.qml 
-
-# to disable building translations every time, comment out the
-# following CONFIG line
-CONFIG += sailfishapp_i18n
-
-# German translation is enabled as an example. If you aren't
-# planning to localize your app, remember to comment out the
-# following TRANSLATIONS line. And also do not forget to
-# modify the localized app name in the the .desktop file.
-#TRANSLATIONS += translations/Neliapila-de.ts
-
-#HEADERS += \
-#    qmlutils.h
 
 DISTFILES += \
     py/lib/certifi-2018.8.24.dist-info/metadata.json \
@@ -346,4 +309,7 @@ DISTFILES += \
     py/utils.py \
     qml/pages/NewPost.qml \
     qml/pages/Captcha2Page.qml
+
+HEADERS += \
+    src/neliapilanam.h
 
