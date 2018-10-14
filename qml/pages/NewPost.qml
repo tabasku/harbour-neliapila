@@ -138,20 +138,22 @@ Page {
 
             Button {
                text: "Verification"
+               color: 'red'
                onClicked: pageStack.push(captcha2Page)
-
+               anchors.horizontalCenter: parent.horizontalCenter
             }
 
             ValueButton {
-                //anchors.centerIn: parent
                 label: "File"
                 value: selectedFile ? selectedFile : "None"
                 onClicked: pageStack.push(filePickerPage)
+                anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Image {
                 id: selectedImage
                 sourceSize.height: Theme.itemSizeHuge
+                asynchronous: true
             }
 
         }
@@ -175,18 +177,14 @@ Page {
 
             SilicaWebView {
                 id: webView
-                opacity: 1
+                //opacity: 1
+                anchors.fill: parent
+                opacity: loading ? 0.5 : 1
 
                 header: PageHeader {
                      title: "Verification"
                 }
 
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
-                }
                 //url: "captcha2.html"
                 url: "https://httpbin.org/headers"
             }
