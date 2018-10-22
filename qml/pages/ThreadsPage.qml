@@ -84,6 +84,18 @@ AbstractPage {
 
             MenuItem {
                 id:newThread
+                text: qsTr("Captchatest")
+                enabled: boardId ? true: false
+
+
+                onClicked: {
+                    //pageStack.push("NewPost.qml");
+                    pageStack.push("Captcha2Page.qml");
+                }
+            }
+
+            MenuItem {
+                id:newThread2
                 text: qsTr("Start a New Thread")
                 enabled: boardId ? true: false
 
@@ -296,6 +308,14 @@ AbstractPage {
 
             setHandler('posts_status', function(result) {
                 //To silence onReceived from pinned
+            });
+
+            setHandler('set_challenge', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('set_response', function(result) {
+                //To silence onReceived from boards
             });
 
             setHandler('pinned_board', function(result) {

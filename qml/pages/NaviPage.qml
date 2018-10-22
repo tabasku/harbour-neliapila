@@ -369,6 +369,14 @@ AbstractPage {
                 //To silence onReceived from posts
             });
 
+            setHandler('set_challenge', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('set_response', function(result) {
+                //To silence onReceived from boards
+            });
+
             setHandler('boards', function(result) {
                 if(boardHolder.enabled){
                     boardHolder.enabled = false

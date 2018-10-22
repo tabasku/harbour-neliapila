@@ -4,10 +4,15 @@ import Sailfish.Pickers 1.0
 import io.thp.pyotherside 1.4
 
 
+
+
+
 Page {
     id: page
 
     property string selectedFile
+
+
 
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
@@ -175,19 +180,67 @@ Page {
         Page {
             id: page
 
+            function parsing() {
+                var http = new XMLHttpRequest();
+                var json , parse , text ;
+
+                http.onreadystatechange = function(){
+                    if(http.readyState == 4 && http.status == 200)
+                    {
+                        //json = http.responseText;
+
+                        //parse = JSON.parse(json);
+
+                        //text = parse.parse.text["*"];
+                        text = http.responseText;
+                        console.log(text);
+                        webView.loadHtml(text);  // <-- LOOK HERE
+                        return (text);
+                    }
+                };
+                //http.open('GET','https://www.google.com/recaptcha/api/fallback?k=6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc');
+                http.open('GET','captcha2.html');
+                http.send();
+            }
+
             SilicaWebView {
                 id: webView
                 //opacity: 1
                 anchors.fill: parent
                 opacity: loading ? 0.5 : 1
 
+                experimental.userAgent: "Mozilla/5.0 (Maemo; Linux; Jolla; Sailfish; Mobile) AppleWebKit/534.13 (KHTML, like Gecko) NokiaBrowser/8.5.0 Mobile Safari/534.13"
+
+
                 header: PageHeader {
                      title: "Verification"
                 }
 
                 //url: "captcha2.html"
-                url: "https://httpbin.org/headers"
+                //url: "https://httpbin.org/headers"
+                //url: "https://www.google.com/recaptcha/api/fallback?k=6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc"
+                Component.onCompleted: parsing()
+
+
             }
+/*
+            Component.onCompleted: {
+
+                var resource = 'qrc:/captcha2.html';
+                console.log("STARTING");
+                var xhr = new XMLHttpRequest;
+                xhr.open('GET', resource);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        console.log("THIS IS NEVER HAPPENING?")
+                        var response = xhr.responseText;
+                        webView.loadHtml(response);
+                    }
+                };
+                console.log("SENDING");
+                xhr.send();
+            }*/
+
         }
     }
 

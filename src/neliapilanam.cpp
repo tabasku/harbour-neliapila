@@ -20,7 +20,8 @@ QNetworkReply *NeliapilaNAM::createRequest(QNetworkAccessManager::Operation op, 
 {
 
     QNetworkRequest new_req(req);
-    new_req.setRawHeader("User-Agent", "myAppName");
+    new_req.setRawHeader("User-Agent",
+    "Mozilla/5.0 (Maemo; Linux; Jolla; Sailfish; Mobile) AppleWebKit/534.13 (KHTML, like Gecko) NokiaBrowser/8.5.0 Mobile Safari/534.13");
     new_req.setRawHeader("Referer", "https://boards.4chan.org/");
     qDebug() << "NeliapilaNAM used! ";
 
