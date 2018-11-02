@@ -290,8 +290,9 @@ BackgroundItem {
                             height: 32
                             width: 32
                             anchors{
-                                left :parent.left
+                                //left :parent.left
                                 bottom: parent.bottom
+                                right: parent.right
                             }
                             source: "image://theme/icon-lock-more"
                             visible: false

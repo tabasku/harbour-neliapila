@@ -35,15 +35,41 @@ AbstractPage {
         infoBanner.alert("Page "+pageNo);
     }
 
+    Drawer {
+        id: drawer
+
+        anchors.fill: parent
+        dock: threadPage.isPortrait ? Dock.Top : Dock.Left
+        //height: screen.height
+
+        background: PostEditor {}
+
     SilicaListView {
         id: listView
         model: currentModel
-        anchors.fill: parent
-        focus: true
+        //anchors.fill: parent
+        anchors {
+            fill: parent
+        }
+        //focus: true
         VerticalScrollDecorator {}
+
+        //height:  drawer.open ? parent.height/2 : parent.height
+
+
+        MouseArea {
+            enabled: drawer.open
+            anchors.fill: parent
+            onClicked: {
+                drawer.open = false
+                threadPage.forwardNavigation = true
+            }
+        }
 
         PullDownMenu {
             id: mainPullDownMenu
+            enabled: drawer.open ? false : true
+            visible: drawer.open ? false : true
 
             busy : busy
 
@@ -53,14 +79,14 @@ AbstractPage {
 //                    pageStack.push("SettingsPage.qml");
 //                }
 //            }
-
+/*
             MenuItem {
                 text: qsTr("About")
                 onClicked: {
                     pageStack.push("AboutPage.qml");
                 }
             }
-
+*/
             MenuItem {
                 id: showPinnedMenu
                 text: qsTr("Pinned posts");
@@ -84,13 +110,17 @@ AbstractPage {
 
             MenuItem {
                 id:newThread
-                text: qsTr("Captchatest")
+                text: qsTr("New Thread")
                 enabled: boardId ? true: false
 
 
                 onClicked: {
                     //pageStack.push("NewPost.qml");
-                    pageStack.push("Captcha2Page.qml");
+                    //pageStack.push("Captcha2Page.qml");
+                    drawer.open = true
+                    threadPage.forwardNavigation = false
+
+
                 }
             }
 
@@ -101,7 +131,11 @@ AbstractPage {
 
 
                 onClicked: {
-                    pageStack.push("NewPost.qml");
+                    pageStack.push("NewPost.qml",
+                                   {
+                                       "boardId" : boardId
+                                   })
+
                 }
             }
 
@@ -232,6 +266,8 @@ AbstractPage {
         }
     }
 
+    }
+
     Component.onCompleted: {
 
         if(boardId){
@@ -315,6 +351,10 @@ AbstractPage {
             });
 
             setHandler('set_response', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('failed_challenge', function(result) {
                 //To silence onReceived from boards
             });
 
@@ -467,7 +507,7 @@ AbstractPage {
 
 
         }
-
+/*
         onError: {
             // when an exception is raised, this error handler will be called
             console.log('threads python error: ' + traceback);
@@ -480,7 +520,7 @@ AbstractPage {
             // asychronous messages from Python arrive here
             // in Python, this can be accomplished via pyotherside.send()
             console.log('threads got message from python: ' + data);
-        }
+        }*/
     }
 
 }

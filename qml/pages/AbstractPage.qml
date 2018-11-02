@@ -47,6 +47,22 @@ Page {
         size: BusyIndicatorSize.Large;
         running: busy;
     }
+/*
+    IconButton {
+        id: play
+        icon.source: "image://theme/icon-l-play"
+        onClicked: iconButtons.playing = true
+        enabled: !iconButtons.playing
+        anchors {
+            left: parent.right
+            bottom: parent.bottom
+            leftMargin: Theme.paddingMedium
+            bottomMargin: Theme.paddingMedium
+
+        }
+        z: -1
+
+    }*/
 
     function setBusy(state) {
         busy = state;

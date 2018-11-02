@@ -34,20 +34,30 @@ captcha2_response = None
 def get_challenge_text(soup):            
     try:
         captcha2_challenge_text = soup.find("div", {'class': 'rc-imageselect-desc-no-canonical'}).text
+        return captcha2_challenge_text
     except:
         captcha2_challenge_text = soup.find("div", {'class': 'rc-imageselect-desc'}).text
 
-def get_challenge_id(soup):          
-    captcha2_challenge_id = soup.find("div", {'class': 'fbc-imageselect-challenge'}).find('input')['value']
+def get_challenge_id(soup):    
+    try:      
+        captcha2_challenge_id = soup.find("div", {'class': 'fbc-imageselect-challenge'}).find('input')['value']
+        return captcha2_challenge_id
+    except Exception as err:
+        print("Error: {} ".format(err))
 
 def get_challenge_image(captcha2_challenge_id):
-    # Get captcha image
-    headers = {'Referer': captcha2_url, 'User-Agent': user_agent}
-    r = requests.get(captcha2_payload_url + '?c=' + captcha2_challenge_id + '&k=' + sitekey, headers=headers)
-    #captcha2_image = r.content
 
-    # encode imagedata so it can be loaded from QML
-    captcha2_image = ("data:" + r.headers['Content-Type'] + ";" + "base64," + str(base64.b64encode(r.content).decode("utf-8")))
+    try:
+        # Get captcha image
+        headers = {'Referer': captcha2_url, 'User-Agent': user_agent}
+        r = requests.get(captcha2_payload_url + '?c=' + captcha2_challenge_id + '&k=' + sitekey, headers=headers)
+        #captcha2_image = r.content
+
+        # encode imagedata so it can be loaded from QML
+        captcha2_image = ("data:" + r.headers['Content-Type'] + ";" + "base64," + str(base64.b64encode(r.content).decode("utf-8")))
+        return captcha2_image
+    except Exception as err:
+        print("Error: {} ".format(err))
 
 def get_challenge():
     try:
@@ -107,25 +117,27 @@ def get_response(id,value):
         data={'c':captcha2_challenge_id, 'response':captcha2_solution}
         r = requests.post(captcha2_url, headers=headers, data=data)
         html_post = r.content
-        soup = BeautifulSoup(html_post, 'html.parser')
 
         pyotherside.send('debug', [html_post])
-        
-        captcha2_response = soup.find("div", {'class': 'fbc-verification-token'}).text
+        soup = BeautifulSoup(html_post, 'html.parser')
 
-        pyotherside.send('set_response', [captcha2_response])
-
-
+        captcha2_response_soup = soup.find("div", {'class': 'fbc-verification-token'})
+        if captcha2_response_soup is not None:
+            print('I find')
+            #captcha2_response = soup.find("div", {'class': 'fbc-verification-token'}).text
+            captcha2_response = captcha2_response_soup.text
+            pyotherside.send('set_response', [captcha2_response])
+        else:
+            print('None found')
+            pyotherside.send('failed_challenge','Failed, trying setting new captcha')
+            # Try again
+            captcha2_challenge_text = get_challenge_text(soup)
+            captcha2_challenge_id = get_challenge_id(soup)
+            captcha2_image = get_challenge_image(captcha2_challenge_id)
+            pyotherside.send('set_challenge', [captcha2_challenge_id,captcha2_challenge_text,captcha2_image])
 
     except AttributeError as e: 
         print(e)
-        pyotherside.send('failed_challenge','Failed, trying setting new captcha %'.format(e))
-        # Try again
-        captcha2_challenge_text = get_challenge_text(soup)
-        captcha2_challenge_id = get_challenge_id(soup)
-        captcha2_image = get_challenge_image(captcha2_challenge_id)
-        pyotherside.send('set_challenge', [captcha2_challenge_id,captcha2_challenge_text,captcha2_image])
-            
 
     except Exception as e: print(e)
     

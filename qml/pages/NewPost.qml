@@ -2,15 +2,26 @@ import QtQuick 2.2
 import Sailfish.Silica 1.0
 import Sailfish.Pickers 1.0
 import io.thp.pyotherside 1.4
-
-
-
-
+import Nemo.Thumbnailer 1.0
+import "../items/"
 
 Page {
-    id: page
+    id: newPostPage
 
+    property string boardId: boardId
+    property int replyTo: 0
     property string selectedFile
+
+    property string nickname: nameText.text
+    property string options: ""
+    property string subject: subjectText.text
+    property string comment: commentText.text
+    //property string file_path: selectedFile ? selectedFile : ""
+    property variant captcha_token
+
+
+    //(nickname="", comment="", subject="", file_attach="", captcha_response="")
+
 
 
 
@@ -31,14 +42,16 @@ Page {
                 id:newThread
                 text: qsTr("Post")
                 //enabled: boardId ? true: false
-                enabled: true
+                enabled: true// comment.length ? true : false
+
 
 
                 onClicked: {
-                    pageStack.push("CaptchaVerify.qml");
+                    //pageStack.push("Captcha2Page.qml");
+                    py.post()
                 }
             }
-
+/*
             MenuItem {
                 id:menuRefresh
                 text: qsTr("Save draft")
@@ -49,8 +62,9 @@ Page {
                     infoBanner.alert("Refreshing...")
                 }
             }
+*/
             Label{
-                text: typeof boardTitle === 'undefined' ?  " PERKEL" : boardTitle
+                text: typeof boardId === 'undefined' ?  " PERKEL" : "New post to /"+boardId+"/"
                 //wrapMode: Text.WordWrap
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeExtraSmall
@@ -67,7 +81,7 @@ Page {
             id: column
 
             width: parent.width
-            height: contentText.contentHeight
+            height: parent.contentHeight
             spacing: Theme.paddingLarge
             PageHeader {
                 title: "New Post"
@@ -87,8 +101,10 @@ Page {
                 placeholderText: "Anonymous"
                 wrapMode: TextEdit.Wrap
                 label: 'Name'
+                text: nickname
             }
 
+            /*
             TextArea{
                 id: optionsText
                 width: parent.width
@@ -104,10 +120,12 @@ Page {
                 wrapMode: TextEdit.Wrap
                 label: 'Options'
                 placeholderText: 'Options'
+                text: options
             }
+            */
 
             TextArea{
-                id: subjectTest
+                id: subjectText
                 width: parent.width
                 //wrapMode: Text.WordWrap
                 font.family: Theme.fontFamily
@@ -121,9 +139,11 @@ Page {
                 wrapMode: TextEdit.Wrap
                 label: 'Subject'
                 placeholderText: 'Subject'
+                text: subject
             }
+
             TextArea{
-                id: contentText
+                id: commentText
                 width: parent.width
                 //wrapMode: Text.WordWrap
                 font.family: Theme.fontFamily
@@ -138,15 +158,20 @@ Page {
                 color: text ? Theme.primaryColor : 'red'
                 label: 'Comment'
                 placeholderText: 'Comment'
-
+                text: comment
             }
+
 
             Button {
+               id: verificationButton
                text: "Verification"
-               color: 'red'
-               onClicked: pageStack.push(captcha2Page)
+               color: captcha_token ? Theme.primaryColor : 'red'
+               //onClicked: pageStack.push("Captcha2Page.qml")
+               onClicked:  pageStack.push("Captcha2Page.qml")
                anchors.horizontalCenter: parent.horizontalCenter
             }
+
+
 
             ValueButton {
                 label: "File"
@@ -155,9 +180,23 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
+            /*
             Image {
                 id: selectedImage
+                height: 200
+                width: 300
                 sourceSize.height: Theme.itemSizeHuge
+                asynchronous: true
+            }
+            */
+
+            Image {
+                id: selectedImageThumb
+                source: "image://nemoThumbnail/" + selectedFile
+                width: 100
+                height: 100
+                sourceSize.width: width
+                sourceSize.height: height
                 asynchronous: true
             }
 
@@ -169,78 +208,10 @@ Page {
         FilePickerPage {
             nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
             onSelectedContentPropertiesChanged: {
-                page.selectedFile = selectedContentProperties.filePath
-                page.selectedImage.source = selectedContentProperties.filePath
+                newPostPage.selectedFile = selectedContentProperties.filePath
+                newPostPage.selectedImageThumb.source = selectedContentProperties.filePath
+                selectedImageThumb.source = selectedContentProperties.filePath
             }
-        }
-    }
-
-    Component {
-        id: captcha2Page
-        Page {
-            id: page
-
-            function parsing() {
-                var http = new XMLHttpRequest();
-                var json , parse , text ;
-
-                http.onreadystatechange = function(){
-                    if(http.readyState == 4 && http.status == 200)
-                    {
-                        //json = http.responseText;
-
-                        //parse = JSON.parse(json);
-
-                        //text = parse.parse.text["*"];
-                        text = http.responseText;
-                        console.log(text);
-                        webView.loadHtml(text);  // <-- LOOK HERE
-                        return (text);
-                    }
-                };
-                //http.open('GET','https://www.google.com/recaptcha/api/fallback?k=6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc');
-                http.open('GET','captcha2.html');
-                http.send();
-            }
-
-            SilicaWebView {
-                id: webView
-                //opacity: 1
-                anchors.fill: parent
-                opacity: loading ? 0.5 : 1
-
-                experimental.userAgent: "Mozilla/5.0 (Maemo; Linux; Jolla; Sailfish; Mobile) AppleWebKit/534.13 (KHTML, like Gecko) NokiaBrowser/8.5.0 Mobile Safari/534.13"
-
-
-                header: PageHeader {
-                     title: "Verification"
-                }
-
-                //url: "captcha2.html"
-                //url: "https://httpbin.org/headers"
-                //url: "https://www.google.com/recaptcha/api/fallback?k=6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc"
-                Component.onCompleted: parsing()
-
-
-            }
-/*
-            Component.onCompleted: {
-
-                var resource = 'qrc:/captcha2.html';
-                console.log("STARTING");
-                var xhr = new XMLHttpRequest;
-                xhr.open('GET', resource);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        console.log("THIS IS NEVER HAPPENING?")
-                        var response = xhr.responseText;
-                        webView.loadHtml(response);
-                    }
-                };
-                console.log("SENDING");
-                xhr.send();
-            }*/
-
         }
     }
 
@@ -253,8 +224,57 @@ Page {
             //var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
             addImportPath(pythonpath);
             console.log(pythonpath);
-            importModule('savefile', function() {});
+            importModule('posting', function() {});
+
+             setHandler('post_successfull', function(result) {
+                 console.log("SUCCESS : "+result);
+                 infoBanner.alert("SUCCESS")
+
+             });
+
+            setHandler('post_failed', function(result) {
+                console.log("FAILED : "+result);
+                infoBanner.alert("Failed to send")
+
+            });
+
+            setHandler('set_response', function(result) {
+                if(result.length === 1){
+                    console.log("set_response fired"+result);
+                    newPostPage.captcha_token = result[0]
+                    verificationButton.enabled = false
+                    verificationButton.color = "green"
+                    infoBanner.alert("Verified")
+
+
+                }
+                else {
+                    infoBanner.alert("Something went wrong, try reverify")
+                }
+
+            });
+
         }
+
+
+
+        function post(){
+            if(!comment.length){infoBanner.alert("Cannot post without comment");return}
+            console.log("posting with captchatoken "+captcha_token)
+            console.log("posting with filepath "+selectedFile)
+            console.log("posting with subject "+subject)
+
+            call('posting.post', [
+                     nickname,
+                     comment,
+                     subject,
+                     selectedFile,
+                     captcha_token
+                 ], function() {});
+            //(nickname="", comment="", subject="", file_attach="", captcha_response="")
+
+        }
+
         onError: {
             // when an exception is raised, this error handler will be called
             console.log('python error: ' + traceback);

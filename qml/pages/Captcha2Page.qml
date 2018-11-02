@@ -1,7 +1,8 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
-import Sailfish.Pickers 1.0
+//import Sailfish.Pickers 1.0
 import io.thp.pyotherside 1.4
+import "../items/"
 
 
 AbstractPage {
@@ -9,20 +10,27 @@ AbstractPage {
 
     property string title
     property string captchaId
-    property string captchaText
+    property string captchaText: "Fetching verification challenge..."
     property string captchaImageData
     property variant captchaInput : []
+    busy : true
     allowedOrientations : Orientation.All
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
+        contentHeight: column.height + Theme.paddingLarge
+
+        // Why is this necessary?
+        contentWidth: parent.width
+
 
         // Tell SilicaFlickable the height of its content.
-        contentHeight: column.height
+        //contentHeight: column.height
 
         // Place our content in a Column.  The PageHeader is always placed at the top
         // of the page, followed by our content.
+
 
         Column {
             id: column
@@ -34,41 +42,36 @@ AbstractPage {
                 title: "Verification"
             }
 
-            Column{
-
-                height: Theme.paddingLarge * 2
-                width: parent.width
+            Row {
+                id: captchaTextRow
+                spacing: Theme.paddingLarge
+                anchors.horizontalCenter: parent.horizontalCenter
 
                 Label {
                     id: captchaTextObject
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontSizeMedium
-                    horizontalAlignment: Text.AlignHCenter
                     color: Theme.primaryColor
                     text: captchaText
-                    //anchors.horizontalCenter: captchaImageColumn.horizontalCenter
                 }
             }
-            Column{
-                id: captchaImageColumn
+
+            Row {
+                id: captchaImageRow
+                spacing: Theme.paddingLarge
+                anchors.horizontalCenter: parent.horizontalCenter
+
                 Image {
                     id: captchaImage
-                    opacity: 1
-                    //anchors{
-                        //right: parent.right
-                        //bottom: parent.bottom
-                    //    horizontalCenter:  parent.horizontalCenter
-                    //}
+                    opacity: captchaPage.busy ? 1 : 0
                     height:column.width
                     width: column.width
 
                     fillMode: Image.PreserveAspectFit
                     visible: true
                     source: captchaImageData
-                    //source:"feels.jpg";
-                    //source: "https://www.google.com/recaptcha/api2/payload?c=03AMGVjXgI8qfCH54yx73T6cm4OiABf7vLFvO0rWQFFS_hTJF3hI-kjQMn2wdg6k_-fMNcrh3_-lvN5L1MBlCT0ObaQSfDJdN8E6Acx8nuYbgXP-H_XPHBgl8HlVZZF0hVY-bdtjsRNUO4O5PxupbcevC1Ybh9p6HF-iL73ZJTQESfZA4CoD173OHyyYwkvBgDsap9hiNkx9pYwGBLYbKQV6pYXeHuoQ7rJuNRAwtShXn448bBC7MWGjH6Mad55IQsFb0ESojIW6xqPUWH_txSw8i6e3smABijJXd1lUh73byWEYGyc0IBgfekBQ-yet5wLL57CtdnC9HnGzq3Z5q_fKc-TIq4L9K7wT2wTX1aYjaIBPcICLlEa9A&k=6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc";
 
-                    //asynchronous : true
+                    // Draw grid over captcha challenge
                     Grid {
                       id: grid
                       anchors.fill: parent
@@ -80,6 +83,7 @@ AbstractPage {
                       rows: 3
 
                       Repeater {
+                         id: repeater
                          // 5 * 5 elements here
                          model: grid.columns * grid.rows;
                          // Component to use to represent each image you want
@@ -87,22 +91,11 @@ AbstractPage {
 
                              color: Theme.highlightColor
                              opacity: selected ? 0.5 : 0
-                             //anchors.fill: parent
+                             FadeAnimation on opacity {}
                              width: parent.width/3
                              height: parent.height/3
 
                              property bool selected: false
-
-                             Label {
-                                 text: index
-
-                                 font.family: Theme.fontFamily
-                                 font.pixelSize: Theme.fontSizeLarge
-                                 anchors {
-                                             centerIn: parent
-                                         }
-                             }
-
 
                              MouseArea
                              {
@@ -110,26 +103,25 @@ AbstractPage {
                                  width: parent.width
                                  height: parent.height
                                  onClicked: {
-                                    console.log('u toched: ' + index);
+
                                      if(!parent.selected){
                                          parent.selected = true
                                          captchaInput.push(index);
-                                         //captchaInput[index] = 1
-
                                      }
                                      else{
                                          parent.selected = false
                                          captchaInput.pop(index);
-                                         //captchaInput[index] = 0
                                      }
-                                    console.log(captchaInput);
+
+                                     if(captchaInput.length){
+                                         captchaSubmit.enabled = true
+                                     }
+                                     else{
+                                        captchaSubmit.enabled = false
+                                     }
 
                                  }
                              }
-
-                             //Component.onCompleted: {
-                              //  captchaInput[index] = 0
-                             //}
                            }
 
 
@@ -141,12 +133,16 @@ AbstractPage {
 
             }
 
-            Column{
+            Row {
+                id: submitRow
+                spacing: Theme.paddingLarge*2
+                anchors.horizontalCenter: parent.horizontalCenter
+
                 Button{
 
                     id: captchaSubmit
-                    //anchors.horizontalCenter: captchaImageColumn.horizontalCenter
                     text: "Submit"
+                    enabled: captchaInput.length
                     onClicked: {
                         console.log("Submit");
                         py.submitCaptcha(captchaInput)
@@ -157,91 +153,6 @@ AbstractPage {
 
         }
     }
-
-    /*
-    SilicaGridView {
-        id:list
-        width: parent.width;
-        height: parent.height
-
-        cellWidth: width / 3
-        cellHeight: width / 2
-
-        model: ListModel {
-           id: myJSModel
-
-        }
-        header: PageHeader {
-            id: header
-            title: "Verify"
-        }
-        delegate: Item {
-            width: list.cellWidth
-            height: list.cellHeight
-
-
-
-            Label {
-                text: value
-                font.pixelSize: Theme.fontSizeMedium
-                anchors {
-                            left: parent.left
-                            right: parent.right
-                            margins: Theme.paddingLarge
-
-                        }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    var value = list.model.get(index).value
-                    console.log(value);
-                }
-            }
-        }
-
-        Component.onCompleted: {
-            for(var i=0;i<=100;i++) {
-                var element = { "value" : i }
-                myJSModel.append(element)
-            }
-        }
-    }*/
-    /*
-    SilicaWebView {
-        id: webView
-        anchors.fill: parent
-        opacity: loading ? 0.5 : 1
-
-        header: PageHeader {
-             title: "Verification"
-        }
-
-        url: "http://sailfishos.org"
-
-        Component.onCompleted: {
-
-            var resource = 'https://www.google.com/recaptcha/api/fallback?k=6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc';
-            var xhr = new XMLHttpRequest;
-
-            xhr.open('GET', resource);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    console.log("GOT RESPONSE");
-
-                    var response = xhr.responseText;
-
-                    console.log(
-                                console.response
-                                );
-                    webView.loadHtml(response);
-                }
-            };
-            console.log("SENDING");
-            xhr.send();
-        }
-    }*/
 
     Python {
         id: py
@@ -257,16 +168,40 @@ AbstractPage {
              });
 
             setHandler('set_challenge', function(result) {
-                console.log("Handler set_challenge : "+result);
+                //console.log("Handler set_challenge : "+result);
+//                infoBanner.alert("Verification done");
+
                 captchaId = result[0];
                 captchaText = result[1];
                 captchaImageData = result[2];
+                captcha.busy = false
+                //captchaSubmit.enabled = true
+
             });
 
+            setHandler('failed_challenge', function(result) {
+
+                //console.log("set_response fired"+result);
+                infoBanner.alert("Verification failed, try again");
+                captchaInput.forEach(function(element) {
+                  //console.log(element);
+                  repeater.itemAt(element).selected = false
+                });
+                captchaSubmit.enabled = false
+                captchaInput = []
+                captcha.busy = false
+                //captchaText = result[1];
+                //captchaImageData = result[2];
+            });
 
             setHandler('set_response', function(result) {
 
-                console.log("Handler fired"+result);
+                //console.log("set_response fired"+result);
+                //infoBanner.alert("Verification done");
+
+                //newPostPage.captcha_token = result
+                pageStack.navigateBack();
+
                 //captchaText = result[1];
                 //captchaImageData = result[2];
             });
@@ -275,17 +210,13 @@ AbstractPage {
 
 
         function submitCaptcha(value){
-
-
+            captchaSubmit.enabled = false
             var string = value.toString().replace(/\,/g, "");
-
-            console.log("captchaId "+captchaId);
-            console.log(string);
             call('captcha.get_response', [captchaId,string], function() {});
 
         }
 
-
+/*
         onError: {
             // when an exception is raised, this error handler will be called
             console.log('python error: ' + traceback);
@@ -294,7 +225,7 @@ AbstractPage {
             // asychronous messages from Python arrive here
             // in Python, this can be accomplished via pyotherside.send()
             console.log('got message from python: ' + data);
-        }
+        }*/
     }
 }
 

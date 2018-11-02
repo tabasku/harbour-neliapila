@@ -32,3 +32,6 @@ INSTALLS += py
 HEADERS += \
     src/neliapilanam.h
 
+DISTFILES += \
+    qml/items/PostEditor.qml
+
