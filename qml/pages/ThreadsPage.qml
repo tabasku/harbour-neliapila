@@ -35,15 +35,41 @@ AbstractPage {
         infoBanner.alert("Page "+pageNo);
     }
 
+    Drawer {
+        id: drawer
+
+        anchors.fill: parent
+        dock: threadPage.isPortrait ? Dock.Top : Dock.Left
+        //height: screen.height
+
+        background: PostEditor {}
+
     SilicaListView {
         id: listView
         model: currentModel
-        anchors.fill: parent
-        focus: true
+        //anchors.fill: parent
+        anchors {
+            fill: parent
+        }
+        //focus: true
         VerticalScrollDecorator {}
+
+        //height:  drawer.open ? parent.height/2 : parent.height
+
+
+        MouseArea {
+            enabled: drawer.open
+            anchors.fill: parent
+            onClicked: {
+                drawer.open = false
+                threadPage.forwardNavigation = true
+            }
+        }
 
         PullDownMenu {
             id: mainPullDownMenu
+            enabled: drawer.open ? false : true
+            visible: drawer.open ? false : true
 
             busy : busy
 
@@ -53,14 +79,14 @@ AbstractPage {
 //                    pageStack.push("SettingsPage.qml");
 //                }
 //            }
-
+/*
             MenuItem {
                 text: qsTr("About")
                 onClicked: {
                     pageStack.push("AboutPage.qml");
                 }
             }
-
+*/
             MenuItem {
                 id: showPinnedMenu
                 text: qsTr("Pinned posts");
@@ -79,6 +105,36 @@ AbstractPage {
 
                 onClicked: {
                     showThreadTimer.start()
+                }
+            }
+
+            MenuItem {
+                id:newThread
+                text: qsTr("New Thread")
+                enabled: boardId ? true: false
+
+
+                onClicked: {
+                    //pageStack.push("NewPost.qml");
+                    //pageStack.push("Captcha2Page.qml");
+                    drawer.open = true
+                    threadPage.forwardNavigation = false
+
+
+                }
+            }
+
+            MenuItem {
+                id:newThread2
+                text: qsTr("Start a New Thread")
+                enabled: boardId ? true: false
+
+
+                onClicked: {
+                    pageStack.push("NewPost.qml",
+                                   {
+                                       "boardId" : boardId
+                                   })
                 }
             }
 
@@ -209,6 +265,23 @@ AbstractPage {
         }
     }
 
+    DockedNewPost {
+            id: newPostPanel
+
+            width: parent.width
+            //height: screen.height*0.4
+
+            /*
+            PostEditorDocked {
+                id: newPostItem
+                anchors.centerIn: parent
+            }*/
+
+            dock: threadPage.isPortrait ? Dock.Bottom : Dock.Right
+        }
+
+    }
+
     Component.onCompleted: {
 
         if(boardId){
@@ -266,7 +339,8 @@ AbstractPage {
 
         Component.onCompleted: {
             // Add the Python library directory to the import path
-            var pythonpath = Qt.resolvedUrl('../py/').substr('file://'.length);
+            var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
+
             //var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
             addImportPath(pythonpath);
             //console.log("Threads: "+pythonpath);
@@ -285,6 +359,18 @@ AbstractPage {
 
             setHandler('posts_status', function(result) {
                 //To silence onReceived from pinned
+            });
+
+            setHandler('set_challenge', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('set_response', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('failed_challenge', function(result) {
+                //To silence onReceived from boards
             });
 
             setHandler('pinned_board', function(result) {
@@ -436,7 +522,7 @@ AbstractPage {
 
 
         }
-
+/*
         onError: {
             // when an exception is raised, this error handler will be called
             console.log('threads python error: ' + traceback);
@@ -449,6 +535,35 @@ AbstractPage {
             // asychronous messages from Python arrive here
             // in Python, this can be accomplished via pyotherside.send()
             console.log('threads got message from python: ' + data);
+        }*/
+    }
+
+    IconButton {
+        anchors {
+            //right: (threadPage.isPortrait ? parent.right : parent.left)
+            //bottom: (threadPage.isPortrait ? infoPanel.top : parent.bottom)
+            right: parent.right
+            bottom: parent.bottom
+            margins: {
+                left: Theme.paddingLarge
+                bottom: Theme.paddingLarge
+            }
+        }
+
+        id: newPost
+        width: Theme.iconSizeLarge
+        height: width
+        visible: !isPortrait ? true : !newPostPanel.open
+        icon.source: newPostPanel.open
+                     ? "image://theme/icon-l-clear"
+                     : "image://theme/icon-l-add"
+        onClicked: {
+            newPostPanel.open = !newPostPanel.open
+
+
+            //newPostPanel.show()
+            //drawer.open = true
+            threadPage.forwardNavigation = !newPostPanel.open
         }
     }
 

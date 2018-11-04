@@ -169,6 +169,7 @@ AbstractPage {
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
                 asynchronous : true
+                opacity: busy ? 0.5 : 1
                 //visible:false
             }
         }

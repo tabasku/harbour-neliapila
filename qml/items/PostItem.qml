@@ -243,9 +243,10 @@ BackgroundItem {
 
                             switch(ext){
                             case ".webm":
-                                pageStack.push(Qt.resolvedUrl("VideoViewPage.qml"),
+                                pageStack.push(Qt.resolvedUrl("../pages/VideoViewPage.qml"),
                                                {
-                                                   "imgUrl": imgUrl
+                                                   "imgUrl": imgUrl,
+                                                   "filename": filename
                                                });
                                 break;
 
@@ -289,8 +290,9 @@ BackgroundItem {
                             height: 32
                             width: 32
                             anchors{
-                                left :parent.left
+                                //left :parent.left
                                 bottom: parent.bottom
+                                right: parent.right
                             }
                             source: "image://theme/icon-lock-more"
                             visible: false
@@ -433,7 +435,7 @@ BackgroundItem {
                 var modelToStrip = pP.returnModel()
 
             contextMenu = contextMenuComponent.createObject(listView, {postReplies: postReplies, thisPostNo: no, modelToStrip : modelToStrip,com: com})
-            contextMenu.show(delegate)
+            contextMenu.open(delegate)
             break;
 
             //        case "thread":
@@ -448,7 +450,7 @@ BackgroundItem {
 
         default:
             contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
-            contextMenu.show(delegate)
+            contextMenu.open(delegate)
         }
     }
 }

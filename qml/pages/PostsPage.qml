@@ -23,205 +23,215 @@ AbstractPage {
 
     title: "<b>/" + boardId + "/</b>"+postNo
 
-    SilicaListView {
-        id: listView
-        model: postsModel
+    Drawer {
+        id: drawer
+
         anchors.fill: parent
-        focus: true
-        VerticalScrollDecorator {}
+        dock: postsPage.isPortrait ? Dock.Top : Dock.Left
+        //height: screen.height
 
-        PullDownMenu {
-            id: postsPullDownMenu
-            busy : busy
+        background: PostEditor {}
 
-            MenuItem {
-                text: qsTr("Open thread in browser")
-                onClicked: {
-                    var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo
-                    infoBanner.alert("Opening thread in web browser");
-                    Qt.openUrlExternally(url)
-                }
-            }
+        SilicaListView {
+            id: listView
+            model: postsModel
+            anchors.fill: parent
+            focus: true
+            VerticalScrollDecorator {}
 
-            MenuItem {
-                text: "Add pin"
-                visible: !pinned && pageStack.depth === 2
-                onClicked: {
-                    //console.log("Add pin for post "+postNo +" on board "+boardId)
-                    pyp.pin(postNo,boardId)
-                }
-            }
-            MenuItem {
-                text: "Remove pin"
-                visible: pinned && pageStack.depth === 2
-                onClicked: {
-                    //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
-                    pyp.unpin(postNo,boardId)
-                }
-            }
-            MenuItem {
-                id: backToPost
-                text: qsTr("Back to "+postNo )
-                visible: false
-                onClicked: {
-                    getBackToPost()
-                }
-            }
-            MenuItem {
-                text: qsTr("Reload")
-                onClicked: {
-                    //postsModel.clear()
-                    //postWorker.getData()
-                    pyp.getPosts(boardId,postNo)
-                    infoBanner.alert("Refreshing...")
-                }
-            }
-        }
-
-        Button{
-            id: moreInfoButton
-            visible: false
-            text: "More info"
-            anchors.centerIn: parent
-            anchors.verticalCenterOffset: parent.height*0.1
-            property string fullError
-            property string errorTitle
-            onClicked: {
-                pageStack.push(Qt.resolvedUrl("TextPage.qml"),
-                               {
-                                   "title" : errorTitle,
-                                   "content": fullError
-                               });
-            }
-        }
-
-        ViewPlaceholder {
-            id: postViewPlaceholder
-            text: "Something crashed..."
-            enabled: false
-        }
-
-        header: PageHeader {
-            title: {
-                if(postsToShow){
-                    qsTr("<b>/" + boardId + "/</b>"+postNo+"/replies")
-                }
-                else{
-                    qsTr("<b>/" + boardId + "/</b>"+postNo)
-                }
-            }
-        }
-
-        ListModel {
-            id: postsModel
-        }
-
-        Component {
-            id: contextMenuComponent
-
-            ContextMenu {
-                property string postReplies
-                //property var postReplies : []
-                property string com
-                property var quote
-                property var thisPostNo
-                property var modelToStrip
-                visible: mode === "thread" ? false : true
+            PullDownMenu {
+                id: postsPullDownMenu
+                busy : busy
 
                 MenuItem {
-                    visible: postReplies ? true : false
-                    text: qsTr("View replies")
-                    onClicked:{
-                        postsToShow = postReplies
-                        if(modelToStrip){
-                            //console.log("WE HAVE TO HO DEEPPER")
-                            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
-                                               postNo: thisPostNo,
-                                               boardId: boardId,
-                                               modelToStrip : modelToStrip,
-                                               postsToShow : postsToShow
-                                           } )
-                        }
-                        else{
-                            console.log("no modelstrip")
-                            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
-                                               postNo: thisPostNo,
-                                               boardId: boardId,
-                                               modelToStrip : postsModel,
-                                               postsToShow : postsToShow
-                                           } )
-                        }
-                    }
-                }
-                /*
-                MenuItem {
-                    text: qsTr("Reply")
+                    text: qsTr("Open thread in browser")
                     onClicked: {
-                        var replyform = pageStack.nextPage()
-                        //pageStack.previousPage()
-                        replyform.comment = comment + comm
-                        navigateForward()
-                    }
-                }*/
-                MenuItem {
-                    text: "Show text"
-
-                    visible: com !== "" ? true : false
-
-                    onClicked: {
-                        com = com.replace(/<(?:.|\n)*?>/gm, '\n');
-                        pageStack.push(Qt.resolvedUrl("TextPage.qml"),
-                                       {
-                                           "title" : postNo,
-                                           "content": com
-                                       });
-                    }
-                }
-                MenuItem {
-                    text: qsTr("Open post in browser")
-                    onClicked: {
-
-                        var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo+"#p"+thisPostNo
-                        infoBanner.alert("Opening post in web browser");
+                        var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo
+                        infoBanner.alert("Opening thread in web browser");
                         Qt.openUrlExternally(url)
                     }
                 }
 
+                MenuItem {
+                    text: "Add pin"
+                    visible: !pinned && pageStack.depth === 2
+                    onClicked: {
+                        //console.log("Add pin for post "+postNo +" on board "+boardId)
+                        pyp.pin(postNo,boardId)
+                    }
+                }
+                MenuItem {
+                    text: "Remove pin"
+                    visible: pinned && pageStack.depth === 2
+                    onClicked: {
+                        //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
+                        pyp.unpin(postNo,boardId)
+                    }
+                }
+                MenuItem {
+                    id: backToPost
+                    text: qsTr("Back to "+postNo )
+                    visible: false
+                    onClicked: {
+                        getBackToPost()
+                    }
+                }
+                MenuItem {
+                    text: qsTr("Reload")
+                    onClicked: {
+                        //postsModel.clear()
+                        //postWorker.getData()
+                        pyp.getPosts(boardId,postNo)
+                        infoBanner.alert("Refreshing...")
+                    }
+                }
             }
-        }
 
-        WorkerScript {
-            id: stripper
-            source: "../js/stripper.js"
-            onMessage: {
-                busy = messageObject.busy
+            Button{
+                id: moreInfoButton
+                visible: false
+                text: "More info"
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: parent.height*0.1
+                property string fullError
+                property string errorTitle
+                onClicked: {
+                    pageStack.push(Qt.resolvedUrl("TextPage.qml"),
+                                   {
+                                       "title" : errorTitle,
+                                       "content": fullError
+                                   });
+                }
             }
-            function work(){
 
-                sendMessage({
-                                'postNo': postNo,
-                                'model': postsModel,
-                                'postsToShow': postsToShow,
-                                'modelToStrip': modelToStrip
-                            });
+            ViewPlaceholder {
+                id: postViewPlaceholder
+                text: "Something crashed..."
+                enabled: false
             }
-        }
 
-        delegate: PostItem{
-            id: delegate
-        }
+            header: PageHeader {
+                title: {
+                    if(postsToShow){
+                        qsTr("<b>/" + boardId + "/</b>"+postNo+"/replies")
+                    }
+                    else{
+                        qsTr("<b>/" + boardId + "/</b>"+postNo)
+                    }
+                }
+            }
 
-        add: Transition {
-            NumberAnimation { property: "opacity"; easing.type: Easing.InQuad; from: 0; to: 1.0; duration: 300 }
-        }
+            ListModel {
+                id: postsModel
+            }
 
-        populate: Transition {
-            NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
-        }
+            Component {
+                id: contextMenuComponent
 
-        footer:PostsPageFooter{
-        }
+                ContextMenu {
+                    property string postReplies
+                    //property var postReplies : []
+                    property string com
+                    property var quote
+                    property var thisPostNo
+                    property var modelToStrip
+                    visible: mode === "thread" ? false : true
 
+                    MenuItem {
+                        visible: postReplies ? true : false
+                        text: qsTr("View replies")
+                        onClicked:{
+                            postsToShow = postReplies
+                            if(modelToStrip){
+                                //console.log("WE HAVE TO HO DEEPPER")
+                                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
+                                                   postNo: thisPostNo,
+                                                   boardId: boardId,
+                                                   modelToStrip : modelToStrip,
+                                                   postsToShow : postsToShow
+                                               } )
+                            }
+                            else{
+                                console.log("no modelstrip")
+                                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
+                                                   postNo: thisPostNo,
+                                                   boardId: boardId,
+                                                   modelToStrip : postsModel,
+                                                   postsToShow : postsToShow
+                                               } )
+                            }
+                        }
+                    }
+                    /*
+                    MenuItem {
+                        text: qsTr("Reply")
+                        onClicked: {
+                            var replyform = pageStack.nextPage()
+                            //pageStack.previousPage()
+                            replyform.comment = comment + comm
+                            navigateForward()
+                        }
+                    }*/
+                    MenuItem {
+                        text: "Show text"
+
+                        visible: com !== "" ? true : false
+
+                        onClicked: {
+                            com = com.replace(/<(?:.|\n)*?>/gm, '\n');
+                            pageStack.push(Qt.resolvedUrl("TextPage.qml"),
+                                           {
+                                               "title" : postNo,
+                                               "content": com
+                                           });
+                        }
+                    }
+                    MenuItem {
+                        text: qsTr("Open post in browser")
+                        onClicked: {
+
+                            var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo+"#p"+thisPostNo
+                            infoBanner.alert("Opening post in web browser");
+                            Qt.openUrlExternally(url)
+                        }
+                    }
+
+                }
+            }
+
+            WorkerScript {
+                id: stripper
+                source: "../js/stripper.js"
+                onMessage: {
+                    busy = messageObject.busy
+                }
+                function work(){
+
+                    sendMessage({
+                                    'postNo': postNo,
+                                    'model': postsModel,
+                                    'postsToShow': postsToShow,
+                                    'modelToStrip': modelToStrip
+                                });
+                }
+            }
+
+            delegate: PostItem{
+                id: delegate
+            }
+
+            add: Transition {
+                NumberAnimation { property: "opacity"; easing.type: Easing.InQuad; from: 0; to: 1.0; duration: 300 }
+            }
+
+            populate: Transition {
+                NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
+            }
+
+            footer:PostsPageFooter{
+            }
+
+        }
     }
 
     Component.onCompleted: {
@@ -253,7 +263,7 @@ AbstractPage {
 
         Component.onCompleted: {
             // Add the Python library directory to the import path
-            var pythonpath = Qt.resolvedUrl('../py/').substr('file://'.length);
+            var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
             //var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
             addImportPath(pythonpath);
             //console.log("Threads: "+pythonpath);

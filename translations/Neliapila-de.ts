@@ -24,6 +24,20 @@
     </message>
 </context>
 <context>
+    <name>NewPost</name>
+    <message>
+        <source>Post</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PostEditor</name>
+    <message>
+        <source>Post</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PostsPage</name>
     <message>
         <source>Open thread in browser</source>
@@ -68,7 +82,30 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>About</source>
+        <source>New Thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start a New Thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>VideoViewPage</name>
+    <message>
+        <source>Open in browser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error loading video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Problem finding stream URL</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
