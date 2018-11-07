@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import pyotherside
@@ -9,6 +9,13 @@ import base64
 #import thread
 import time
 import warnings
+import sys
+import inspect
+
+sys.path.append('./lib')
+cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join(os.path.split(inspect.getfile( inspect.currentframe() ))[0],"lib")))
+if cmd_subfolder not in sys.path:
+    sys.path.insert(0, cmd_subfolder)
 
 import requests
 from bs4 import BeautifulSoup

@@ -16,9 +16,17 @@ CONFIG += sailfishapp
 
 SOURCES += src/harbour-neliapila.cpp
 
+DEPLOYMENT_PATH = /usr/share/$${TARGET}
+
+py.files = py
+py.path = $${DEPLOYMENT_PATH}
+
+INSTALLS += py
+
+
 # to disable building translations every time, comment out the
 # following CONFIG line
-CONFIG += sailfishapp_i18n
+#CONFIG += sailfishapp_i18n
 
 # German translation is enabled as an example. If you aren't
 # planning to localize your app, remember to comment out the
@@ -163,6 +171,24 @@ DISTFILES += \
     py/lib/urllib3/util/__pycache__/timeout.cpython-37.pyc \
     py/lib/urllib3/util/__pycache__/url.cpython-37.pyc \
     py/lib/urllib3/util/__pycache__/wait.cpython-37.pyc \
+    py/requests/__pycache__/__init__.cpython-37.pyc \
+    py/requests/__pycache__/__version__.cpython-37.pyc \
+    py/requests/__pycache__/_internal_utils.cpython-37.pyc \
+    py/requests/__pycache__/adapters.cpython-37.pyc \
+    py/requests/__pycache__/api.cpython-37.pyc \
+    py/requests/__pycache__/auth.cpython-37.pyc \
+    py/requests/__pycache__/certs.cpython-37.pyc \
+    py/requests/__pycache__/compat.cpython-37.pyc \
+    py/requests/__pycache__/cookies.cpython-37.pyc \
+    py/requests/__pycache__/exceptions.cpython-37.pyc \
+    py/requests/__pycache__/help.cpython-37.pyc \
+    py/requests/__pycache__/hooks.cpython-37.pyc \
+    py/requests/__pycache__/models.cpython-37.pyc \
+    py/requests/__pycache__/packages.cpython-37.pyc \
+    py/requests/__pycache__/sessions.cpython-37.pyc \
+    py/requests/__pycache__/status_codes.cpython-37.pyc \
+    py/requests/__pycache__/structures.cpython-37.pyc \
+    py/requests/__pycache__/utils.cpython-37.pyc \
     py/lib/certifi/cacert.pem \
     py/neliapila-captcha.jpg \
     py/lib/BASC_py4chan-0.6.4-py3.7.egg-info/dependency_links.txt \
@@ -346,6 +372,24 @@ DISTFILES += \
     py/lib/urllib3/poolmanager.py \
     py/lib/urllib3/request.py \
     py/lib/urllib3/response.py \
+    py/requests/__init__.py \
+    py/requests/__version__.py \
+    py/requests/_internal_utils.py \
+    py/requests/adapters.py \
+    py/requests/api.py \
+    py/requests/auth.py \
+    py/requests/certs.py \
+    py/requests/compat.py \
+    py/requests/cookies.py \
+    py/requests/exceptions.py \
+    py/requests/help.py \
+    py/requests/hooks.py \
+    py/requests/models.py \
+    py/requests/packages.py \
+    py/requests/sessions.py \
+    py/requests/status_codes.py \
+    py/requests/structures.py \
+    py/requests/utils.py \
     py/boards.py \
     py/captcha.py \
     py/getdata.py \
@@ -358,5 +402,3 @@ DISTFILES += \
     py/storage.py \
     py/threads.py \
     py/utils.py
-
-
