@@ -63,7 +63,7 @@ AbstractPage {
 
                 Image {
                     id: captchaImage
-                    opacity: captchaPage.busy ? 1 : 0
+                    opacity: captchaPage.busy ? 0 : 1
                     height:column.width
                     width: column.width
 
@@ -174,7 +174,7 @@ AbstractPage {
                 captchaId = result[0];
                 captchaText = result[1];
                 captchaImageData = result[2];
-                captcha.busy = false
+                captchaPage.busy = false
                 //captchaSubmit.enabled = true
 
             });
@@ -189,7 +189,7 @@ AbstractPage {
                 });
                 captchaSubmit.enabled = false
                 captchaInput = []
-                captcha.busy = false
+                captchaPage.busy = false
                 //captchaText = result[1];
                 //captchaImageData = result[2];
             });

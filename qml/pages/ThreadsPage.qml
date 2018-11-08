@@ -109,36 +109,6 @@ AbstractPage {
             }
 
             MenuItem {
-                id:newThread
-                text: qsTr("New Thread")
-                enabled: boardId ? true: false
-
-
-                onClicked: {
-                    //pageStack.push("NewPost.qml");
-                    //pageStack.push("Captcha2Page.qml");
-                    drawer.open = true
-                    threadPage.forwardNavigation = false
-
-
-                }
-            }
-
-            MenuItem {
-                id:newThread2
-                text: qsTr("Start a New Thread")
-                enabled: boardId ? true: false
-
-
-                onClicked: {
-                    pageStack.push("NewPost.qml",
-                                   {
-                                       "boardId" : boardId
-                                   })
-                }
-            }
-
-            MenuItem {
                 id:menuRefresh
                 text: qsTr("Refresh")
                 enabled: false
@@ -265,7 +235,7 @@ AbstractPage {
         }
     }
 
-    DockedNewPost {
+        DockedNewPost {
             id: newPostPanel
 
             width: parent.width
@@ -331,6 +301,36 @@ AbstractPage {
         else if (status === PageStatus.Active && pageStack.depth === 1 && mode === "pinned") {
             pageStack.pushAttached(Qt.resolvedUrl("NaviPage.qml"),{boardId: boardId} );
             pyt.getPinned()
+        }
+    }
+
+    IconButton {
+        anchors {
+            //right: (threadPage.isPortrait ? parent.right : parent.left)
+            //bottom: (threadPage.isPortrait ? infoPanel.top : parent.bottom)
+            right: parent.right
+            bottom: parent.bottom
+            margins: {
+                left: Theme.paddingLarge
+                bottom: Theme.paddingLarge
+            }
+        }
+
+        id: newPost
+        width: Theme.iconSizeLarge
+        height: width
+        visible: !isPortrait ? true : !newPostPanel.open
+        enabled: boardId ? true: false
+        icon.source: newPostPanel.open
+                     ? "image://theme/icon-l-clear"
+                     : "image://theme/icon-l-add"
+        onClicked: {
+            newPostPanel.open = !newPostPanel.open
+
+
+            //newPostPanel.show()
+            //drawer.open = true
+            threadPage.forwardNavigation = !newPostPanel.open
         }
     }
 
@@ -449,23 +449,26 @@ AbstractPage {
 
              setHandler('post_successfull', function(result) {
                  console.log("SUCCESS : "+result);
-                 infoBanner.alert("SUCCESS")
+                 newPostPanel.busy = true
+                 newPostPanel.open = false
+
+                 infoBanner.alert("Post sent")
 
              });
 
             setHandler('post_failed', function(result) {
                 console.log("FAILED : "+result);
-                infoBanner.alert("Failed to send")
+                infoBanner.alert("Failed to send");
+                newPostPanel.busy = false;
 
             });
 
             setHandler('set_response', function(result) {
                 if(result.length === 1){
                     console.log("set_response fired"+result);
-                    newPostPage.captcha_token = result[0]
-                    infoBanner.alert("Verified")
-
-
+                    newPostPanel.captcha_token = result[0]
+                    newPostPanel.busy = true
+                    post()
                 }
                 else {
                     infoBanner.alert("Something went wrong, try reverify")
@@ -585,34 +588,4 @@ AbstractPage {
             console.log('threads got message from python: ' + data);
         }*/
     }
-
-    IconButton {
-        anchors {
-            //right: (threadPage.isPortrait ? parent.right : parent.left)
-            //bottom: (threadPage.isPortrait ? infoPanel.top : parent.bottom)
-            right: parent.right
-            bottom: parent.bottom
-            margins: {
-                left: Theme.paddingLarge
-                bottom: Theme.paddingLarge
-            }
-        }
-
-        id: newPost
-        width: Theme.iconSizeLarge
-        height: width
-        visible: !isPortrait ? true : !newPostPanel.open
-        icon.source: newPostPanel.open
-                     ? "image://theme/icon-l-clear"
-                     : "image://theme/icon-l-add"
-        onClicked: {
-            newPostPanel.open = !newPostPanel.open
-
-
-            //newPostPanel.show()
-            //drawer.open = true
-            threadPage.forwardNavigation = !newPostPanel.open
-        }
-    }
-
 }

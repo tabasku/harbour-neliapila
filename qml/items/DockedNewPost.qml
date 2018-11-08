@@ -19,6 +19,7 @@ DockedPanel {
     //property string file_path: selectedFile ? selectedFile : ""
     property variant captcha_token
     property bool optionalFieldsVisible: false
+    property bool busy: false
 
     //anchors.fill: parent
     width: parent.width
@@ -26,6 +27,7 @@ DockedPanel {
 
     Item {
         anchors.fill: parent
+        enabled: !busy
 
         Rectangle {
             anchors.fill: parent
@@ -50,6 +52,20 @@ DockedPanel {
             rightMargin: pageMargin
         }
 
+        BusyIndicator {
+            id: postBusyIndicator;
+            anchors {
+                right: parent.right
+                top: parent.top
+                margins: {
+                    left: Theme.paddingLarge
+                    bottom: Theme.paddingLarge
+                }
+            }
+            size: BusyIndicatorSize.Small;
+            running: newPostItem.busy;
+            visible: newPostItem.busy;
+        }
 
         Column {
             id: column
@@ -98,7 +114,6 @@ DockedPanel {
                             anchors.fill: parent
                             onClicked: pageStack.push(filePickerPage)
                         }
-
                     }
                 }
 
@@ -127,20 +142,11 @@ DockedPanel {
 
             Rectangle{
                 id: optionalFields
-
-                //spacing: Theme.paddingSmall
                 width: column.width
                 height: optionalFieldsVisible
                         ? nameText.height + subjectText.height + Theme.paddingSmall
                         : 0
                 color: "transparent"
-
-                /*
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0) }
-                    GradientStop { position: 1.0; color: Theme.rgba(Theme.primaryColor, 0.2) }
-                }
-                */
 
                 Column{
 
@@ -148,12 +154,9 @@ DockedPanel {
                         id: subjectText
                         width: column.width
                         visible: optionalFieldsVisible
-                        //wrapMode: Text.WordWrap
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
                         color: Theme.primaryColor
-                        //text: content
-                        //x: Theme.paddingSmall
                         clip: true
 
                         focus: optionalFieldsVisible
@@ -168,12 +171,9 @@ DockedPanel {
                             id: nameText
                             width: column.width/3*2
                             visible: optionalFieldsVisible
-                            //wrapMode: Text.WordWrap
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontSizeSmall
                             color: Theme.primaryColor
-                            //text: content
-                            //x: Theme.paddingSmall
                             clip: true
                             focus: false
                             placeholderText: "Anonymous"
@@ -185,12 +185,9 @@ DockedPanel {
                             id: optionsText
                             width: column.width/3
                             visible: optionalFieldsVisible
-                            //wrapMode: Text.WordWrap
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontSizeSmall
                             color: Theme.primaryColor
-                            //text: content
-                            //x: Theme.paddingSmall
                             clip: true
                             focus: false
                             label: 'Options'
@@ -223,6 +220,7 @@ DockedPanel {
                     icon.source: "image://theme/icon-m-tab-close"
                     onClicked: {
                         newPostItem.open = false
+
                     }
                 }
 
@@ -231,7 +229,7 @@ DockedPanel {
                     width: Theme.iconSizeMedium
                     height: width
 
-                    enabled: commentText.text.length && selectedFile
+                    enabled: commentText.text.length && selectedFile || !newPostItem.busy
                             ? true
                             : false
 
@@ -243,8 +241,8 @@ DockedPanel {
 
                     icon.source: "image://theme/icon-m-message"
                     onClicked: {
-                        pyt.post()
-                        //pageStack.push("../pages/Captcha2Page.qml")
+                        //pyt.post()
+                        pageStack.push("../pages/Captcha2Page.qml")
                     }
                 }
 

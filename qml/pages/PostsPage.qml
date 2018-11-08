@@ -232,6 +232,14 @@ AbstractPage {
             }
 
         }
+
+        DockedNewPost {
+
+            id: replyPostPanel
+            width: parent.width
+            dock: postsPage.isPortrait ? Dock.Bottom : Dock.Right
+
+        }
     }
 
     Component.onCompleted: {
@@ -248,15 +256,30 @@ AbstractPage {
         //        }
 
     }
-    /*
-    onStatusChanged: {
-        if (status === PageStatus.Active && pageStack.depth > 2) {
-            backMenuItem.visible = true
+
+    IconButton {
+        anchors {
+            right: parent.right
+            bottom: parent.bottom
+            margins: {
+                left: Theme.paddingLarge
+                bottom: Theme.paddingLarge
+            }
         }
-        else if(status === PageStatus.Active && pageStack.depth !== 0) {
-            backMenuItem.visible = true
+
+        id: replyPost
+        width: Theme.iconSizeLarge
+        height: width
+        visible: !isPortrait ? true : !replyPostPanel.open
+        enabled: boardId ? true: false
+        icon.source: replyPostPanel.open
+                     ? "image://theme/icon-l-clear"
+                     : "image://theme/icon-l-add"
+        onClicked: {
+            replyPostPanel.open = !replyPostPanel.open
+            postsPage.forwardNavigation = !replyPostPanel.open
         }
-    }*/
+    }
 
     Python {
         id: pyp
