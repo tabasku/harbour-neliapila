@@ -65,7 +65,7 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
         #url = 'http://httpbin.org/status/404'
         #url = "http://localhost/" + board + "/post"
         #url = 'http://httpbin.org/post'
-        url = 'http://requestbin.fullcontact.com/12xdx0m1'
+        url = 'http://requestbin.fullcontact.com/1oldjgn1'
 
         print(subject)
 

@@ -243,7 +243,7 @@ DockedPanel {
 
                     icon.source: "image://theme/icon-m-message"
                     onClicked: {
-                        pyPosting.post()
+                        pyt.post()
                         //pageStack.push("../pages/Captcha2Page.qml")
                     }
                 }

@@ -34,7 +34,7 @@ Page {
 
     property int padding : Theme.paddingSmall
     property int infoFontSize: Theme.fontSizeSmall
-    property variant infoFontColor: Theme.secondaryHighlightColor
+    property color infoFontColor: Theme.secondaryHighlightColor
     property int postFontSize: Theme.fontSizeMedium
     property int pageMargin : Theme.horizontalPageMargin
     property bool animations : false
@@ -84,6 +84,7 @@ Page {
         }
     }
 
+    /*
     Python {
         id: pyPosting
 
@@ -153,6 +154,6 @@ Page {
             // in Python, this can be accomplished via pyotherside.send()
             console.log('got message from python: ' + data);
         }
-    }
+    }*/
 
 }

@@ -360,7 +360,7 @@ AbstractPage {
             setHandler('posts_status', function(result) {
                 //To silence onReceived from pinned
             });
-
+/*
             setHandler('set_challenge', function(result) {
                 //To silence onReceived from boards
             });
@@ -371,7 +371,7 @@ AbstractPage {
 
             setHandler('failed_challenge', function(result) {
                 //To silence onReceived from boards
-            });
+            });*/
 
             setHandler('pinned_board', function(result) {
 
@@ -444,6 +444,54 @@ AbstractPage {
 
             importModule('threads', function() {});
             importModule('pinned', function() {});
+
+            importModule('posting', function() {});
+
+             setHandler('post_successfull', function(result) {
+                 console.log("SUCCESS : "+result);
+                 infoBanner.alert("SUCCESS")
+
+             });
+
+            setHandler('post_failed', function(result) {
+                console.log("FAILED : "+result);
+                infoBanner.alert("Failed to send")
+
+            });
+
+            setHandler('set_response', function(result) {
+                if(result.length === 1){
+                    console.log("set_response fired"+result);
+                    newPostPage.captcha_token = result[0]
+                    infoBanner.alert("Verified")
+
+
+                }
+                else {
+                    infoBanner.alert("Something went wrong, try reverify")
+                }
+
+            });
+
+        }
+
+
+
+        function post(){
+            if(!newPostPanel.comment.length){infoBanner.alert("Cannot post without comment");return}
+            console.log("posting with captchatoken "+newPostPanel.captcha_token)
+            console.log("posting with filepath "+newPostPanel.selectedFile)
+            console.log("posting with subject "+newPostPanel.subject)
+
+            call('posting.post', [
+                     newPostPanel.nickname,
+                     newPostPanel.comment,
+                     newPostPanel.subject,
+                     newPostPanel.selectedFile,
+                     newPostPanel.captcha_token
+                 ], function() {});
+            //(nickname="", comment="", subject="", file_attach="", captcha_response="")
+
         }
 
         function getThreads(boardId,pageNo){
