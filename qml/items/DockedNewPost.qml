@@ -9,7 +9,7 @@ DockedPanel {
     id: newPostItem
 
     property string boardId: boardId
-    property int replyTo: 0
+    property int replyTo
     property string selectedFile
 
     property string nickname: nameText.text
@@ -52,17 +52,12 @@ DockedPanel {
             rightMargin: pageMargin
         }
 
+
+
         BusyIndicator {
             id: postBusyIndicator;
-            anchors {
-                right: parent.right
-                top: parent.top
-                margins: {
-                    left: Theme.paddingLarge
-                    bottom: Theme.paddingLarge
-                }
-            }
-            size: BusyIndicatorSize.Small;
+            anchors.centerIn: parent
+            size: BusyIndicatorSize.Large;
             running: newPostItem.busy;
             visible: newPostItem.busy;
         }
@@ -76,6 +71,9 @@ DockedPanel {
                     : commentText.height + screen.height * 0.3
             //height: parent.contentHeight
             spacing: Theme.paddingSmall
+            opacity: newPostItem.busy
+                    ? 0.5
+                    : 1
 
             anchors.fill: parent
 
@@ -95,9 +93,7 @@ DockedPanel {
 
                     gradient: Gradient {
                         GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0) }
-                        GradientStop { position: 1.0; color: Theme.rgba(selectedFile
-                                                                        ? Theme.primaryColor
-                                                                        : "red", 0.2) }
+                        GradientStop { position: 1.0; color: Theme.rgba(Theme.secondaryColor, 0.5) }
                     }
 
                     Image {
@@ -113,6 +109,7 @@ DockedPanel {
                         MouseArea{
                             anchors.fill: parent
                             onClicked: pageStack.push(filePickerPage)
+                            enabled: !busy
                         }
                     }
                 }
@@ -125,6 +122,7 @@ DockedPanel {
 
                     TextArea{
                         id: commentText
+                        enabled: !busy
                         width: column.width/3*2
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
@@ -152,6 +150,7 @@ DockedPanel {
 
                     TextField{
                         id: subjectText
+                        enabled: !busy
                         width: column.width
                         visible: optionalFieldsVisible
                         font.family: Theme.fontFamily
@@ -169,6 +168,7 @@ DockedPanel {
 
                         TextField{
                             id: nameText
+                            enabled: !busy
                             width: column.width/3*2
                             visible: optionalFieldsVisible
                             font.family: Theme.fontFamily
@@ -183,6 +183,7 @@ DockedPanel {
 
                         TextField{
                             id: optionsText
+                            enabled: !busy
                             width: column.width/3
                             visible: optionalFieldsVisible
                             font.family: Theme.fontFamily
@@ -209,7 +210,7 @@ DockedPanel {
                     id: closePostButton
                     width: Theme.iconSizeMedium
                     height: width
-
+                    enabled: !busy
 
                     anchors {
                         bottom: parent.bottom
@@ -220,6 +221,7 @@ DockedPanel {
                     icon.source: "image://theme/icon-m-tab-close"
                     onClicked: {
                         newPostItem.open = false
+                        newPostItem.clear()
 
                     }
                 }
@@ -229,9 +231,7 @@ DockedPanel {
                     width: Theme.iconSizeMedium
                     height: width
 
-                    enabled: commentText.text.length && selectedFile || !newPostItem.busy
-                            ? true
-                            : false
+                    enabled: !newPostItem.busy
 
                     anchors {
                         bottom: parent.bottom
@@ -242,16 +242,23 @@ DockedPanel {
                     icon.source: "image://theme/icon-m-message"
                     onClicked: {
                         //pyt.post()
-                        pageStack.push("../pages/Captcha2Page.qml")
+
+                        newPostItem.replyTo
+                            ? pageStack.push("../pages/Captcha2Page.qml",
+                              {
+                                  "replyTo" : newPostItem.replyTo
+                              })
+                            : pageStack.push("../pages/Captcha2Page.qml")
                     }
+
                 }
 
 
                 IconButton {
                     id: expandOptionalButton
+                    enabled: !busy
                     width: Theme.iconSizeMedium
                     height: width
-
 
                     anchors {
                         bottom: parent.bottom
@@ -285,6 +292,15 @@ Component {
             selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
         }
     }
+}
+
+function clear(){
+    subjectText.text = '';
+    selectedFile = '';
+    nameText.text = '';
+    optionsText.text = '';
+    commentText.text = '';
+
 }
 
 }

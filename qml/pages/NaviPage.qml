@@ -381,6 +381,24 @@ AbstractPage {
                 //To silence onReceived from boards
             });
 
+            setHandler('post_successfull', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('reply_successfull', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('post_failed', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('reply_failed', function(result) {
+                //To silence onReceived from boards
+            });
+
+
+
             setHandler('boards', function(result) {
                 if(boardHolder.enabled){
                     boardHolder.enabled = false

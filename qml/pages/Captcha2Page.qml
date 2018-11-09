@@ -13,6 +13,7 @@ AbstractPage {
     property string captchaText: "Fetching verification challenge..."
     property string captchaImageData
     property variant captchaInput : []
+    property int replyTo
     busy : true
     allowedOrientations : Orientation.All
 
@@ -194,7 +195,15 @@ AbstractPage {
                 //captchaImageData = result[2];
             });
 
-            setHandler('set_response', function(result) {
+            setHandler('reply_set_response', function(result) {
+                pageStack.navigateBack();
+            });
+
+            setHandler('post_set_response', function(result) {
+                pageStack.navigateBack();
+            });
+
+            setHandler('captcha_done', function(result) {
 
                 //console.log("set_response fired"+result);
                 //infoBanner.alert("Verification done");
@@ -212,7 +221,7 @@ AbstractPage {
         function submitCaptcha(value){
             captchaSubmit.enabled = false
             var string = value.toString().replace(/\,/g, "");
-            call('captcha.get_response', [captchaId,string], function() {});
+            call('captcha.get_response', [captchaId,string,replyTo], function() {});
 
         }
 

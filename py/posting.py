@@ -24,7 +24,7 @@ bp = None
 
 user_agent = 'Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'
 
-def post(nickname="", comment="", subject="", file_attach="", captcha_response=""):
+def post(nickname="", comment="", subject="", file_attach="", captcha_response="", board="b",threadno=""):
     '''
     subject: not implemented
     file_attach: (/path/to/file.ext) will be uploaded as "file" + extension
@@ -60,15 +60,8 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
             print(e)
             raise
 
-        
-        #url = "https://sys.4chan.org/" + board + "/post"
-        #url = 'http://httpbin.org/status/404'
-        #url = "http://localhost/" + board + "/post"
-        #url = 'http://httpbin.org/post'
         url = 'http://requestbin.fullcontact.com/1oldjgn1'
-
-        print(subject)
-
+        #url = "https://sys.4chan.org/" + board + "/post"
 
         values = {  
                     'MAX_FILE_SIZE' : (None, '4194304'),
@@ -102,17 +95,21 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
                 if re.search("blocked due to abuse", response.text):
                     perror = "You are range banned ;_;"
             finally:
-                pyotherside.send('post_failed', [str(response.status_code)])
+                if threadno:
+                    pyotherside.send('reply_failed', [str(response.status_code)])
+                else:
+                    pyotherside.send('post_failed', [str(response.status_code)])
         
         if response.status_code == 200:
             print("post succesful!")
-            pyotherside.send('post_successfull', [str(response.status_code)])
+            if threadno:
+                pyotherside.send('reply_successfull', [str(response.status_code)])
+            else:
+                pyotherside.send('post_successfull', [str(response.status_code)])
         else:
             print("response.status_code: " + str(response.status_code))
             pyotherside.send('post_failed', [str(response.status_code)])
 
-        
-        
         return response.status_code
     
     except Exception as e:

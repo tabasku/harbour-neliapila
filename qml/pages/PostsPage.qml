@@ -12,6 +12,7 @@ AbstractPage {
     property var postsToShow;
     property var modelToStrip;
     property bool pinned;
+    property int replyTo: postNo
 
     function getBackToPost(){
         pageStack.pop(pageStack.find( function(page){ return(page._depth === 1)} ), PageStackAction.Immediate)
@@ -138,7 +139,8 @@ AbstractPage {
                     visible: mode === "thread" ? false : true
 
                     MenuItem {
-                        visible: postReplies ? true : false
+                        visible: postReplies && !replyPostPanel.open ? true : false
+
                         text: qsTr("View replies")
                         onClicked:{
                             postsToShow = postReplies
@@ -171,9 +173,10 @@ AbstractPage {
                             replyform.comment = comment + comm
                             navigateForward()
                         }
-                    }*/
+                    }
                     MenuItem {
                         text: "Show text"
+                        enabled: false
 
                         visible: com !== "" ? true : false
 
@@ -185,14 +188,44 @@ AbstractPage {
                                                "content": com
                                            });
                         }
-                    }
+                    }*/
+
                     MenuItem {
                         text: qsTr("Open post in browser")
+                        visible: !replyPostPanel.open
                         onClicked: {
 
                             var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo+"#p"+thisPostNo
                             infoBanner.alert("Opening post in web browser");
                             Qt.openUrlExternally(url)
+                        }
+                    }
+
+                    MenuItem {
+                        text: qsTr("Quote")
+                        onClicked: {
+
+                            replyPostPanel.open = true
+                            replyPostPanel.comment
+                                    ? replyPostPanel.comment += String("\n>>"+thisPostNo)
+                                    : replyPostPanel.comment = String(">>"+thisPostNo)
+                        }
+                    }
+
+                    MenuItem {
+                        text: qsTr("Quote text")
+                        visible: com !== "" ? true : false
+                        onClicked: {
+
+                            var strippedComment = com.replace(/<(?:.|\n)*?>/gm, '');
+                            var quote = String(">>"+thisPostNo + "\n >"+strippedComment)
+                            console.log(strippedComment)
+                            replyPostPanel.open = true;
+
+                            replyPostPanel.comment
+                                        ?  replyPostPanel.comment += "\n"+quote
+                                        :  replyPostPanel.comment = quote;
+
                         }
                     }
 
@@ -238,6 +271,9 @@ AbstractPage {
             id: replyPostPanel
             width: parent.width
             dock: postsPage.isPortrait ? Dock.Bottom : Dock.Right
+            onOpenChanged: {
+                replyPostPanel.replyTo = postNo;
+            }
 
         }
     }
@@ -344,6 +380,38 @@ AbstractPage {
             importModule('posts', function() {});
             importModule('pinned', function() {});
 
+            importModule('posting', function() {});
+
+             setHandler('reply_successfull', function(result) {
+                 console.log("SUCCESS : "+result);
+                 replyPostPanel.busy = false
+                 replyPostPanel.open = false
+                 replyPostPanel.clear();
+
+                 infoBanner.alert("Reply sent")
+
+             });
+
+            setHandler('reply_failed', function(result) {
+                console.log("FAILED REPLY: "+result);
+                infoBanner.alert("Failed to send");
+                replyPostPanel.busy = false;
+
+            });
+
+            setHandler('reply_set_response', function(result) {
+                if(result.length === 1){
+                    //console.log("set_response fired from reply "+result);
+                    replyPostPanel.captcha_token = result[0]
+                    replyPostPanel.busy = true
+                    post()
+                }
+                else {
+                    infoBanner.alert("Something went wrong, try reverify")
+                }
+
+            });
+
         }
 
         function getPosts(boardId,postNo){
@@ -408,13 +476,34 @@ AbstractPage {
                     pin = 0
                 }
 
-
-
                 var updateItem
                 updateItem = postsModel.get(0)
                 updateItem.pin = pin
             }
 
+
+        }
+
+        function post(){
+            //if(!replyPostPanel.comment.length){infoBanner.alert("Cannot post without comment");return}
+            console.log("Replying to "+postNo)
+            console.log("posting with captchatoken "+replyPostPanel.captcha_token)
+            console.log("posting with filepath "+replyPostPanel.selectedFile)
+            console.log("posting with subject "+replyPostPanel.subject)
+            console.log("posting with comment "+replyPostPanel.comment)
+
+            console.log("posting to board "+boardId)
+
+            call('posting.post', [
+                     replyPostPanel.nickname,
+                     replyPostPanel.comment,
+                     replyPostPanel.subject,
+                     replyPostPanel.selectedFile,
+                     replyPostPanel.captcha_token,
+                     boardId,
+                     replyTo
+                 ], function() {});
+            //(nickname="", comment="", subject="", file_attach="", captcha_response="")
 
         }
 

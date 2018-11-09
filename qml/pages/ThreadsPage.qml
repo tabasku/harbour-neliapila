@@ -445,12 +445,26 @@ AbstractPage {
             importModule('threads', function() {});
             importModule('pinned', function() {});
 
+            setHandler('reply_successfull', function(result) {
+
+            });
+
+            setHandler('reply_failed', function(result) {
+
+            });
+
+            setHandler('reply_set_response', function(result) {
+
+            });
+
             importModule('posting', function() {});
 
              setHandler('post_successfull', function(result) {
                  console.log("SUCCESS : "+result);
-                 newPostPanel.busy = true
-                 newPostPanel.open = false
+                 newPostPanel.busy = false;
+                 newPostPanel.open = false;
+                 newPostPanel.clear();
+                 threadPage.forwardNavigation = true;
 
                  infoBanner.alert("Post sent")
 
@@ -460,10 +474,11 @@ AbstractPage {
                 console.log("FAILED : "+result);
                 infoBanner.alert("Failed to send");
                 newPostPanel.busy = false;
+                threadPage.forwardNavigation = true;
 
             });
 
-            setHandler('set_response', function(result) {
+            setHandler('post_set_response', function(result) {
                 if(result.length === 1){
                     console.log("set_response fired"+result);
                     newPostPanel.captcha_token = result[0]
@@ -471,27 +486,32 @@ AbstractPage {
                     post()
                 }
                 else {
-                    infoBanner.alert("Something went wrong, try reverify")
+                    infoBanner.alert("Something went wrong, try reverify");
                 }
 
             });
 
         }
 
-
-
         function post(){
-            if(!newPostPanel.comment.length){infoBanner.alert("Cannot post without comment");return}
+            if(!newPostPanel.comment || !newPostPanel.selectedFile){
+                infoBanner.alert("Comment & Image needed in new post");
+                return;
+            }
             console.log("posting with captchatoken "+newPostPanel.captcha_token)
             console.log("posting with filepath "+newPostPanel.selectedFile)
             console.log("posting with subject "+newPostPanel.subject)
+            console.log("posting to board "+boardId)
+
+
 
             call('posting.post', [
                      newPostPanel.nickname,
                      newPostPanel.comment,
                      newPostPanel.subject,
                      newPostPanel.selectedFile,
-                     newPostPanel.captcha_token
+                     newPostPanel.captcha_token,
+                     boardId
                  ], function() {});
             //(nickname="", comment="", subject="", file_attach="", captcha_response="")
 
@@ -573,7 +593,7 @@ AbstractPage {
 
 
         }
-/*
+
         onError: {
             // when an exception is raised, this error handler will be called
             console.log('threads python error: ' + traceback);
@@ -586,6 +606,6 @@ AbstractPage {
             // asychronous messages from Python arrive here
             // in Python, this can be accomplished via pyotherside.send()
             console.log('threads got message from python: ' + data);
-        }*/
+        }
     }
 }

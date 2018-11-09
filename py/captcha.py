@@ -96,7 +96,7 @@ def get_challenge():
         print("Error: {} ".format(err))
 
 
-def get_response(id,value):
+def get_response(id,value,reply):
 
     #if isinstance(value, list):
     #    print("Not list!")
@@ -133,7 +133,11 @@ def get_response(id,value):
             print('I find')
             #captcha2_response = soup.find("div", {'class': 'fbc-verification-token'}).text
             captcha2_response = captcha2_response_soup.text
-            pyotherside.send('set_response', [captcha2_response])
+
+            if reply:
+                pyotherside.send('reply_set_response', [captcha2_response])
+            else:
+                pyotherside.send('post_set_response', [captcha2_response])
         else:
             print('None found')
             pyotherside.send('failed_challenge','Failed, trying setting new captcha')
