@@ -341,13 +341,28 @@ Component {
 }
 
 function clearFields(){
-    subjectText.text = "";
     selectedFile = "";
     selectedImageThumb.source = "image://theme/icon-l-image";
+
+    subjectText.text = "";
     nameText.text = "";
     optionsText.text = "";
     commentText.text = "";
 
+    subjectText.focus = false;
+    nameText.focus = false;
+    optionsText.focus = false;
+    commentText.focus = false;
+
+}
+
+function addQuote(quote){
+    if(commentText.text.length){
+        commentText.text += "\n"+quote
+    }else{
+        console.log("Field empty")
+        commentText.text += quote
+    }
 }
 
 }

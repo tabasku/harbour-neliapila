@@ -214,11 +214,15 @@ AbstractPage {
                     MenuItem {
                         text: qsTr("Quote")
                         onClicked: {
+                            replyPostPanel.open = true
+                            replyPostPanel.addQuote(String(">>"+thisPostNo));
 
+/*
                             replyPostPanel.open = true
                             replyPostPanel.comment
                                     ? replyPostPanel.comment += String("\n>>"+thisPostNo)
                                     : replyPostPanel.comment = String(">>"+thisPostNo)
+                                    */
                         }
                     }
 
@@ -232,10 +236,12 @@ AbstractPage {
                             console.log(strippedComment)
                             replyPostPanel.open = true;
 
+                            replyPostPanel.addQuote(quote);
+/*
                             replyPostPanel.comment
                                         ?  replyPostPanel.comment += "\n"+quote
                                         :  replyPostPanel.comment = quote;
-
+*/
                         }
                     }
 
