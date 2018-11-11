@@ -453,6 +453,10 @@ AbstractPage {
 
             });
 
+            setHandler('set_challenge', function(result) {
+
+            });
+
             setHandler('reply_set_response', function(result) {
 
             });
@@ -466,7 +470,8 @@ AbstractPage {
                  newPostPanel.clear();
                  threadPage.forwardNavigation = true;
 
-                 infoBanner.alert("Post sent")
+                 infoBanner.alert("Post sent, refreshing..");
+                 pyt.getThreads(boardId,pageNo);
 
              });
 
@@ -480,7 +485,7 @@ AbstractPage {
 
             setHandler('post_set_response', function(result) {
                 if(result.length === 1){
-                    console.log("set_response fired"+result);
+                    console.log("threads post_set_response "+result);
                     newPostPanel.captcha_token = result[0]
                     newPostPanel.busy = true
                     post()
@@ -494,10 +499,7 @@ AbstractPage {
         }
 
         function post(){
-            if(!newPostPanel.comment || !newPostPanel.selectedFile){
-                infoBanner.alert("Comment & Image needed in new post");
-                return;
-            }
+
             console.log("posting with captchatoken "+newPostPanel.captcha_token)
             console.log("posting with filepath "+newPostPanel.selectedFile)
             console.log("posting with subject "+newPostPanel.subject)

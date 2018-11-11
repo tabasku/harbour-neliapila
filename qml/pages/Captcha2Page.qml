@@ -20,10 +20,10 @@ AbstractPage {
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
-        contentHeight: column.height + Theme.paddingLarge
+        //contentHeight: parent.height + Theme.paddingLarge
 
         // Why is this necessary?
-        contentWidth: parent.width
+        //contentWidth: parent.width
 
 
         // Tell SilicaFlickable the height of its content.

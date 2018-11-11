@@ -127,7 +127,7 @@ DockedPanel {
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
                         clip: false
-                        //focus: newPostPanel.open
+                        //focus: newPostItem.open
                         focus: false
                         wrapMode: TextEdit.Wrap
                         color: text ? Theme.primaryColor : 'red'
@@ -241,18 +241,53 @@ DockedPanel {
 
                     icon.source: "image://theme/icon-m-message"
                     onClicked: {
-                        //pyt.post()
+
+                        if(!newPostItem.replyTo){
+                            console.log("new thread")
+
+                            if(!newPostItem.comment && !newPostItem.selectedFile){
+
+                                infoBanner.alert("Comment & Image required in new post");
+                                return;
+                            }
+                        }
+                        else{
+                            console.log("new post")
+
+                            if(!newPostItem.comment || !newPostItem.selectedFile){
+                                infoBanner.alert("Comment or Image required in reply");
+                                return;
+                            }
+                        }
+
 
                         newPostItem.replyTo
                             ? pageStack.push("../pages/Captcha2Page.qml",
                               {
                                   "replyTo" : newPostItem.replyTo
                               })
-                            : pageStack.push("../pages/Captcha2Page.qml")
+                            : pageStack.push("../pages/Captcha2Page.qml");
+
+                        /*
+                        if(!newPostItem.replyTo && !newPostItem.comment && !newPostItem.selectedFile){
+
+                            infoBanner.alert("Comment & Image required in new post");
+                            return;
+                        }
+                        else if(!newPostItem.comment){
+                                infoBanner.alert("Comment required in reply");
+                                return;
+                        }
+                        else{
+                            newPostItem.replyTo
+                                ? pageStack.push("../pages/Captcha2Page.qml",
+                                  {
+                                      "replyTo" : newPostItem.replyTo
+                                  })
+                                : pageStack.push("../pages/Captcha2Page.qml");
+                        }*/
                     }
-
                 }
-
 
                 IconButton {
                     id: expandOptionalButton
@@ -295,11 +330,12 @@ Component {
 }
 
 function clear(){
-    subjectText.text = '';
-    selectedFile = '';
-    nameText.text = '';
-    optionsText.text = '';
-    commentText.text = '';
+    subjectText.text = "";
+    selectedFile = "";
+    selectedImageThumb.source = "image://theme/icon-l-image";
+    nameText.text = "";
+    optionsText.text = "";
+    commentText.text = "";
 
 }
 

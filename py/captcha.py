@@ -21,7 +21,6 @@ import requests
 from bs4 import BeautifulSoup
 
 
-
 sitekey = "6Ldp2bsSAAAAAAJ5uyx_lx34lJeEpTLVkP5k04qc"
 
 captcha2_url = "https://www.google.com/recaptcha/api/fallback?k=" + sitekey
@@ -58,7 +57,6 @@ def get_challenge_image(captcha2_challenge_id):
         # Get captcha image
         headers = {'Referer': captcha2_url, 'User-Agent': user_agent}
         r = requests.get(captcha2_payload_url + '?c=' + captcha2_challenge_id + '&k=' + sitekey, headers=headers)
-        #captcha2_image = r.content
 
         # encode imagedata so it can be loaded from QML
         captcha2_image = ("data:" + r.headers['Content-Type'] + ";" + "base64," + str(base64.b64encode(r.content).decode("utf-8")))
@@ -98,21 +96,15 @@ def get_challenge():
 
 def get_response(id,value,reply):
 
-    #if isinstance(value, list):
-    #    print("Not list!")
-    #else:
-    #    print("Yes, its list")
-    #print(value)
-    # Append checkbox integer values to response array
     try:
-        #captcha2_solution = value
         captcha2_challenge_id = id
         captcha2_solution = []
+
         for i in str(value):
             captcha2_solution.append(str(int(i)))
+
         captcha2_solution.sort()
 
-            #captcha2_solution.append(str(int(i) - 1))
     except ValueError as err:
         print("Value error: {}".format(err))
     except Exception as err:
@@ -124,14 +116,11 @@ def get_response(id,value,reply):
         data={'c':captcha2_challenge_id, 'response':captcha2_solution}
         r = requests.post(captcha2_url, headers=headers, data=data)
         html_post = r.content
-
-        pyotherside.send('debug', [html_post])
+        #pyotherside.send('debug', [html_post])
         soup = BeautifulSoup(html_post, 'html.parser')
 
         captcha2_response_soup = soup.find("div", {'class': 'fbc-verification-token'})
         if captcha2_response_soup is not None:
-            print('I find')
-            #captcha2_response = soup.find("div", {'class': 'fbc-verification-token'}).text
             captcha2_response = captcha2_response_soup.text
 
             if reply:
@@ -151,12 +140,3 @@ def get_response(id,value,reply):
         print(e)
 
     except Exception as e: print(e)
-    
-    
-
-    #try:
-    #    print(soup)
-    #    captcha2_response = soup.find("div", {'class': 'fbc-verification-token'}).text
-    #    print(captcha2_response)
-    #except AttributeError as e: print(e)
-    #except Exception as e: print(e)

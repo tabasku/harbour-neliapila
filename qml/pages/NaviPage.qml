@@ -397,6 +397,14 @@ AbstractPage {
                 //To silence onReceived from boards
             });
 
+            setHandler('post_set_response', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('reply_set_response', function(result) {
+                //To silence onReceived from boards
+            });
+
 
 
             setHandler('boards', function(result) {
@@ -493,7 +501,7 @@ AbstractPage {
         onReceived: {
             //            // asychronous messages from Python arrive here
             //            // in Python, this can be accomplished via pyotherside.send()
-            console.log('boards got message from python: ' + data);
+            //console.log('boards got message from python: ' + data);
         }
     }
 

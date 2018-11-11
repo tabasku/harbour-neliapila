@@ -382,6 +382,10 @@ AbstractPage {
 
             importModule('posting', function() {});
 
+            setHandler('set_challenge', function(result) {
+
+            });
+
              setHandler('reply_successfull', function(result) {
                  console.log("SUCCESS : "+result);
                  replyPostPanel.busy = false

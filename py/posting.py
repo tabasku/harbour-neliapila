@@ -16,7 +16,6 @@ if cmd_subfolder not in sys.path:
 
 import requests
 
-
 board = None
 threadno = None
 
@@ -26,7 +25,6 @@ user_agent = 'Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58
 
 def post(nickname="", comment="", subject="", file_attach="", captcha_response="", board="b",threadno=""):
     '''
-    subject: not implemented
     file_attach: (/path/to/file.ext) will be uploaded as "file" + extension
     '''
     cookies = None
@@ -42,10 +40,6 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
         try:
             if file_attach:
                 
-                # extract file path from ranger file and re-assign it
-                #with open(file_attach, "r") as f:
-                #    file_attach = f.read()
-                
                 _, file_ext = os.path.splitext(file_attach)
                 filename = "file" + file_ext
                 content_type, _ = mimetypes.guess_type(filename)
@@ -60,7 +54,7 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
             print(e)
             raise
 
-        url = 'http://requestbin.fullcontact.com/1oldjgn1'
+        url = 'http://requestbin.fullcontact.com/1iwk8r21'
         #url = "https://sys.4chan.org/" + board + "/post"
 
         values = {  
@@ -75,13 +69,8 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
                     'g-recaptcha-response' : (None, captcha_response),
                     'upfile' : (filename, filedata, content_type)
                 }
-
-        #print(values)
-        #print(values['sub'])
-
         
         headers = { 'User-Agent' : user_agent }
-
         response = requests.post(url, headers=headers, files=values, cookies=cookies)
         
         # raise exception on error code
@@ -108,7 +97,10 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
                 pyotherside.send('post_successfull', [str(response.status_code)])
         else:
             print("response.status_code: " + str(response.status_code))
-            pyotherside.send('post_failed', [str(response.status_code)])
+            if threadno:
+                pyotherside.send('reply_failed', [str(response.status_code)])
+            else:
+                pyotherside.send('post_failed', [str(response.status_code)])
 
         return response.status_code
     
