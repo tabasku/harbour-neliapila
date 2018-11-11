@@ -61,7 +61,7 @@ AbstractPage {
             enabled: drawer.open
             anchors.fill: parent
             onClicked: {
-                drawer.open = false
+                //drawer.open = false
                 threadPage.forwardNavigation = true
             }
         }
@@ -79,14 +79,15 @@ AbstractPage {
 //                    pageStack.push("SettingsPage.qml");
 //                }
 //            }
-/*
+
+            /*
             MenuItem {
                 text: qsTr("About")
                 onClicked: {
                     pageStack.push("AboutPage.qml");
                 }
-            }
-*/
+            }*/
+
             MenuItem {
                 id: showPinnedMenu
                 text: qsTr("Pinned posts");
@@ -94,6 +95,15 @@ AbstractPage {
 
                 onClicked: {
                     showPinnedTimer.start()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("New post");
+                enabled: !newPostPanel.open
+                onClicked: {
+                    newPostPanel.open = !newPostPanel.open
+                    //threadPage.forwardNavigation = false
                 }
             }
 
@@ -110,12 +120,12 @@ AbstractPage {
 
             MenuItem {
                 id:menuRefresh
-                text: qsTr("Refresh")
+                text: qsTr("Reload")
                 enabled: false
-
+                visible: mode === "thread"
                 onClicked: {
                     pyt.getThreads(boardId,pageNo)
-                    infoBanner.alert("Refreshing...")
+                    infoBanner.alert("Reloading...")
                 }
             }
             Label{
@@ -237,17 +247,8 @@ AbstractPage {
 
         DockedNewPost {
             id: newPostPanel
-
             width: parent.width
-            //height: screen.height*0.4
-
-            /*
-            PostEditorDocked {
-                id: newPostItem
-                anchors.centerIn: parent
-            }*/
-
-            dock: threadPage.isPortrait ? Dock.Bottom : Dock.Right
+            dock: Dock.Bottom //threadPage.isPortrait ? Dock.Top : Dock.Right
         }
 
     }
@@ -302,8 +303,12 @@ AbstractPage {
             pageStack.pushAttached(Qt.resolvedUrl("NaviPage.qml"),{boardId: boardId} );
             pyt.getPinned()
         }
+
+        //newPostPanel.open = false;
+        //newPostPanel.clear();
     }
 
+    /*
     IconButton {
         anchors {
             //right: (threadPage.isPortrait ? parent.right : parent.left)
@@ -332,7 +337,7 @@ AbstractPage {
             //drawer.open = true
             threadPage.forwardNavigation = !newPostPanel.open
         }
-    }
+    }*/
 
     Python {
         id: pyt
@@ -360,18 +365,6 @@ AbstractPage {
             setHandler('posts_status', function(result) {
                 //To silence onReceived from pinned
             });
-/*
-            setHandler('set_challenge', function(result) {
-                //To silence onReceived from boards
-            });
-
-            setHandler('set_response', function(result) {
-                //To silence onReceived from boards
-            });
-
-            setHandler('failed_challenge', function(result) {
-                //To silence onReceived from boards
-            });*/
 
             setHandler('pinned_board', function(result) {
 
@@ -434,8 +427,6 @@ AbstractPage {
 
                     for (var i=0; i<result.length; i++) {
                         updateItem.postCount = result[i]['postCount']
-                        //updateItem.threadDead = result[i]['threadDead']
-                        //updateItem.closed = result[i]['closed']
                     }
 
                 }
@@ -467,11 +458,16 @@ AbstractPage {
                  console.log("SUCCESS : "+result);
                  newPostPanel.busy = false;
                  newPostPanel.open = false;
-                 newPostPanel.clear();
+                 newPostPanel.clearFields();
                  threadPage.forwardNavigation = true;
+                 var newPostId = result[1];
 
-                 infoBanner.alert("Post sent, refreshing..");
+                 //infoBanner.alert("Post sent, refreshing..");
                  pyt.getThreads(boardId,pageNo);
+                 Remorse.popupAction(threadPage, "Post sent, opening your thread", function() {
+                     console.log("remorse fired")
+                     pageStack.push("PostsPage.qml", {postNo: newPostId, boardId: boardId, pinned: false} )
+                 })
 
              });
 

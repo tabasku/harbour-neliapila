@@ -64,7 +64,7 @@ DockedPanel {
 
         Column {
             id: column
-
+            anchors.fill: parent
             width: parent.width
             height: commentText.text
                     ? commentText.height
@@ -75,7 +75,6 @@ DockedPanel {
                     ? 0.5
                     : 1
 
-            anchors.fill: parent
 
             Row{
                 id: commentRow
@@ -86,14 +85,15 @@ DockedPanel {
 
                 Rectangle{
                     //spacing: Theme.paddingSmall
-                    width: column.width/3
+                    width: column.width/4
                     height: width
 
                     //color: "transparent"
 
                     gradient: Gradient {
-                        GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0) }
-                        GradientStop { position: 1.0; color: Theme.rgba(Theme.secondaryColor, 0.5) }
+                        GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0.1) }
+                        GradientStop { position: 0.5; color: Theme.rgba(Theme.secondaryHighlightColor, 0.2) }
+                        GradientStop { position: 1.0; color: Theme.rgba(Theme.primaryColor, 0.1) }
                     }
 
                     Image {
@@ -118,12 +118,14 @@ DockedPanel {
                     height: commentText.contentHeight < column.width/3
                             ? column.width/3
                             : commentText.contentHeight
+                    width: column.width/4*3
                     spacing: 0
 
                     TextArea{
                         id: commentText
                         enabled: !busy
-                        width: column.width/3*2
+                        //width: column.width/4*3
+                        width: parent.width
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
                         clip: false
@@ -158,7 +160,7 @@ DockedPanel {
                         color: Theme.primaryColor
                         clip: true
 
-                        focus: optionalFieldsVisible
+                        focus: false //optionalFieldsVisible
                         label: 'Subject'
                         placeholderText: 'Subject'
                         text: subject
@@ -220,8 +222,12 @@ DockedPanel {
 
                     icon.source: "image://theme/icon-m-tab-close"
                     onClicked: {
-                        newPostItem.open = false
-                        newPostItem.clear()
+
+                        Remorse.popupAction(newPostItem, "Clearing fields", function() {
+                            newPostItem.open = false
+                            newPostItem.clearFields()
+                        })
+
 
                     }
                 }
@@ -245,17 +251,21 @@ DockedPanel {
                         if(!newPostItem.replyTo){
                             console.log("new thread")
 
-                            if(!newPostItem.comment && !newPostItem.selectedFile){
+                            if(!newPostItem.selectedFile){
 
-                                infoBanner.alert("Comment & Image required in new post");
+                                infoBanner.alert("Image required in new post");
+                                return;
+                            }
+                            else if(!newPostItem.comment){
+                                infoBanner.alert("Comment required in new post");
                                 return;
                             }
                         }
                         else{
                             console.log("new post")
 
-                            if(!newPostItem.comment || !newPostItem.selectedFile){
-                                infoBanner.alert("Comment or Image required in reply");
+                            if(!newPostItem.comment){
+                                infoBanner.alert("Comment required in reply");
                                 return;
                             }
                         }
@@ -319,8 +329,9 @@ DockedPanel {
 
 Component {
     id: filePickerPage
-    FilePickerPage {
-        nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
+    //FilePickerPage {
+    ImagePickerPage {
+        //nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
         onSelectedContentPropertiesChanged: {
             newPostItem.selectedFile = selectedContentProperties.filePath
             //newPostItem.selectedImageThumb.source = selectedContentProperties.filePath
@@ -329,7 +340,7 @@ Component {
     }
 }
 
-function clear(){
+function clearFields(){
     subjectText.text = "";
     selectedFile = "";
     selectedImageThumb.source = "image://theme/icon-l-image";

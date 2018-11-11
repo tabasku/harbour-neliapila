@@ -304,6 +304,8 @@ BackgroundItem {
                             }
                         }
                     }
+
+
                 }
             }
         }
@@ -403,6 +405,8 @@ BackgroundItem {
     }
 
     onClicked: {
+
+
         switch(mode){
         case "pinned":
             pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: true } )

@@ -23,7 +23,7 @@ bp = None
 
 user_agent = 'Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'
 
-def post(nickname="", comment="", subject="", file_attach="", captcha_response="", board="b",threadno=""):
+def post(nickname="", comment="", subject="", file_attach="", captcha_response="", board="",threadno=""):
     '''
     file_attach: (/path/to/file.ext) will be uploaded as "file" + extension
     '''
@@ -54,8 +54,8 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
             print(e)
             raise
 
-        url = 'http://requestbin.fullcontact.com/1iwk8r21'
-        #url = "https://sys.4chan.org/" + board + "/post"
+        #url = 'http://requestbin.fullcontact.com/1iwk8r21'
+        url = "https://sys.4chan.org/" + board + "/post"
 
         values = {  
                     'MAX_FILE_SIZE' : (None, '4194304'),
@@ -91,10 +91,13 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
         
         if response.status_code == 200:
             print("post succesful!")
+            print(response.content)
             if threadno:
-                pyotherside.send('reply_successfull', [str(response.status_code)])
+                replyno = re.search(r"thread\:(\d+),no\:(\d+)",str(response.content)).group(2)
+                pyotherside.send('reply_successfull', [str(response.status_code),replyno])
             else:
-                pyotherside.send('post_successfull', [str(response.status_code)])
+                newthreadno = re.search(r"thread\:(\d+),no\:(\d+)",str(response.content)).group(2)
+                pyotherside.send('post_successfull', [str(response.status_code),newthreadno])
         else:
             print("response.status_code: " + str(response.status_code))
             if threadno:

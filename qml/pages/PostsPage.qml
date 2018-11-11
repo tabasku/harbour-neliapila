@@ -77,13 +77,23 @@ AbstractPage {
                         getBackToPost()
                     }
                 }
+
+                MenuItem {
+                    text: qsTr("Reply")
+                    enabled: !replyPostPanel.open
+                    visible: pageStack.depth === 2
+                    onClicked: {
+                        replyPostPanel.open = !replyPostPanel.open
+                    }
+                }
+
                 MenuItem {
                     text: qsTr("Reload")
                     onClicked: {
                         //postsModel.clear()
                         //postWorker.getData()
                         pyp.getPosts(boardId,postNo)
-                        infoBanner.alert("Refreshing...")
+                        infoBanner.alert("Reloading...")
                     }
                 }
             }
@@ -270,7 +280,7 @@ AbstractPage {
 
             id: replyPostPanel
             width: parent.width
-            dock: postsPage.isPortrait ? Dock.Bottom : Dock.Right
+            dock: Dock.Bottom //postsPage.isPortrait ? Dock.Bottom : Dock.Right
             onOpenChanged: {
                 replyPostPanel.replyTo = postNo;
             }
@@ -293,6 +303,7 @@ AbstractPage {
 
     }
 
+    /*
     IconButton {
         anchors {
             right: parent.right
@@ -316,6 +327,7 @@ AbstractPage {
             postsPage.forwardNavigation = !replyPostPanel.open
         }
     }
+    */
 
     Python {
         id: pyp
@@ -390,9 +402,11 @@ AbstractPage {
                  console.log("SUCCESS : "+result);
                  replyPostPanel.busy = false
                  replyPostPanel.open = false
-                 replyPostPanel.clear();
+                 replyPostPanel.clearFields();
 
-                 infoBanner.alert("Reply sent")
+                 infoBanner.alert("Reply sent, reloading..")
+                 pyp.getPosts(boardId,postNo)
+
 
              });
 
