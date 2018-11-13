@@ -59,13 +59,13 @@ AbstractPage {
 //                }
 //            }
 
-            /*
+
             MenuItem {
                 text: qsTr("About")
                 onClicked: {
                     pageStack.push("AboutPage.qml");
                 }
-            }*/
+            }
 
             MenuItem {
                 id: showPinnedMenu
@@ -452,7 +452,12 @@ AbstractPage {
 
             setHandler('post_failed', function(result) {
                 console.log("FAILED : "+result);
-                infoBanner.alert("Failed to send");
+                if(String(result).search('banned')){
+                    infoBanner.alert("You are banned ;_;");
+                }
+                else{
+                    infoBanner.alert("Failed to send");
+                }
                 newPostPanel.busy = false;
                 threadPage.forwardNavigation = true;
 

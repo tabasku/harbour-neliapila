@@ -79,7 +79,8 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
             perror = "Unknown Error."
             
             try:
-                perror = re.search(r"Error: ([A-Za-z.,]\w*\s*)+", response.text).group(0)
+                #perror = re.search(r"Error: ([A-Za-z.,]\w*\s*)+", response.text).group(0)
+                perror = re.search(r"banned", response.text).group(0)
             except:
                 if re.search("blocked due to abuse", response.text):
                     perror = "You are range banned ;_;"
@@ -88,6 +89,7 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
                     pyotherside.send('reply_failed', [str(response.status_code),perror])
                 else:
                     pyotherside.send('post_failed', [str(response.status_code),perror])
+                return
         
         if response.status_code == 200:
             print("post succesful!")

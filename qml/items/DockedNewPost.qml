@@ -330,6 +330,7 @@ DockedPanel {
 Component {
     id: filePickerPage
 
+    /*
     FilePickerPage {
         id: filePicker
         visible: false
@@ -339,17 +340,16 @@ Component {
             selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
         }
     }
+*/
 
-    /*
     ImagePickerPage {
         id: imagePicker
-        visible: true
         onSelectedContentPropertiesChanged: {
             newPostItem.selectedFile = selectedContentProperties.filePath
             //newPostItem.selectedImageThumb.source = selectedContentProperties.filePath
             selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
         }
-    }*/
+    }
 }
 
 function clearFields(){

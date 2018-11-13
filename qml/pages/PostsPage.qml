@@ -189,7 +189,7 @@ AbstractPage {
                                                "content": com
                                            });
                         }
-                    }*/
+                    }
 
                     MenuItem {
                         text: qsTr("Open post in browser")
@@ -200,7 +200,7 @@ AbstractPage {
                             infoBanner.alert("Opening post in web browser");
                             Qt.openUrlExternally(url)
                         }
-                    }
+                    }*/
 
                     MenuItem {
                         text: qsTr("Quote")
@@ -223,7 +223,7 @@ AbstractPage {
                         onClicked: {
 
                             var strippedComment = com.replace(/<(?:.|\n)*?>/gm, '');
-                            var quote = String(">>"+thisPostNo + "\n >"+strippedComment)
+                            var quote = String(">>"+thisPostNo + "\n>"+strippedComment.replace(/>>\d+/gm, ''))
                             console.log(strippedComment)
                             replyPostPanel.open = true;
 
@@ -409,7 +409,13 @@ AbstractPage {
 
             setHandler('reply_failed', function(result) {
                 console.log("FAILED REPLY: "+result);
-                infoBanner.alert("Failed to send");
+
+                if(String(result).search('banned')){
+                    infoBanner.alert("You are banned ;_;");
+                }
+                else{
+                    infoBanner.alert("Failed to send");
+                }
                 replyPostPanel.busy = false;
 
             });
