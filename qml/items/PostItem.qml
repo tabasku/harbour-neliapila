@@ -81,6 +81,7 @@ BackgroundItem {
                         width: height
                         fillMode: Image.PreserveAspectFit
                         visible: sticky ? true : false
+                        cache: true
                         anchors{
                             right: closedImg.left
                             rightMargin: padding

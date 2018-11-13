@@ -85,9 +85,9 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
                     perror = "You are range banned ;_;"
             finally:
                 if threadno:
-                    pyotherside.send('reply_failed', [str(response.status_code)])
+                    pyotherside.send('reply_failed', [str(response.status_code),perror])
                 else:
-                    pyotherside.send('post_failed', [str(response.status_code)])
+                    pyotherside.send('post_failed', [str(response.status_code),perror])
         
         if response.status_code == 200:
             print("post succesful!")

@@ -10,6 +10,7 @@ import random
 
 def image_provider(image_id, requested_size):
 
+
     if requested_size == (-1, -1):
         requested_size = (300, 300)
 
@@ -18,4 +19,4 @@ def image_provider(image_id, requested_size):
     data = response.read()
     return bytearray(data), requested_size, pyotherside.format_data
 
-pyotherside.set_image_provider(image_provider)
+#pyotherside.set_image_provider(image_provider)

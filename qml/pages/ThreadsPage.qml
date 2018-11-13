@@ -35,15 +35,6 @@ AbstractPage {
         infoBanner.alert("Page "+pageNo);
     }
 
-    Drawer {
-        id: drawer
-
-        anchors.fill: parent
-        dock: threadPage.isPortrait ? Dock.Top : Dock.Left
-        //height: screen.height
-
-        background: PostEditor {}
-
     SilicaListView {
         id: listView
         model: currentModel
@@ -56,20 +47,8 @@ AbstractPage {
 
         //height:  drawer.open ? parent.height/2 : parent.height
 
-
-        MouseArea {
-            enabled: drawer.open
-            anchors.fill: parent
-            onClicked: {
-                //drawer.open = false
-                threadPage.forwardNavigation = true
-            }
-        }
-
         PullDownMenu {
             id: mainPullDownMenu
-            enabled: drawer.open ? false : true
-            visible: drawer.open ? false : true
 
             busy : busy
 
@@ -245,13 +224,13 @@ AbstractPage {
         }
     }
 
-        DockedNewPost {
-            id: newPostPanel
-            width: parent.width
-            dock: Dock.Bottom //threadPage.isPortrait ? Dock.Top : Dock.Right
-        }
-
+    DockedNewPost {
+        id: newPostPanel
+        width: parent.width
+        dock: Dock.Bottom //threadPage.isPortrait ? Dock.Top : Dock.Right
     }
+
+
 
     Component.onCompleted: {
 

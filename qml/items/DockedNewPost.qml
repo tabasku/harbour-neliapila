@@ -171,7 +171,8 @@ DockedPanel {
                         TextField{
                             id: nameText
                             enabled: !busy
-                            width: column.width/3*2
+                            //width: column.width/3*2
+                            width: column.width
                             visible: optionalFieldsVisible
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontSizeSmall
@@ -182,7 +183,7 @@ DockedPanel {
                             label: 'Name'
                             text: nickname
                         }
-
+                        /*
                         TextField{
                             id: optionsText
                             enabled: !busy
@@ -196,7 +197,7 @@ DockedPanel {
                             label: 'Options'
                             placeholderText: 'Options'
                             text: options
-                        }
+                        }*/
 
                     }
                 }
@@ -270,7 +271,6 @@ DockedPanel {
                             }
                         }
 
-
                         newPostItem.replyTo
                             ? pageStack.push("../pages/Captcha2Page.qml",
                               {
@@ -329,15 +329,27 @@ DockedPanel {
 
 Component {
     id: filePickerPage
-    //FilePickerPage {
+
+    FilePickerPage {
+        id: filePicker
+        visible: false
+        nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
+        onSelectedContentPropertiesChanged: {
+            newPostItem.selectedFile = selectedContentProperties.filePath
+            selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
+        }
+    }
+
+    /*
     ImagePickerPage {
-        //nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
+        id: imagePicker
+        visible: true
         onSelectedContentPropertiesChanged: {
             newPostItem.selectedFile = selectedContentProperties.filePath
             //newPostItem.selectedImageThumb.source = selectedContentProperties.filePath
             selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
         }
-    }
+    }*/
 }
 
 function clearFields(){
@@ -346,12 +358,12 @@ function clearFields(){
 
     subjectText.text = "";
     nameText.text = "";
-    optionsText.text = "";
+    //optionsText.text = "";
     commentText.text = "";
 
     subjectText.focus = false;
     nameText.focus = false;
-    optionsText.focus = false;
+    //optionsText.focus = false;
     commentText.focus = false;
 
 }

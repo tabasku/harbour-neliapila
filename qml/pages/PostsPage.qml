@@ -24,15 +24,6 @@ AbstractPage {
 
     title: "<b>/" + boardId + "/</b>"+postNo
 
-    Drawer {
-        id: drawer
-
-        anchors.fill: parent
-        dock: postsPage.isPortrait ? Dock.Top : Dock.Left
-        //height: screen.height
-
-        background: PostEditor {}
-
         SilicaListView {
             id: listView
             model: postsModel
@@ -292,7 +283,7 @@ AbstractPage {
             }
 
         }
-    }
+
 
     Component.onCompleted: {
 
