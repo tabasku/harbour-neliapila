@@ -15,6 +15,7 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import io.thp.pyotherside 1.4
 import "../items"
 
 Page {
@@ -33,7 +34,7 @@ Page {
 
     property int padding : Theme.paddingSmall
     property int infoFontSize: Theme.fontSizeSmall
-    property variant infoFontColor: Theme.secondaryHighlightColor
+    property color infoFontColor: Theme.secondaryHighlightColor
     property int postFontSize: Theme.fontSizeMedium
     property int pageMargin : Theme.horizontalPageMargin
     property bool animations : false

@@ -12,6 +12,7 @@ AbstractPage {
     property var postsToShow;
     property var modelToStrip;
     property bool pinned;
+    property int replyTo: postNo
 
     function getBackToPost(){
         pageStack.pop(pageStack.find( function(page){ return(page._depth === 1)} ), PageStackAction.Immediate)
@@ -23,206 +24,266 @@ AbstractPage {
 
     title: "<b>/" + boardId + "/</b>"+postNo
 
-    SilicaListView {
-        id: listView
-        model: postsModel
-        anchors.fill: parent
-        focus: true
-        VerticalScrollDecorator {}
+        SilicaListView {
+            id: listView
+            model: postsModel
+            anchors.fill: parent
+            focus: true
+            VerticalScrollDecorator {}
 
-        PullDownMenu {
-            id: postsPullDownMenu
-            busy : busy
-
-            MenuItem {
-                text: qsTr("Open thread in browser")
-                onClicked: {
-                    var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo
-                    infoBanner.alert("Opening thread in web browser");
-                    Qt.openUrlExternally(url)
-                }
-            }
-
-            MenuItem {
-                text: "Add pin"
-                visible: !pinned && pageStack.depth === 2
-                onClicked: {
-                    //console.log("Add pin for post "+postNo +" on board "+boardId)
-                    pyp.pin(postNo,boardId)
-                }
-            }
-            MenuItem {
-                text: "Remove pin"
-                visible: pinned && pageStack.depth === 2
-                onClicked: {
-                    //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
-                    pyp.unpin(postNo,boardId)
-                }
-            }
-            MenuItem {
-                id: backToPost
-                text: qsTr("Back to "+postNo )
-                visible: false
-                onClicked: {
-                    getBackToPost()
-                }
-            }
-            MenuItem {
-                text: qsTr("Reload")
-                onClicked: {
-                    //postsModel.clear()
-                    //postWorker.getData()
-                    pyp.getPosts(boardId,postNo)
-                    infoBanner.alert("Refreshing...")
-                }
-            }
-        }
-
-        Button{
-            id: moreInfoButton
-            visible: false
-            text: "More info"
-            anchors.centerIn: parent
-            anchors.verticalCenterOffset: parent.height*0.1
-            property string fullError
-            property string errorTitle
-            onClicked: {
-                pageStack.push(Qt.resolvedUrl("TextPage.qml"),
-                               {
-                                   "title" : errorTitle,
-                                   "content": fullError
-                               });
-            }
-        }
-
-        ViewPlaceholder {
-            id: postViewPlaceholder
-            text: "Something crashed..."
-            enabled: false
-        }
-
-        header: PageHeader {
-            title: {
-                if(postsToShow){
-                    qsTr("<b>/" + boardId + "/</b>"+postNo+"/replies")
-                }
-                else{
-                    qsTr("<b>/" + boardId + "/</b>"+postNo)
-                }
-            }
-        }
-
-        ListModel {
-            id: postsModel
-        }
-
-        Component {
-            id: contextMenuComponent
-
-            ContextMenu {
-                property string postReplies
-                //property var postReplies : []
-                property string com
-                property var quote
-                property var thisPostNo
-                property var modelToStrip
-                visible: mode === "thread" ? false : true
+            PullDownMenu {
+                id: postsPullDownMenu
+                busy : busy
 
                 MenuItem {
-                    visible: postReplies ? true : false
-                    text: qsTr("View replies")
-                    onClicked:{
-                        postsToShow = postReplies
-                        if(modelToStrip){
-                            //console.log("WE HAVE TO HO DEEPPER")
-                            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
-                                               postNo: thisPostNo,
-                                               boardId: boardId,
-                                               modelToStrip : modelToStrip,
-                                               postsToShow : postsToShow
-                                           } )
-                        }
-                        else{
-                            console.log("no modelstrip")
-                            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
-                                               postNo: thisPostNo,
-                                               boardId: boardId,
-                                               modelToStrip : postsModel,
-                                               postsToShow : postsToShow
-                                           } )
-                        }
-                    }
-                }
-                /*
-                MenuItem {
-                    text: qsTr("Reply")
+                    text: qsTr("Open thread in browser")
                     onClicked: {
-                        var replyform = pageStack.nextPage()
-                        //pageStack.previousPage()
-                        replyform.comment = comment + comm
-                        navigateForward()
-                    }
-                }*/
-                MenuItem {
-                    text: "Show text"
-
-                    visible: com !== "" ? true : false
-
-                    onClicked: {
-                        com = com.replace(/<(?:.|\n)*?>/gm, '\n');
-                        pageStack.push(Qt.resolvedUrl("TextPage.qml"),
-                                       {
-                                           "title" : postNo,
-                                           "content": com
-                                       });
-                    }
-                }
-                MenuItem {
-                    text: qsTr("Open post in browser")
-                    onClicked: {
-
-                        var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo+"#p"+thisPostNo
-                        infoBanner.alert("Opening post in web browser");
+                        var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo
+                        infoBanner.alert("Opening thread in web browser");
                         Qt.openUrlExternally(url)
                     }
                 }
 
+                MenuItem {
+                    text: "Add pin"
+                    visible: !pinned && pageStack.depth === 2
+                    onClicked: {
+                        //console.log("Add pin for post "+postNo +" on board "+boardId)
+                        pyp.pin(postNo,boardId)
+                    }
+                }
+                MenuItem {
+                    text: "Remove pin"
+                    visible: pinned && pageStack.depth === 2
+                    onClicked: {
+                        //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
+                        pyp.unpin(postNo,boardId)
+                    }
+                }
+                MenuItem {
+                    id: backToPost
+                    text: qsTr("Back to "+postNo )
+                    visible: false
+                    onClicked: {
+                        getBackToPost()
+                    }
+                }
+
+                MenuItem {
+                    text: qsTr("Reply")
+                    enabled: !replyPostPanel.open
+                    visible: pageStack.depth === 2
+                    onClicked: {
+                        replyPostPanel.open = !replyPostPanel.open
+                    }
+                }
+
+                MenuItem {
+                    text: qsTr("Reload")
+                    onClicked: {
+                        //postsModel.clear()
+                        //postWorker.getData()
+                        pyp.getPosts(boardId,postNo)
+                        infoBanner.alert("Reloading...")
+                    }
+                }
             }
-        }
 
-        WorkerScript {
-            id: stripper
-            source: "../js/stripper.js"
-            onMessage: {
-                busy = messageObject.busy
+            Button{
+                id: moreInfoButton
+                visible: false
+                text: "More info"
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: parent.height*0.1
+                property string fullError
+                property string errorTitle
+                onClicked: {
+                    pageStack.push(Qt.resolvedUrl("TextPage.qml"),
+                                   {
+                                       "title" : errorTitle,
+                                       "content": fullError
+                                   });
+                }
             }
-            function work(){
 
-                sendMessage({
-                                'postNo': postNo,
-                                'model': postsModel,
-                                'postsToShow': postsToShow,
-                                'modelToStrip': modelToStrip
-                            });
+            ViewPlaceholder {
+                id: postViewPlaceholder
+                text: "Something crashed..."
+                enabled: false
             }
+
+            header: PageHeader {
+                title: {
+                    if(postsToShow){
+                        qsTr("<b>/" + boardId + "/</b>"+postNo+"/replies")
+                    }
+                    else{
+                        qsTr("<b>/" + boardId + "/</b>"+postNo)
+                    }
+                }
+            }
+
+            ListModel {
+                id: postsModel
+            }
+
+            Component {
+                id: contextMenuComponent
+
+                ContextMenu {
+                    property string postReplies
+                    //property var postReplies : []
+                    property string com
+                    property var quote
+                    property var thisPostNo
+                    property var modelToStrip
+                    visible: mode === "thread" ? false : true
+
+                    MenuItem {
+                        visible: postReplies && !replyPostPanel.open ? true : false
+
+                        text: qsTr("View replies")
+                        onClicked:{
+                            postsToShow = postReplies
+                            if(modelToStrip){
+                                //console.log("WE HAVE TO HO DEEPPER")
+                                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
+                                                   postNo: thisPostNo,
+                                                   boardId: boardId,
+                                                   modelToStrip : modelToStrip,
+                                                   postsToShow : postsToShow
+                                               } )
+                            }
+                            else{
+                                console.log("no modelstrip")
+                                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
+                                                   postNo: thisPostNo,
+                                                   boardId: boardId,
+                                                   modelToStrip : postsModel,
+                                                   postsToShow : postsToShow
+                                               } )
+                            }
+                        }
+                    }
+                    /*
+                    MenuItem {
+                        text: qsTr("Reply")
+                        onClicked: {
+                            var replyform = pageStack.nextPage()
+                            //pageStack.previousPage()
+                            replyform.comment = comment + comm
+                            navigateForward()
+                        }
+                    }
+                    MenuItem {
+                        text: "Show text"
+                        enabled: false
+
+                        visible: com !== "" ? true : false
+
+                        onClicked: {
+                            com = com.replace(/<(?:.|\n)*?>/gm, '\n');
+                            pageStack.push(Qt.resolvedUrl("TextPage.qml"),
+                                           {
+                                               "title" : postNo,
+                                               "content": com
+                                           });
+                        }
+                    }
+
+                    MenuItem {
+                        text: qsTr("Open post in browser")
+                        visible: !replyPostPanel.open
+                        onClicked: {
+
+                            var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo+"#p"+thisPostNo
+                            infoBanner.alert("Opening post in web browser");
+                            Qt.openUrlExternally(url)
+                        }
+                    }*/
+
+                    MenuItem {
+                        text: qsTr("Quote")
+                        onClicked: {
+                            replyPostPanel.open = true
+                            replyPostPanel.addQuote(String(">>"+thisPostNo));
+
+/*
+                            replyPostPanel.open = true
+                            replyPostPanel.comment
+                                    ? replyPostPanel.comment += String("\n>>"+thisPostNo)
+                                    : replyPostPanel.comment = String(">>"+thisPostNo)
+                                    */
+                        }
+                    }
+
+                    MenuItem {
+                        text: qsTr("Quote text")
+                        visible: com !== "" ? true : false
+                        onClicked: {
+
+                            var strippedComment = com.replace(/<(?:.|\n)*?>/gm, '');
+                            var quote = String(">>"+thisPostNo + "\n>"+strippedComment.replace(/>>\d+/gm, ''))
+                            console.log(strippedComment)
+                            replyPostPanel.open = true;
+
+                            replyPostPanel.addQuote(quote);
+/*
+                            replyPostPanel.comment
+                                        ?  replyPostPanel.comment += "\n"+quote
+                                        :  replyPostPanel.comment = quote;
+*/
+                        }
+                    }
+
+                }
+            }
+
+            WorkerScript {
+                id: stripper
+                source: "../js/stripper.js"
+                onMessage: {
+                    busy = messageObject.busy
+                }
+                function work(){
+
+                    sendMessage({
+                                    'postNo': postNo,
+                                    'model': postsModel,
+                                    'postsToShow': postsToShow,
+                                    'modelToStrip': modelToStrip
+                                });
+                }
+            }
+
+            delegate: PostItem{
+                id: delegate
+            }
+
+            add: Transition {
+                NumberAnimation { property: "opacity"; easing.type: Easing.InQuad; from: 0; to: 1.0; duration: 300 }
+            }
+
+            populate: Transition {
+                NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
+            }
+
+            footer:PostsPageFooter{
+            }
+
         }
 
-        delegate: PostItem{
-            id: delegate
+        DockedNewPost {
+
+            id: replyPostPanel
+            width: parent.width
+            dock: Dock.Bottom //postsPage.isPortrait ? Dock.Bottom : Dock.Right
+            onOpenChanged: {
+                replyPostPanel.replyTo = postNo;
+            }
+
         }
 
-        add: Transition {
-            NumberAnimation { property: "opacity"; easing.type: Easing.InQuad; from: 0; to: 1.0; duration: 300 }
-        }
-
-        populate: Transition {
-            NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
-        }
-
-        footer:PostsPageFooter{
-        }
-
-    }
 
     Component.onCompleted: {
 
@@ -238,22 +299,39 @@ AbstractPage {
         //        }
 
     }
+
     /*
-    onStatusChanged: {
-        if (status === PageStatus.Active && pageStack.depth > 2) {
-            backMenuItem.visible = true
+    IconButton {
+        anchors {
+            right: parent.right
+            bottom: parent.bottom
+            margins: {
+                left: Theme.paddingLarge
+                bottom: Theme.paddingLarge
+            }
         }
-        else if(status === PageStatus.Active && pageStack.depth !== 0) {
-            backMenuItem.visible = true
+
+        id: replyPost
+        width: Theme.iconSizeLarge
+        height: width
+        visible: !isPortrait ? true : !replyPostPanel.open
+        enabled: boardId ? true: false
+        icon.source: replyPostPanel.open
+                     ? "image://theme/icon-l-clear"
+                     : "image://theme/icon-l-add"
+        onClicked: {
+            replyPostPanel.open = !replyPostPanel.open
+            postsPage.forwardNavigation = !replyPostPanel.open
         }
-    }*/
+    }
+    */
 
     Python {
         id: pyp
 
         Component.onCompleted: {
             // Add the Python library directory to the import path
-            var pythonpath = Qt.resolvedUrl('../py/').substr('file://'.length);
+            var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
             //var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
             addImportPath(pythonpath);
             //console.log("Threads: "+pythonpath);
@@ -310,6 +388,50 @@ AbstractPage {
 
             importModule('posts', function() {});
             importModule('pinned', function() {});
+
+            importModule('posting', function() {});
+
+            setHandler('set_challenge', function(result) {
+
+            });
+
+             setHandler('reply_successfull', function(result) {
+                 console.log("SUCCESS : "+result);
+                 replyPostPanel.busy = false
+                 replyPostPanel.open = false
+                 replyPostPanel.clearFields();
+
+                 infoBanner.alert("Reply sent, reloading..")
+                 pyp.getPosts(boardId,postNo)
+
+
+             });
+
+            setHandler('reply_failed', function(result) {
+                console.log("FAILED REPLY: "+result);
+
+                if(String(result).search('banned')){
+                    infoBanner.alert("You are banned ;_;");
+                }
+                else{
+                    infoBanner.alert("Failed to send");
+                }
+                replyPostPanel.busy = false;
+
+            });
+
+            setHandler('reply_set_response', function(result) {
+                if(result.length === 1){
+                    //console.log("set_response fired from reply "+result);
+                    replyPostPanel.captcha_token = result[0]
+                    replyPostPanel.busy = true
+                    post()
+                }
+                else {
+                    infoBanner.alert("Something went wrong, try reverify")
+                }
+
+            });
 
         }
 
@@ -375,13 +497,34 @@ AbstractPage {
                     pin = 0
                 }
 
-
-
                 var updateItem
                 updateItem = postsModel.get(0)
                 updateItem.pin = pin
             }
 
+
+        }
+
+        function post(){
+            //if(!replyPostPanel.comment.length){infoBanner.alert("Cannot post without comment");return}
+            console.log("Replying to "+postNo)
+            console.log("posting with captchatoken "+replyPostPanel.captcha_token)
+            console.log("posting with filepath "+replyPostPanel.selectedFile)
+            console.log("posting with subject "+replyPostPanel.subject)
+            console.log("posting with comment "+replyPostPanel.comment)
+
+            console.log("posting to board "+boardId)
+
+            call('posting.post', [
+                     replyPostPanel.nickname,
+                     replyPostPanel.comment,
+                     replyPostPanel.subject,
+                     replyPostPanel.selectedFile,
+                     replyPostPanel.captcha_token,
+                     boardId,
+                     replyTo
+                 ], function() {});
+            //(nickname="", comment="", subject="", file_attach="", captcha_response="")
 
         }
 

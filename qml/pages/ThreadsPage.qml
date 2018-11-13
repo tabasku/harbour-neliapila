@@ -38,9 +38,14 @@ AbstractPage {
     SilicaListView {
         id: listView
         model: currentModel
-        anchors.fill: parent
-        focus: true
+        //anchors.fill: parent
+        anchors {
+            fill: parent
+        }
+        //focus: true
         VerticalScrollDecorator {}
+
+        //height:  drawer.open ? parent.height/2 : parent.height
 
         PullDownMenu {
             id: mainPullDownMenu
@@ -53,6 +58,7 @@ AbstractPage {
 //                    pageStack.push("SettingsPage.qml");
 //                }
 //            }
+
 
             MenuItem {
                 text: qsTr("About")
@@ -72,6 +78,15 @@ AbstractPage {
             }
 
             MenuItem {
+                text: qsTr("New post");
+                enabled: !newPostPanel.open
+                onClicked: {
+                    newPostPanel.open = !newPostPanel.open
+                    //threadPage.forwardNavigation = false
+                }
+            }
+
+            MenuItem {
                 id: backToThreadMode
                 //text: qsTr("/"+ boardId+"/")
                 text: "Back to <b>/"+boardId+"/</b>"
@@ -84,12 +99,12 @@ AbstractPage {
 
             MenuItem {
                 id:menuRefresh
-                text: qsTr("Refresh")
+                text: qsTr("Reload")
                 enabled: false
-
+                visible: mode === "thread"
                 onClicked: {
                     pyt.getThreads(boardId,pageNo)
-                    infoBanner.alert("Refreshing...")
+                    infoBanner.alert("Reloading...")
                 }
             }
             Label{
@@ -209,6 +224,14 @@ AbstractPage {
         }
     }
 
+    DockedNewPost {
+        id: newPostPanel
+        width: parent.width
+        dock: Dock.Bottom //threadPage.isPortrait ? Dock.Top : Dock.Right
+    }
+
+
+
     Component.onCompleted: {
 
         if(boardId){
@@ -259,14 +282,49 @@ AbstractPage {
             pageStack.pushAttached(Qt.resolvedUrl("NaviPage.qml"),{boardId: boardId} );
             pyt.getPinned()
         }
+
+        //newPostPanel.open = false;
+        //newPostPanel.clear();
     }
+
+    /*
+    IconButton {
+        anchors {
+            //right: (threadPage.isPortrait ? parent.right : parent.left)
+            //bottom: (threadPage.isPortrait ? infoPanel.top : parent.bottom)
+            right: parent.right
+            bottom: parent.bottom
+            margins: {
+                left: Theme.paddingLarge
+                bottom: Theme.paddingLarge
+            }
+        }
+
+        id: newPost
+        width: Theme.iconSizeLarge
+        height: width
+        visible: !isPortrait ? true : !newPostPanel.open
+        enabled: boardId ? true: false
+        icon.source: newPostPanel.open
+                     ? "image://theme/icon-l-clear"
+                     : "image://theme/icon-l-add"
+        onClicked: {
+            newPostPanel.open = !newPostPanel.open
+
+
+            //newPostPanel.show()
+            //drawer.open = true
+            threadPage.forwardNavigation = !newPostPanel.open
+        }
+    }*/
 
     Python {
         id: pyt
 
         Component.onCompleted: {
             // Add the Python library directory to the import path
-            var pythonpath = Qt.resolvedUrl('../py/').substr('file://'.length);
+            var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
+
             //var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
             addImportPath(pythonpath);
             //console.log("Threads: "+pythonpath);
@@ -348,8 +406,6 @@ AbstractPage {
 
                     for (var i=0; i<result.length; i++) {
                         updateItem.postCount = result[i]['postCount']
-                        //updateItem.threadDead = result[i]['threadDead']
-                        //updateItem.closed = result[i]['closed']
                     }
 
                 }
@@ -358,6 +414,89 @@ AbstractPage {
 
             importModule('threads', function() {});
             importModule('pinned', function() {});
+
+            setHandler('reply_successfull', function(result) {
+
+            });
+
+            setHandler('reply_failed', function(result) {
+
+            });
+
+            setHandler('set_challenge', function(result) {
+
+            });
+
+            setHandler('reply_set_response', function(result) {
+
+            });
+
+            importModule('posting', function() {});
+
+             setHandler('post_successfull', function(result) {
+                 console.log("SUCCESS : "+result);
+                 newPostPanel.busy = false;
+                 newPostPanel.open = false;
+                 newPostPanel.clearFields();
+                 threadPage.forwardNavigation = true;
+                 var newPostId = result[1];
+
+                 //infoBanner.alert("Post sent, refreshing..");
+                 pyt.getThreads(boardId,pageNo);
+                 Remorse.popupAction(threadPage, "Post sent, opening your thread", function() {
+                     console.log("remorse fired")
+                     pageStack.push("PostsPage.qml", {postNo: newPostId, boardId: boardId, pinned: false} )
+                 })
+
+             });
+
+            setHandler('post_failed', function(result) {
+                console.log("FAILED : "+result);
+                if(String(result).search('banned')){
+                    infoBanner.alert("You are banned ;_;");
+                }
+                else{
+                    infoBanner.alert("Failed to send");
+                }
+                newPostPanel.busy = false;
+                threadPage.forwardNavigation = true;
+
+            });
+
+            setHandler('post_set_response', function(result) {
+                if(result.length === 1){
+                    console.log("threads post_set_response "+result);
+                    newPostPanel.captcha_token = result[0]
+                    newPostPanel.busy = true
+                    post()
+                }
+                else {
+                    infoBanner.alert("Something went wrong, try reverify");
+                }
+
+            });
+
+        }
+
+        function post(){
+
+            console.log("posting with captchatoken "+newPostPanel.captcha_token)
+            console.log("posting with filepath "+newPostPanel.selectedFile)
+            console.log("posting with subject "+newPostPanel.subject)
+            console.log("posting to board "+boardId)
+
+
+
+            call('posting.post', [
+                     newPostPanel.nickname,
+                     newPostPanel.comment,
+                     newPostPanel.subject,
+                     newPostPanel.selectedFile,
+                     newPostPanel.captcha_token,
+                     boardId
+                 ], function() {});
+            //(nickname="", comment="", subject="", file_attach="", captcha_response="")
+
         }
 
         function getThreads(boardId,pageNo){
@@ -451,5 +590,4 @@ AbstractPage {
             console.log('threads got message from python: ' + data);
         }
     }
-
 }

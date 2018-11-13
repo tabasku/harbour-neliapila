@@ -86,178 +86,6 @@ AbstractPage {
             }
 
 
-//            SectionHeader {
-//                id: pinnedHeader
-
-//                Label{
-//                    //: headline for all automatic smart lists
-//                    //% "Smart lists"
-//                    id: pinnedHeaderLabel
-//                    text: "Pinned posts"
-//                    font.family: Theme.fontFamily
-//                    font.pixelSize: Theme.fontSizeMedium
-//                    anchors{
-//                        //topMargin: parent.height*0.1
-//                        right: parent.right
-//                        top: parent.top
-//                    }
-//                    color: Theme.highlightColor
-//                }
-//                MouseArea{
-//                    anchors.fill: parent
-//                    onClicked: {
-//                        if(headerRepeater.model === 0)
-//                            headerRepeater.model = 5
-//                        else
-//                            headerRepeater.model = 0
-
-//                    }
-//                }
-
-//            }
-
-
-//            Column {
-
-//                id: smartListContainer
-//                width: parent.width
-
-//                Repeater {
-//                    focus: true
-
-//                    id: headerRepeater
-//                    model: 1
-
-//                    delegate: BackgroundItem {
-//                        id: headerDelegate
-
-//                        Text {
-//                            id:pinnedCom
-
-//                            //x: Theme.paddingLarge
-//                            //antialiasing: true
-//                            //maximumLineCount:1
-//                            font.family: Theme.fontFamily
-//                            //font.pixelSize: Theme.fontSizeSmall
-//                            //wrapMode: Text.WordWrap
-
-//                            //text: "<b>/adv/</b> Pinned post lorem k"+index
-//                            //text : "<b>/" + pinFromBoard +"/</b> - " + shortCom
-//                            text: "Pinned Posts"
-//                            width: parent.width-pinNewPostCounter.width
-//                            anchors{
-//                                left: parent.left
-//                                right: pinNewPostCounter.left
-//                                verticalCenter: parent.verticalCenter
-//                                margins: Theme.paddingMedium
-//                            }
-//                            clip: true
-//                            smooth: true
-//                            color: headerDelegate.highlighted ? Theme.highlightColor : Theme.primaryColor
-//                        }
-
-//                        Rectangle{
-//                            id: pinNewPostCounter
-//                            width: parent.width*0.1
-//                            height:parent.height*0.45
-//                            radius: 3
-//                            gradient: Gradient {
-//                                GradientStop { position: 0.0; color: Theme.secondaryHighlightColor }
-//                                GradientStop { position: 1.0; color: "transparent" }
-//                            }
-//                            anchors{
-//                                right: parent.right
-//                                verticalCenter: parent.verticalCenter
-//                                margins: Theme.paddingLarge
-//                            }
-
-//                            Text{
-//                                id: pinNewPostCounterText
-//                                text: "999"
-//                                color: Theme.primaryColor
-//                                font.family: Theme.fontFamily
-//                                font.pixelSize: Theme.fontSizeSmall
-//                                anchors.horizontalCenter: parent.horizontalCenter
-//                                anchors.verticalCenter: parent.verticalCenter
-
-
-//                                function setpinNewPostCounterText(txt){
-//                                    text = txt
-//                                }
-
-//                            }
-
-
-//                        }
-
-//                        onClicked: {
-//                            console.log("Clicked " + index)
-//                            var threadPage = pageStack.find(function(page) { return page.objectName === "threadPage"; });
-//                            if (threadPage){
-//                                threadPage.showPinnedPage = true
-//                                naviPage.backNavigation = true
-//                                pageStack.navigateBack()
-//                            }
-//                            else{
-//                                pageStack.navigateBack()
-//                            }
-//                        }
-
-//                    }
-//                }
-
-
-//            }
-
-
-//            SectionHeader {
-//                id: boardsHeader
-
-
-
-//                Label{
-//                    //: headline for all automatic smart lists
-//                    //% "Smart lists"
-//                    id: boardsHeaderLabel
-//                    text: "Boards"
-//                    font.family: Theme.fontFamily
-//                    font.pixelSize: Theme.fontSizeMedium
-//                    anchors{
-//                        topMargin: parent.height*0.1
-//                        right: parent.right
-//                        top: parent.top
-//                    }
-//                    color: Theme.highlightColor
-//                }
-//                Image{
-//                    //source: "image://theme/icon-m-refresh"
-//                    source: {
-//                        if(show_model === boardModel)
-//                            "image://theme/icon-m-favorite"
-//                        else
-//                            "image://theme/icon-m-favorite-selected"
-//                    }
-
-//                    width: parent.height*0.8
-//                    height: width
-//                    anchors{
-
-//                        top: parent.top
-//                        right: boardsHeaderLabel.left
-//                    }
-//                    MouseArea{
-//                        anchors.fill: parent
-//                        onClicked: {
-//                            if(show_model === boardModel)
-//                                show_model = favoriteModel
-//                            else
-//                                show_model = boardModel
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
         Button{
             id: moreInfoButton
             visible: false
@@ -418,7 +246,7 @@ AbstractPage {
 
                 onPressAndHold: {
                     contextMenu = boardContextMenuComponent.createObject(boardListView, {board: board, title: title,favorite: favorite,default_board:!default_board,index:index})
-                    contextMenu.show(parent)
+                    contextMenu.open(parent)
                 }
 
             }
@@ -512,7 +340,7 @@ AbstractPage {
 
         Component.onCompleted: {
             // Add the Python library directory to the import path
-            var pythonpath = Qt.resolvedUrl('../py/').substr('file://'.length);
+            var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
             //var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
             addImportPath(pythonpath);
             //console.log("Boards " +pythonpath);
@@ -540,6 +368,44 @@ AbstractPage {
             setHandler('pinned_all_update', function(result) {
                 //To silence onReceived from posts
             });
+
+            setHandler('set_challenge', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('set_response', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('failed_challenge', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('post_successfull', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('reply_successfull', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('post_failed', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('reply_failed', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('post_set_response', function(result) {
+                //To silence onReceived from boards
+            });
+
+            setHandler('reply_set_response', function(result) {
+                //To silence onReceived from boards
+            });
+
+
 
             setHandler('boards', function(result) {
                 if(boardHolder.enabled){
@@ -635,7 +501,7 @@ AbstractPage {
         onReceived: {
             //            // asychronous messages from Python arrive here
             //            // in Python, this can be accomplished via pyotherside.send()
-            console.log('boards got message from python: ' + data);
+            //console.log('boards got message from python: ' + data);
         }
     }
 
