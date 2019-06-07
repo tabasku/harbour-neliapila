@@ -1,3 +1,19 @@
+/*
+    Neliapila - 4chan.org client for SailfishOS
+    Copyright (C) 2015  Joni Kurunsaari
+    Copyright (C) 2019  Jacob Gold
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see [http://www.gnu.org/licenses/].
+*/
+
 import QtQuick 2.1
 import Sailfish.Silica 1.0
 import "../items"
@@ -20,7 +36,7 @@ AbstractPage {
             switch (imageItem.status) {
             case Image.Ready : {
                 imagePage.busy=false
-                thumbnail_streched.visible = false
+                thumbnail_stretched.visible = false
                 return undefined
             }
 
@@ -39,7 +55,6 @@ AbstractPage {
         Component {
             id: busyIndicatorComponent
 
-
             Rectangle {
                 color: Theme.highlightBackgroundColor
                 width: imagePage.width
@@ -51,12 +66,9 @@ AbstractPage {
                     size: BusyIndicatorSize.Small
                     running: true
                     anchors {
-//                            left: parent.left
                         verticalCenter: parent.verticalCenter
-//                            leftMargin: Theme.paddingSmall
                         right : imageLoaderText.left
                         rightMargin: Theme.paddingSmall
-
                     }
                 }
 
@@ -65,20 +77,21 @@ AbstractPage {
 
                     text: "Loading image "+Math.round(imageItem.progress * 100) + "%"
                     anchors {
-                        //left: imageLoaderIndicator.right; right: parent.right; margins: Theme.paddingMedium
                         verticalCenter: parent.verticalCenter
                         horizontalCenter: parent.horizontalCenter
                     }
-                    //elide: Text.ElideRight
                     font.pixelSize: Theme.fontSizeSmall
                     color: Theme.primaryColor
                 }
             }
 
-
-
         }
-        Component { id: failedLoading; Label { text: qsTr("Error") } }
+        Component {
+            id: failedLoading;
+            Label {
+                text: qsTr("Error")
+            }
+        }
     }
 
     title : filename
@@ -90,10 +103,18 @@ AbstractPage {
         anchors.fill: parent
         pressDelay: 0
         function _fit() {
-            contentX = 0
-            contentY = 0
-            contentWidth = width
-            contentHeight = height
+            fitAnimation.start()
+        }
+
+        // Animation for zooming out
+        ParallelAnimation {
+            id: fitAnimation
+            running: false
+
+            NumberAnimation { target: picFlick; property: "contentWidth"; to: width; duration: 100 }
+            NumberAnimation { target: picFlick; property: "contentHeight"; to: height; duration: 100 }
+            NumberAnimation { target: picFlick; property: "contentX"; to: 0; duration: 100 }
+            NumberAnimation { target: picFlick; property: "contentY"; to: 0; duration: 100 }
         }
 
         PullDownMenu {
@@ -110,9 +131,9 @@ AbstractPage {
                 text: qsTr("Save as")
                 onClicked: pageStack.push(Qt.resolvedUrl("SaveFilePage.qml"), {uri: imgUrl})
             }
+
             Label{
                 text: title
-                //wrapMode: Text.WordWrap
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryHighlightColor
@@ -120,15 +141,14 @@ AbstractPage {
                 smooth: true
                 anchors.horizontalCenter: parent.horizontalCenter
             }
-
         }
-
 
         PinchArea {
             width: Math.max(picFlick.contentWidth, picFlick.width)
             height: Math.max(picFlick.contentHeight, picFlick.height)
             property real initialWidth
             property real initialHeight
+
             onPinchStarted: {
                 initialWidth = picFlick.contentWidth
                 initialHeight = picFlick.contentHeight
@@ -148,7 +168,25 @@ AbstractPage {
             onPinchFinished: {
                 picFlick.returnToBounds()
             }
+
+            // Doubletap to zoom and doubletap to return to images
+            MouseArea {
+                id: doubleTapArea
+                width: Math.max(picFlick.contentWidth, picFlick.width)
+                height: Math.max(picFlick.contentHeight, picFlick.height)
+
+                onDoubleClicked: function() {
+                    if (picFlick.contentWidth <= picFlick.width) {
+                        picFlick.resizeContent(picFlick.width * 2.0, picFlick.height * 2.0, Qt.point(doubleTapArea.mouseX, doubleTapArea.mouseY))
+                        picFlick.returnToBounds()
+                    }
+                    else {
+                        picFlick._fit()
+                    }
+                }
+            }
         }
+
         Item {
             id:imageArea
             width: picFlick.contentWidth
@@ -162,15 +200,15 @@ AbstractPage {
                 smooth: false
                 anchors.fill: parent
             }
-            Image{
+
+            Image {
                 smooth: false
-                id:thumbnail_streched
+                id:thumbnail_stretched
                 source: thumbUrl
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectFit
                 asynchronous : true
                 opacity: busy ? 0.5 : 1
-                //visible:false
             }
         }
     }
