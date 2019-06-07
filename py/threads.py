@@ -42,7 +42,7 @@ def get_threads(board_id,page_no):
         thread_values['no'] = topic.post_number
         thread_values['board'] = board_id
         thread_values['post_board'] = board_id
-        thread_values['replies'] = len(thread.posts)-1
+        thread_values['replies'] = int(thread.num_replies)
         thread_values['sticky'] = int(thread.sticky)
         thread_values['closed'] = int(thread.closed)
         thread_values['name'] = topic.name
