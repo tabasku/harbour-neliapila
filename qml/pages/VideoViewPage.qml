@@ -1,8 +1,9 @@
 /*
     This file based on:
-	Quickddit - Reddit client for mobile phones
+    Quickddit - Reddit client for mobile phones
     Copyright (C) 2017  Sander van Grieken
-	modifications by szopin
+    modifications by szopin
+    modifications by jacquesCedric
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,7 +26,7 @@ import QtMultimedia 5.0
 
 Page {
     id: videoViewPage
- 
+
 
     property string imgUrl
     property string title
@@ -44,7 +45,6 @@ Page {
             MenuItem {
                 text: qsTr("Open in browser")
                 onClicked: {
-                    //infoBanner.alert("Launching external web browser...");
                     Qt.openUrlExternally(imgUrl)
                 }
             }
@@ -55,7 +55,6 @@ Page {
             }
             Label{
                 text: title
-                //wrapMode: Text.WordWrap
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryHighlightColor
@@ -65,7 +64,7 @@ Page {
             }
 
         }
-    
+
 
         MouseArea {
             anchors.fill: parent
@@ -83,16 +82,19 @@ Page {
                 id: mediaPlayer
                 autoPlay: false
                 onDurationChanged: loops = 1
-                onStopped: playPauseButton.opacity = 1
+                onStopped: {
+                    play()
+                    playPauseButton.opacity = 1
+                }
                 onError: {
                     infoBanner.warning(errorString);
                     console.log(errorString);
                 }
 
                 onBufferProgressChanged: {
-                    if (bufferProgress > 0.95)
+                    if (bufferProgress > 0.90)
                         play();
-                    else if (bufferProgress < 0.05)
+                    else if (bufferProgress < 0.10)
                         pause();
                 }
 
@@ -184,9 +186,7 @@ Page {
     }
 
     Component.onCompleted: {
-        
-            mediaPlayer.source = imgUrl
-        
+        mediaPlayer.source = imgUrl
     }
 
     Timer {
@@ -196,17 +196,10 @@ Page {
         onTriggered: {
             playPauseButton.opacity = 0
         }
-}
-        
+    }
 
-            
-            
-
-        onError: {
-            error = true
-            infoBanner.warning(qsTr("Problem finding stream URL"));
-        }
-
-    
-   
+    onError: {
+        error = true
+        infoBanner.warning(qsTr("Problem finding stream URL"));
+    }
 }
