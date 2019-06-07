@@ -11,7 +11,6 @@ BackgroundItem {
     property bool menuOpen: contextMenu != null && contextMenu.parent === delegate
 
     property int ratio: mode === "pinned" ? Math.round(parent.width/5):Math.round(parent.width/3)
-    //property int commentAreaWidth: Math.round(2*ratio-2*pageMargin)
     property int infoAreaHeight: Math.round(Theme.paddingLarge*2)
     property int contentAreaHeight: ratio
 
@@ -32,7 +31,7 @@ BackgroundItem {
 
     Column {
         id: post
-        anchors{
+        anchors {
             left:parent.left
             right:parent.right
             leftMargin: pageMargin
@@ -57,20 +56,20 @@ BackgroundItem {
                     anchors{
                         verticalCenter: parent.verticalCenter
                     }
-                    Label{
+
+                    Label {
                         id: timeText
                         text: now
                         font.pixelSize: infoFontSize
                         color: infoFontColor
                     }
-
                 }
 
                 Item {
                     id: postNoArea
                     width: parent.width-timeArea.width-padding
                     height: postNoText.contentHeight
-                    anchors{
+                    anchors {
                         verticalCenter: parent.verticalCenter
                     }
 
@@ -89,7 +88,7 @@ BackgroundItem {
                         }
                     }
 
-                    Image{
+                    Image {
                         id:closedImg
                         source: "image://theme/icon-s-secure"
                         height:postNoText.contentHeight*0.9
@@ -103,7 +102,7 @@ BackgroundItem {
                         }
                     }
 
-                    Label{
+                    Label {
                         id: postNoText
                         text: mode === "pinned" ? "<b>/"+post_board+"/</b>"+no : no
                         font.pixelSize: infoFontSize
@@ -117,17 +116,16 @@ BackgroundItem {
         }
         Item {
             width: parent.width;
-            //                    height: mode === "post" && !has_file ? postText.contentHeight :  contentAreaHeight;
             height: {
-                switch(mode){
+                switch(mode) {
                 case "post":
-                    if(has_file){
+                    if(has_file) {
                         if(contentAreaHeight < postText.contentHeight)
                             postText.contentHeight
                         else
                             contentAreaHeight
                     }
-                    else{
+                    else {
                         postText.contentHeight
                     }
 
@@ -150,10 +148,8 @@ BackgroundItem {
                     Image {
                         id: thumbImg
                         fillMode: Image.PreserveAspectCrop
-//                        smooth: true
                         asynchronous : true
                         source: !has_file ? "" : thumbUrl
-//                        clip: true
 
                         anchors{
                             fill: parent
@@ -187,7 +183,7 @@ BackgroundItem {
                                     text: ""//Math.round(thumbImg.progress * 100) + "%"
                                 }
 
-                                Rectangle{
+                                Rectangle {
                                     anchors.fill:parent
                                     color: infoFontColor
                                     opacity: 0.3
@@ -199,7 +195,6 @@ BackgroundItem {
                                     source: "image://theme/icon-m-image"
                                     NumberAnimation {
                                         id: animateOpacity
-                                        //target: flashingblob
                                         properties: "opacity"
                                         from: 0.2
                                         to: 1.0
@@ -216,7 +211,7 @@ BackgroundItem {
                                 width: thumbImg.width
                                 height: thumbImg.height
 
-                                Rectangle{
+                                Rectangle {
                                     anchors.fill:parent
                                     color: infoFontColor
                                     opacity: 0.3
@@ -228,7 +223,6 @@ BackgroundItem {
                                     height: thumbImg.height*0.5
                                     fillMode: Image.PreserveAspectFit
                                     anchors.centerIn: parent
-                                    //source: "image://theme/icon-m-image"
                                     source: "../img/image_not_found.png"
                                     opacity: 0.5
                                 }
@@ -241,8 +235,7 @@ BackgroundItem {
                         enabled: mode !== "pinned" ? true : false
                         anchors.fill: thumbImg
                         onClicked: {
-
-                            switch(ext){
+                            switch(ext) {
                             case ".webm":
                                 pageStack.push(Qt.resolvedUrl("../pages/VideoViewPage.qml"),
                                                {
@@ -278,7 +271,6 @@ BackgroundItem {
                         wrapMode: Text.Wrap
                         font.pixelSize: postFontSize
                         color: Theme.primaryColor
-                        //                        color: listView.isCurrentItem ? Theme.highlightColor : Theme.primaryColor
                         clip: mode === "post" ? false : true
                         linkColor : Theme.highlightColor
                         verticalAlignment: Text.AlignTop
@@ -290,7 +282,7 @@ BackgroundItem {
                             id: dots
                             height: 32
                             width: 32
-                            anchors{
+                            anchors {
                                 //left :parent.left
                                 bottom: parent.bottom
                                 right: parent.right
@@ -321,15 +313,12 @@ BackgroundItem {
                     id: nameArea
                     width: parent.width - infoArea.width
                     height: nameText.contentHeight
-                    //                    radius: 20.0
-                    //                    color: "#024c1c"
                     anchors{
                         verticalCenter: parent.verticalCenter
                         left: parent.left
                     }
                     Label{
                         id: nameText
-                        //text: mode === "pinned" ? "READ: "+last_read : name
                         text : name
                         font.pixelSize: infoFontSize
                         color: infoFontColor
@@ -395,7 +384,7 @@ BackgroundItem {
                             id: repcount
                             anchors.right: parent.left
                             anchors.verticalCenter: parent.verticalCenter
-                            text: mode === "pinned" ? "<b>New : " +postCount + "</b>" : replies
+                            text: mode === "pinned" ? "<b>New : " + postCount + "</b>" : replies
                             font.pixelSize :Theme.fontSizeTiny
                             color: infoFontColor
                         }
@@ -406,52 +395,71 @@ BackgroundItem {
     }
 
     onClicked: {
-
-
         switch(mode){
         case "pinned":
             pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: true } )
             break;
         case "thread":
-            if(pin){
+            if(pin) {
                 pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: true } )
             }
-            else{
+            else {
                 pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: false} )
             }
             break;
 
         default:
-            console.log("clicked "+ index)
+            var pP = pageStack.find(function(page) {
+                // This should stop the bug relating to deeper reply levels
+                return page.objectName === "postsPage" && page._depth < 2;
+            });
+
+            if (pP)
+                var modelToStrip = pP.returnModel()
+
+            if (postsModel.get(index).repliesList) {
+
+                var postsToShow = postsModel.get(index).repliesList
+                var thisPostNo = postsModel.get(index).no
+
+                if (modelToStrip) {
+                    pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
+                                       postNo: thisPostNo,
+                                       boardId: boardId,
+                                       modelToStrip : modelToStrip,
+                                       postsToShow : postsToShow
+                                   } )
+                }
+                else {
+                    pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
+                                       postNo: thisPostNo,
+                                       boardId: boardId,
+                                       modelToStrip : postsModel,
+                                       postsToShow : postsToShow
+                                   } )
+                }
+            }
         }
     }
 
     onPressAndHold: {
-
-        switch(mode){
+        switch(mode) {
         case "post":
             var postReplies
-            if(replies){
+            if(replies) {
                 postReplies = postsModel.get(index).repliesList
             }
 
-            var pP = pageStack.find(function(page) { return page.objectName === "postsPage"; });
+            var pP = pageStack.find(function(page) {
+                // Fixed deeper reply level filtering bug
+                return page.objectName === "postsPage" && page._depth < 2;
+            });
             if (pP)
                 var modelToStrip = pP.returnModel()
 
             contextMenu = contextMenuComponent.createObject(listView, {postReplies: postReplies, thisPostNo: no, modelToStrip : modelToStrip,com: com})
             contextMenu.open(delegate)
             break;
-
-            //        case "thread":
-            //            contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
-            //            contextMenu.show(delegate)
-            //            break;
-
-            //        case "pinned":
-            //            contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
-            //            contextMenu.show(delegate)
-            //            break;
 
         default:
             contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
