@@ -8,7 +8,6 @@ Page {
     Flickable {
         id: flickable
         anchors.fill: parent
-        //contentHeight: header.height + columnWrapper.height
 
         PageHeader { id: header; title: aboutPage.title }
 
@@ -27,7 +26,7 @@ Page {
             Label{
                 id: appName
                 anchors { top: appIcon.bottom }
-                text: "Neliapila 0.2-1"
+                text: "Neliapila 0.3"
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeLarge
@@ -51,7 +50,7 @@ Page {
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.primaryColor
                 wrapMode: Text.Wrap
-                text: "Please report issues on Github\nNew icon needed! ";
+                text: "Please report issues on Github";
             }
             Button {
                 id:github_button
@@ -80,11 +79,10 @@ Page {
             Text {
                 id: contributors
                 anchors { top: separator.bottom; left: parent.left; right: parent.right; margins: Theme.paddingLarge }
-                //horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.primaryColor
                 wrapMode: Text.Wrap
-                text: "Contributors:\n★ szopin https://github.com/szopin";
+                text: "Contributors:\n★ szopin https://github.com/szopin\n★ JacquesCedric https://github.com/jacquesCedric";
             }
 
         }
