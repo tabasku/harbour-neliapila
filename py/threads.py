@@ -36,7 +36,6 @@ def get_threads(board_id,page_no):
     thread_list = []
 
     for thread in threads:
-        print(thread.omitted_images)
         topic = thread.topic
         thread_values = {}
         thread_values['no'] = topic.post_number
