@@ -45,7 +45,7 @@ AbstractPage {
             model: postsModel
             anchors.fill: parent
             focus: true
-            quickScroll: false
+            // quickScroll: false
             VerticalScrollDecorator {}
 
             PushUpMenu {
