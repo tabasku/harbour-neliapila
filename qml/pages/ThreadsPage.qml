@@ -57,7 +57,7 @@ AbstractPage {
         anchors {
             fill: parent
         }
-        quickScroll: false
+        // quickScroll: false
 
         VerticalScrollDecorator { flickable: listView }
 
