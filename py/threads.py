@@ -27,11 +27,15 @@ def get_pages(board):
     return pages
 
 
-def get_threads(board_id,page_no):
+def get_threads(board_id):
     #threads = json.loads(req("https://a.4cdn.org/{board}/{page}.json".format(board=board, page=page)))
 
     board = basc_py4chan.Board(board_id)
-    threads = board.get_threads(page_no)
+
+    threads = []
+    for i in range(board.page_count):
+        if i != 0:
+            threads.extend(board.get_threads(i))
 
     thread_list = []
 
@@ -113,12 +117,10 @@ class Threads:
 
         if target_method == "get":
             board = args['board']
-            page = args['page']
-            self.bgthread = threading.Thread(target=get_threads(board,page))
+            self.bgthread = threading.Thread(target=get_threads(board))
 
         self.bgthread.start()
 
 data = Threads()
 
 #get_threads('g',1)
-

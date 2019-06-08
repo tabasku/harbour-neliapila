@@ -1,3 +1,19 @@
+/*
+    Neliapila - 4chan.org client for SailfishOS
+    Copyright (C) 2015-2019  Joni Kurunsaari
+    Copyright (C) 2019  Jacob Gold
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see [http://www.gnu.org/licenses/].
+*/
+
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../items"
@@ -16,11 +32,11 @@ AbstractPage {
 
     title: boardId ? "<b>/"+boardId+"/</b>" : "Neliapila"
 
-    function replacePage(){
+    function replacePage() {
         showPinnedPage = true
     }
 
-    function change_board(boardId){
+    function change_board(boardId) {
         if(helpTxt.enabled){
             helpTxt.enabled = false
         }
@@ -29,36 +45,49 @@ AbstractPage {
         pyt.getThreads(boardId,1)
     }
 
-    function change_page(pageNo){
+    function change_page() {
         listView.scrollToTop()
-        pyt.getThreads(boardId,pageNo)
-        infoBanner.alert("Page "+pageNo);
+        pyt.getThreads(boardId)
+        infoBanner.alert("Reload");
     }
 
     SilicaListView {
         id: listView
         model: currentModel
-        //anchors.fill: parent
         anchors {
             fill: parent
         }
-        //focus: true
-        VerticalScrollDecorator {}
+        // quickScroll: false
 
-        //height:  drawer.open ? parent.height/2 : parent.height
+        VerticalScrollDecorator { flickable: listView }
+
+        PushUpMenu {
+            id: mainPushUpMenu
+            busy: busy
+
+            MenuItem {
+                id:menuBottomRefresh
+                text: qsTr("Reload")
+                enabled: false
+                visible: mode === "thread"
+                onClicked: {
+                    pyt.getThreads(boardId)
+                    // A function to scroll to previous location
+                }
+            }
+        }
 
         PullDownMenu {
             id: mainPullDownMenu
-
             busy : busy
 
+            // Soon...
 //            MenuItem {
 //                text: qsTr("Settings")
 //                onClicked: {
 //                    pageStack.push("SettingsPage.qml");
 //                }
 //            }
-
 
             MenuItem {
                 text: qsTr("About")
@@ -82,13 +111,11 @@ AbstractPage {
                 enabled: !newPostPanel.open
                 onClicked: {
                     newPostPanel.open = !newPostPanel.open
-                    //threadPage.forwardNavigation = false
                 }
             }
 
             MenuItem {
                 id: backToThreadMode
-                //text: qsTr("/"+ boardId+"/")
                 text: "Back to <b>/"+boardId+"/</b>"
                 visible: mode === "pinned" ? true: false
 
@@ -103,13 +130,12 @@ AbstractPage {
                 enabled: false
                 visible: mode === "thread"
                 onClicked: {
-                    pyt.getThreads(boardId,pageNo)
-                    infoBanner.alert("Reloading...")
+                    pyt.getThreads(boardId)
                 }
             }
-            Label{
+
+            Label {
                 text: boardTitle
-                //wrapMode: Text.WordWrap
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeExtraSmall
                 color: Theme.secondaryHighlightColor
@@ -141,11 +167,10 @@ AbstractPage {
                         pageStack.push("AboutPage.qml")
                     }
                 }
-
             }
         }
 
-        Button{
+        Button {
             id: moreInfoButton
             visible: false
             text: "More info"
@@ -176,7 +201,7 @@ AbstractPage {
             id: pinModel
         }
 
-        delegate: PostItem{
+        delegate: PostItem {
             id: delegate
         }
 
@@ -184,7 +209,6 @@ AbstractPage {
             id: contextMenuComponent
 
             ContextMenu {
-
                 property int index
                 property bool pin
 
@@ -217,11 +241,6 @@ AbstractPage {
         displaced: Transition {
             NumberAnimation { properties: "x,y"; duration: 800; easing.type: Easing.InSine }
         }
-
-        footer: ThreadPageFooter{
-            id: pageNav
-            visible : model.count<5 || mode === "pinned" ? false : true
-        }
     }
 
     DockedNewPost {
@@ -230,21 +249,17 @@ AbstractPage {
         dock: Dock.Bottom //threadPage.isPortrait ? Dock.Top : Dock.Right
     }
 
-
-
     Component.onCompleted: {
-
-        if(boardId){
+        if(boardId) {
             pyt.getThreads(boardId,1)
         }
-        else{
-            pyt.call('threads.get_default',[],function(result){
+        else {
+            pyt.call('threads.get_default',[],function(result) {
                 if(typeof result === 'undefined'){
                     busy = false
                     helpTxt.enabled = true
-                    //pageStack.navigateForward();
                 }
-                else{
+                else {
                     boardId = result
                     pageNo = 1
                     pyt.getThreads(result,1)
@@ -271,10 +286,9 @@ AbstractPage {
     }
 
     onStatusChanged: {
-
         if (status === PageStatus.Active && pageStack.depth === 1 && mode === "thread") {
             pageStack.pushAttached(Qt.resolvedUrl("NaviPage.qml"),{boardId: boardId} );
-            if(model.count != 0){
+            if(model.count != 0) {
                 pyt.call('pinned.data.thread_this', ['get_by_board',{'board':boardId}],function() {});
             }
         }
@@ -282,41 +296,7 @@ AbstractPage {
             pageStack.pushAttached(Qt.resolvedUrl("NaviPage.qml"),{boardId: boardId} );
             pyt.getPinned()
         }
-
-        //newPostPanel.open = false;
-        //newPostPanel.clear();
     }
-
-    /*
-    IconButton {
-        anchors {
-            //right: (threadPage.isPortrait ? parent.right : parent.left)
-            //bottom: (threadPage.isPortrait ? infoPanel.top : parent.bottom)
-            right: parent.right
-            bottom: parent.bottom
-            margins: {
-                left: Theme.paddingLarge
-                bottom: Theme.paddingLarge
-            }
-        }
-
-        id: newPost
-        width: Theme.iconSizeLarge
-        height: width
-        visible: !isPortrait ? true : !newPostPanel.open
-        enabled: boardId ? true: false
-        icon.source: newPostPanel.open
-                     ? "image://theme/icon-l-clear"
-                     : "image://theme/icon-l-add"
-        onClicked: {
-            newPostPanel.open = !newPostPanel.open
-
-
-            //newPostPanel.show()
-            //drawer.open = true
-            threadPage.forwardNavigation = !newPostPanel.open
-        }
-    }*/
 
     Python {
         id: pyt
@@ -325,43 +305,27 @@ AbstractPage {
             // Add the Python library directory to the import path
             var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
 
-            //var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
             addImportPath(pythonpath);
-            //console.log("Threads: "+pythonpath);
 
-            setHandler('boards', function(result) {
-                //To silence onReceived from boards
-            });
-
-            setHandler('posts', function(result) {
-                //To silence onReceived from posts
-            });
-
-            setHandler('pinned_postno', function(result) {
-                //To silence onReceived from pinned
-            });
-
-            setHandler('posts_status', function(result) {
-                //To silence onReceived from pinned
-            });
+            // Manage/silence onReceived from boards
+            setHandler('boards', function(result) { });
+            setHandler('posts', function(result) { });
+            setHandler('pinned_postno', function(result) { });
+            setHandler('posts_status', function(result) { });
 
             setHandler('pinned_board', function(result) {
-
                 for (var i=0; i<model.count; i++) {
-
                     var no = model.get(i)['no']
 
                     var updateItem
                     updateItem = model.get(i)
 
-                    if(result.indexOf(no) >= 0) {
-                        //console.log("THIS POST IS PINNED: " + no)
+                    if (result.indexOf(no) >= 0) {
                         updateItem.pin = 1
                     }
-                    else{
+                    else {
                         updateItem.pin = 0
                     }
-
                 }
             });
 
@@ -372,22 +336,21 @@ AbstractPage {
 
                 busy = false
                 menuRefresh.enabled = true
+                menuBottomRefresh.enabled = true
 
                 call('pinned.data.thread_this', ['get_by_board',{'board':boardId}],function() {});
 
                 call('threads.get_pages', [boardId],function(pages) {
                     threadPage.pages = pages
                 });
-
             });
 
             setHandler('pinned_all', function(result) {
-
                 for (var i=0; i<result.length; i++) {
                     pinModel.append(result[i]);
                 }
 
-                if(!result.length){
+                if (!result.length) {
                     helpTxt.text = "No pinned posts"
                     helpTxt.enabled = true
                 }
@@ -396,7 +359,6 @@ AbstractPage {
             });
 
             setHandler('pinned_all_update', function(result) {
-
                 for (var i=0; i<pinModel.count; i++) {
 
                     var no = pinModel.get(i)['no']
@@ -404,32 +366,19 @@ AbstractPage {
                     var updateItem
                     updateItem = pinModel.get(i)
 
-                    for (var i=0; i<result.length; i++) {
-                        updateItem.postCount = result[i]['postCount']
+                    for (var j=0; j<result.length; j++) {
+                        updateItem.postCount = result[j]['postCount']
                     }
-
                 }
-
             });
 
             importModule('threads', function() {});
             importModule('pinned', function() {});
 
-            setHandler('reply_successfull', function(result) {
-
-            });
-
-            setHandler('reply_failed', function(result) {
-
-            });
-
-            setHandler('set_challenge', function(result) {
-
-            });
-
-            setHandler('reply_set_response', function(result) {
-
-            });
+            setHandler('reply_successfull', function(result) { });
+            setHandler('reply_failed', function(result) { });
+            setHandler('set_challenge', function(result) { });
+            setHandler('reply_set_response', function(result) { });
 
             importModule('posting', function() {});
 
@@ -441,8 +390,7 @@ AbstractPage {
                  threadPage.forwardNavigation = true;
                  var newPostId = result[1];
 
-                 //infoBanner.alert("Post sent, refreshing..");
-                 pyt.getThreads(boardId,pageNo);
+                 pyt.getThreads(boardId);
                  Remorse.popupAction(threadPage, "Post sent, opening your thread", function() {
                      console.log("remorse fired")
                      pageStack.push("PostsPage.qml", {postNo: newPostId, boardId: boardId, pinned: false} )
@@ -452,10 +400,10 @@ AbstractPage {
 
             setHandler('post_failed', function(result) {
                 console.log("FAILED : "+result);
-                if(String(result).search('banned')){
+                if (String(result).search('banned')) {
                     infoBanner.alert("You are banned ;_;");
                 }
-                else{
+                else {
                     infoBanner.alert("Failed to send");
                 }
                 newPostPanel.busy = false;
@@ -464,7 +412,7 @@ AbstractPage {
             });
 
             setHandler('post_set_response', function(result) {
-                if(result.length === 1){
+                if (result.length === 1) {
                     console.log("threads post_set_response "+result);
                     newPostPanel.captcha_token = result[0]
                     newPostPanel.busy = true
@@ -473,19 +421,14 @@ AbstractPage {
                 else {
                     infoBanner.alert("Something went wrong, try reverify");
                 }
-
             });
-
         }
 
-        function post(){
-
+        function post() {
             console.log("posting with captchatoken "+newPostPanel.captcha_token)
             console.log("posting with filepath "+newPostPanel.selectedFile)
             console.log("posting with subject "+newPostPanel.subject)
             console.log("posting to board "+boardId)
-
-
 
             call('posting.post', [
                      newPostPanel.nickname,
@@ -495,17 +438,15 @@ AbstractPage {
                      newPostPanel.captcha_token,
                      boardId
                  ], function() {});
-            //(nickname="", comment="", subject="", file_attach="", captcha_response="")
-
         }
 
-        function getThreads(boardId,pageNo){
+        function getThreads(boardId) {
             busy = true
 
-            if(model.count !== 0){
+            if (model.count !== 0) {
                 model.clear()
             }
-            if(currentModel === pinModel){
+            if (currentModel === pinModel) {
                 pinModel.clear()
                 currentModel = model
 
@@ -513,13 +454,11 @@ AbstractPage {
             }
 
             threadPage.boardId = boardId
-            threadPage.pageNo = pageNo
 
-            call('threads.data.thread_this', ['get',{'board':boardId,'page':pageNo}],function() {});
-
+            call('threads.data.thread_this', ['get',{'board':boardId}],function() {});
         }
 
-        function getPinned(){
+        function getPinned() {
             busy=true
             pinModel.clear()
             currentModel = pinModel
@@ -529,8 +468,7 @@ AbstractPage {
             call('pinned.data.thread_this', ['get_all',{}],function() {});
         }
 
-        function pin(index){
-
+        function pin(index) {
             var model = currentModel
 
             var postNo = model.get(index)['no']
@@ -543,10 +481,9 @@ AbstractPage {
             call('pinned.add_pin', [postNo,board,com,thumbUrl,time,replies],function() {
                 updateItem(1,index)
             });
-
         }
 
-        function unpin(index){
+        function unpin(index) {
             var model = currentModel
 
             var postNo = model.get(index)['no']
@@ -555,11 +492,9 @@ AbstractPage {
             call('pinned.delete_pins', [postNo,board],function() {
                 updateItem(0,index)
             });
-
         }
 
-        function updateItem(pin,index){
-
+        function updateItem(pin,index) {
             var model = currentModel
 
             switch(mode){
@@ -572,8 +507,6 @@ AbstractPage {
                 model.remove(index)
                 break;
             }
-
-
         }
 
         onError: {
@@ -581,8 +514,6 @@ AbstractPage {
             console.log('threads python error: ' + traceback);
             busy=false
             Utils.tracebackCatcher(traceback,helpTxt)
-
-
         }
         onReceived: {
             // asychronous messages from Python arrive here
