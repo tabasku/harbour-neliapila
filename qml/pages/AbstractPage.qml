@@ -29,7 +29,7 @@ Page {
     property int pageNo: 1
     property string postNo
 
-    property string errorText: "Oops, somethind did go wrong..."
+    property string errorText: "Oops, somethind went wrong..."
     property string fontPixelSize: Theme.fontSizeSmall
 
     property int padding : Theme.paddingSmall
