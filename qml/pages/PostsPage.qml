@@ -38,223 +38,234 @@ AbstractPage {
         return postsModel
     }
 
-    title: "<b>/" + boardId + "/</b>"+postNo
+    title: "<b>/" + boardId + "/</b>" + postNo
 
-        SilicaListView {
-            id: listView
-            model: postsModel
-            anchors.fill: parent
-            focus: true
-            // quickScroll: false
-            VerticalScrollDecorator {}
+    // Setup gallery page
+    onStatusChanged: {
+        if (status == PageStatus.Active && _depth === 1 && postsModel) {
+            pageStack.pushAttached(Qt.resolvedUrl("GalleryPage.qml"), {
+                                       boardId: boardId,
+                                       leadPost: postNo,
+                                       posts: postsModel
+                                   } )
+        }
+    }
 
-            PushUpMenu {
-                id: postsPushUpMenu
-                busy: busy
+    SilicaListView {
+        id: listView
+        model: postsModel
+        anchors.fill: parent
+        focus: true
+        // quickScroll: false
+        VerticalScrollDecorator {}
 
-                MenuItem {
-                    property int lastPost: 0
-                    text: qsTr("Update thread")
-                    visible: pageStack.depth === 2
-                    onClicked: {
-                        pyp.getPosts(boardId,postNo)
-                        // TODO: A function to scroll to previous location
-                    }
-                }
-            }
+        PushUpMenu {
+            id: postsPushUpMenu
+            busy: busy
 
-            PullDownMenu {
-                id: postsPullDownMenu
-                busy : busy
-
-                MenuItem {
-                    text: qsTr("Open thread in browser")
-                    onClicked: {
-                        var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo
-                        infoBanner.alert("Opening thread in web browser");
-                        Qt.openUrlExternally(url)
-                    }
-                }
-
-                MenuItem {
-                    text: "Add pin"
-                    visible: !pinned && pageStack.depth === 2
-                    onClicked: {
-                        //console.log("Add pin for post "+postNo +" on board "+boardId)
-                        pyp.pin(postNo,boardId)
-                    }
-                }
-                MenuItem {
-                    text: "Remove pin"
-                    visible: pinned && pageStack.depth === 2
-                    onClicked: {
-                        //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
-                        pyp.unpin(postNo,boardId)
-                    }
-                }
-                MenuItem {
-                    id: backToPost
-                    text: qsTr("Back to "+postNo )
-                    visible: false
-                    onClicked: {
-                        getBackToPost()
-                    }
-                }
-
-                MenuItem {
-                    text: qsTr("Reply")
-                    enabled: !replyPostPanel.open
-                    visible: pageStack.depth === 2
-                    onClicked: {
-                        replyPostPanel.open = !replyPostPanel.open
-                    }
-                }
-
-                MenuItem {
-                    text: qsTr("Reload")
-                    visible: pageStack.depth === 2
-                    onClicked: {
-                        pyp.getPosts(boardId,postNo)
-                        infoBanner.alert("Reloading...")
-                    }
-                }
-            }
-
-            Button{
-                id: moreInfoButton
-                visible: false
-                text: "More info"
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: parent.height*0.1
-                property string fullError
-                property string errorTitle
+            MenuItem {
+                property int lastPost: 0
+                text: qsTr("Update thread")
+                visible: pageStack.depth === 2
                 onClicked: {
-                    pageStack.push(Qt.resolvedUrl("TextPage.qml"),
-                                   {
-                                       "title" : errorTitle,
-                                       "content": fullError
-                                   });
+                    pyp.getPosts(boardId,postNo)
+                    // TODO: A function to scroll to previous location
                 }
-            }
-
-            ViewPlaceholder {
-                id: postViewPlaceholder
-                text: "Something crashed..."
-                enabled: false
-            }
-
-            header: PageHeader {
-                title: {
-                    if(postsToShow) {
-                        qsTr("<b>/" + boardId + "/</b>"+postNo+"/replies")
-                    }
-                    else {
-                        qsTr("<b>/" + boardId + "/</b>"+postNo)
-                    }
-                }
-            }
-
-            ListModel {
-                id: postsModel
-            }
-
-            Component {
-                id: contextMenuComponent
-
-                ContextMenu {
-                    property string postReplies
-                    property string com
-                    property var quote
-                    property var thisPostNo
-                    property var modelToStrip
-                    visible: mode === "thread" ? false : true
-
-                    MenuItem {
-                        visible: postReplies && !replyPostPanel.open ? true : false
-
-                        text: qsTr("View replies")
-                        onClicked: {
-                            postsToShow = postReplies
-                            if(modelToStrip) {
-                                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
-                                                   postNo: thisPostNo,
-                                                   boardId: boardId,
-                                                   modelToStrip : modelToStrip,
-                                                   postsToShow : postsToShow
-                                               } )
-                            }
-                            else {
-                                console.log("no modelstrip")
-                                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
-                                                   postNo: thisPostNo,
-                                                   boardId: boardId,
-                                                   modelToStrip : postsModel,
-                                                   postsToShow : postsToShow
-                                               } )
-                            }
-                        }
-                    }
-
-                    MenuItem {
-                        text: qsTr("Quote")
-                        onClicked: {
-                            replyPostPanel.open = true
-                            replyPostPanel.addQuote(String(">>"+thisPostNo));
-                        }
-                    }
-
-                    MenuItem {
-                        text: qsTr("Quote text")
-                        visible: com !== "" ? true : false
-                        onClicked: {
-                            var strippedComment = com.replace(/<(?:.|\n)*?>/gm, '');
-                            var quote = String(">>"+thisPostNo + "\n>"+strippedComment.replace(/>>\d+/gm, ''))
-                            console.log(strippedComment)
-                            replyPostPanel.open = true;
-
-                            replyPostPanel.addQuote(quote);
-                        }
-                    }
-                }
-            }
-
-            WorkerScript {
-                id: stripper
-                source: "../js/stripper.js"
-                onMessage: {
-                    busy = messageObject.busy
-                }
-                function work() {
-                    sendMessage({
-                                    'postNo': postNo,
-                                    'model': postsModel,
-                                    'postsToShow': postsToShow,
-                                    'modelToStrip': modelToStrip
-                                });
-                }
-            }
-
-            delegate: PostItem{
-                id: delegate
-            }
-
-            add: Transition {
-                NumberAnimation { property: "opacity"; easing.type: Easing.InQuad; from: 0; to: 1.0; duration: 300 }
-            }
-
-            populate: Transition {
-                NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
             }
         }
 
-        DockedNewPost {
-            id: replyPostPanel
-            width: parent.width
-            dock: Dock.Bottom //postsPage.isPortrait ? Dock.Bottom : Dock.Right
-            onOpenChanged: {
-                replyPostPanel.replyTo = postNo;
+        PullDownMenu {
+            id: postsPullDownMenu
+            busy : busy
+
+            MenuItem {
+                text: qsTr("Open thread in browser")
+                onClicked: {
+                    var url = "https://boards.4chan.org/"+boardId+"/thread/"+postNo
+                    infoBanner.alert("Opening thread in web browser");
+                    Qt.openUrlExternally(url)
+                }
+            }
+
+            MenuItem {
+                text: "Add pin"
+                visible: !pinned && pageStack.depth === 2
+                onClicked: {
+                    //console.log("Add pin for post "+postNo +" on board "+boardId)
+                    pyp.pin(postNo,boardId)
+                }
+            }
+            MenuItem {
+                text: "Remove pin"
+                visible: pinned && pageStack.depth === 2
+                onClicked: {
+                    //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
+                    pyp.unpin(postNo,boardId)
+                }
+            }
+            MenuItem {
+                id: backToPost
+                text: qsTr("Back to "+postNo )
+                visible: false
+                onClicked: {
+                    getBackToPost()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Reply")
+                enabled: !replyPostPanel.open
+                visible: pageStack.depth === 2
+                onClicked: {
+                    replyPostPanel.open = !replyPostPanel.open
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Reload")
+                visible: pageStack.depth === 2
+                onClicked: {
+                    pyp.getPosts(boardId,postNo)
+                    infoBanner.alert("Reloading...")
+                }
             }
         }
+
+        Button{
+            id: moreInfoButton
+            visible: false
+            text: "More info"
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: parent.height*0.1
+            property string fullError
+            property string errorTitle
+            onClicked: {
+                pageStack.push(Qt.resolvedUrl("TextPage.qml"),
+                               {
+                                   "title" : errorTitle,
+                                   "content": fullError
+                               });
+            }
+        }
+
+        ViewPlaceholder {
+            id: postViewPlaceholder
+            text: "Something crashed..."
+            enabled: false
+        }
+
+        header: PageHeader {
+            title: {
+                if(postsToShow) {
+                    qsTr("<b>/" + boardId + "/</b>"+postNo+"/replies")
+                }
+                else {
+                    qsTr("<b>/" + boardId + "/</b>"+postNo)
+                }
+            }
+        }
+
+        ListModel {
+            id: postsModel
+        }
+
+        Component {
+            id: contextMenuComponent
+
+            ContextMenu {
+                property string postReplies
+                property string com
+                property var quote
+                property var thisPostNo
+                property var modelToStrip
+                visible: mode === "thread" ? false : true
+
+                MenuItem {
+                    visible: postReplies && !replyPostPanel.open ? true : false
+
+                    text: qsTr("View replies")
+                    onClicked: {
+                        postsToShow = postReplies
+                        if(modelToStrip) {
+                            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
+                                               postNo: thisPostNo,
+                                               boardId: boardId,
+                                               modelToStrip : modelToStrip,
+                                               postsToShow : postsToShow
+                                           } )
+                        }
+                        else {
+                            console.log("no modelstrip")
+                            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
+                                               postNo: thisPostNo,
+                                               boardId: boardId,
+                                               modelToStrip : postsModel,
+                                               postsToShow : postsToShow
+                                           } )
+                        }
+                    }
+                }
+
+                MenuItem {
+                    text: qsTr("Quote")
+                    onClicked: {
+                        replyPostPanel.open = true
+                        replyPostPanel.addQuote(String(">>"+thisPostNo));
+                    }
+                }
+
+                MenuItem {
+                    text: qsTr("Quote text")
+                    visible: com !== "" ? true : false
+                    onClicked: {
+                        var strippedComment = com.replace(/<(?:.|\n)*?>/gm, '');
+                        var quote = String(">>"+thisPostNo + "\n>"+strippedComment.replace(/>>\d+/gm, ''))
+                        console.log(strippedComment)
+                        replyPostPanel.open = true;
+
+                        replyPostPanel.addQuote(quote);
+                    }
+                }
+            }
+        }
+
+        WorkerScript {
+            id: stripper
+            source: "../js/stripper.js"
+            onMessage: {
+                busy = messageObject.busy
+            }
+            function work() {
+                sendMessage({
+                                'postNo': postNo,
+                                'model': postsModel,
+                                'postsToShow': postsToShow,
+                                'modelToStrip': modelToStrip
+                            });
+            }
+        }
+
+        delegate: PostItem{
+            id: delegate
+        }
+
+        add: Transition {
+            NumberAnimation { property: "opacity"; easing.type: Easing.InQuad; from: 0; to: 1.0; duration: 300 }
+        }
+
+        populate: Transition {
+            NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
+        }
+    }
+
+    DockedNewPost {
+        id: replyPostPanel
+        width: parent.width
+        dock: Dock.Bottom //postsPage.isPortrait ? Dock.Bottom : Dock.Right
+        onOpenChanged: {
+            replyPostPanel.replyTo = postNo;
+        }
+    }
 
 
     Component.onCompleted: {
