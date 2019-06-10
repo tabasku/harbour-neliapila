@@ -402,4 +402,5 @@ DISTFILES += \
     py/storage.py \
     py/threads.py \
     py/utils.py \
-    qml/pages/GalleryPage.qml
+    qml/pages/GalleryPage.qml \
+    qml/pages/GalleryImageViewer.qml

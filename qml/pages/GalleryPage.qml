@@ -1,4 +1,4 @@
-import QtQuick 2.0
+﻿import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 AbstractPage {
@@ -36,6 +36,17 @@ AbstractPage {
             width: imageGrid.cellWidth
             height: imageGrid.cellHeight
             fillMode: Image.PreserveAspectCrop
+
+            MouseArea {
+                enabled:true
+                anchors.fill: parent
+
+                onClicked: {
+                    pageStack.push(Qt.resolvedUrl("GalleryImageViewer.qml"), {
+                                      imagePosts: imagePosts
+                                   })
+                }
+            }
         }
 
         ViewPlaceholder {
@@ -51,10 +62,8 @@ AbstractPage {
         populate: Transition {
             NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
         }
-    }
 
-    onStatusChanged: {
-        if (status == PageStatus.Active) {
+        Component.onCompleted: {
             for (var i = 0; i < posts.count; i++) {
                 if (posts.get(i)['thumbUrl']) {
                     imagePosts.append({
@@ -65,5 +74,11 @@ AbstractPage {
                 }
             }
         }
+    }
+
+    onStatusChanged: {
+//        if (status == PageStatus.Activating) {
+
+//        }
     }
 }
