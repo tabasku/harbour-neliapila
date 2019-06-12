@@ -13,7 +13,7 @@ AbstractPage {
 
     ListModel {
         id: imagePosts
-        dynamicRoles: true
+//        dynamicRoles: true
     }
 
     SilicaGridView {
@@ -63,8 +63,10 @@ AbstractPage {
         populate: Transition {
             NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
         }
+    }
 
-        Component.onCompleted: {
+    onStatusChanged: {
+        if (status == PageStatus.Activating) {
             for (var i = 0; i < posts.count; i++) {
                 if (posts.get(i)['thumbUrl']) {
                     imagePosts.append({
@@ -76,11 +78,5 @@ AbstractPage {
                 }
             }
         }
-    }
-
-    onStatusChanged: {
-//        if (status == PageStatus.Activating) {
-
-//        }
     }
 }
