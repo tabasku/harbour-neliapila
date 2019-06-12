@@ -33,9 +33,7 @@ def get_threads(board_id):
     board = basc_py4chan.Board(board_id)
 
     threads = []
-    for i in range(board.page_count):
-        if i != 0:
-            threads.extend(board.get_threads(i))
+    threads.extend(board.get_all_threads())
 
     thread_list = []
 
