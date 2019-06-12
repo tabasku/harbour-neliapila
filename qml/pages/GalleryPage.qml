@@ -13,7 +13,6 @@ AbstractPage {
 
     ListModel {
         id: imagePosts
-//        dynamicRoles: true
     }
 
     SilicaGridView {
@@ -67,6 +66,7 @@ AbstractPage {
 
     onStatusChanged: {
         if (status == PageStatus.Activating) {
+            imagePosts.clear() // temporary (permanent) fix for doubling problem
             for (var i = 0; i < posts.count; i++) {
                 if (posts.get(i)['thumbUrl']) {
                     imagePosts.append({
