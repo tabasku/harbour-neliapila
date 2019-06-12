@@ -7,9 +7,10 @@ import urllib.request
 
 def getdirs (dir):
     dirs = []
-    if os.path.abspath(dir) != os.getenv('HOME'):
-        dirs.append("..")
     dirs = dirs + next(os.walk(dir))[1]
+    dirs[:] = [x for x in dirs if not x.startswith('.')]
+    if os.path.abspath(dir) != os.getenv('HOME'):
+        dirs.insert(0, "..")
     return dirs
 
 def save (dir, name, url):

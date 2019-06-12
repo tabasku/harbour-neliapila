@@ -6,38 +6,74 @@ Dialog {
     id: page
     property string uri: ""
     property var dirs: []
-    property string dir: "."
+    property string dir: StandardPaths.home
 
-    onAccepted: py.call('savefile.save', [dir, uri.match(/\d+\.[a-z]+/)[0], uri] );
+    onAccepted: {
+        // Why doesn't this work properly?
+        // Instead of showing the remorse, it merely executes the function
+        remorse.execute("Saving Image", function() {
+            py.call('savefile.save', [dir, uri.match(/\d+\.[a-z]+/)[0], uri] )
+            infoBanner.alert("Image saved")
+        })
+    }
+
+    RemorsePopup { id: remorse }
 
     SilicaListView {
         id: saveform
+
         header: PageHeader {
             title: qsTr("Save")
         }
+
         model: dirs
         anchors{
             fill: parent
         }
+
         delegate: BackgroundItem {
             id: directory
             width: ListView.view.width
             height: Theme.itemSizeSmall
-            Label {
-                text: modelData
-                color: directory.highlighted ? Theme.highlightColor : Theme.primaryColor
-                anchors{
-                    left: parent.left
-                    leftMargin: 10
+
+            Image {
+                id: folderIcon
+                source: {
+                    var patt = /^[^.].*$/;
+                    if (patt.test(modelData))
+                        return "image://theme/icon-m-file-folder"
+                    else
+                        return "image://theme/icon-m-up"
                 }
+                anchors.left: parent.left
+                anchors.leftMargin:  10
+                anchors.verticalCenter: parent.verticalCenter
             }
+
+            Label {
+                text: {
+                    var patt = /^[^.].*$/;
+                    if (patt.test(modelData))
+                        return modelData;
+                    else
+                        return "Up a directory";
+                }
+
+                color: directory.highlighted ? Theme.highlightColor : Theme.primaryColor
+                anchors.left: folderIcon.right
+                anchors.leftMargin:  10
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
             onClicked: {
                 dir = dir + "/" + modelData
                 cd (dir)
             }
         }
+
         Component.onCompleted: cd (dir)
     }
+
     Python {
         id: py
 
