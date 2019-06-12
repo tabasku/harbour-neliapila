@@ -194,8 +194,10 @@ AbstractPage {
             smooth: !(picFlick.movingVertically || picFlick.movingHorizontally)
             anchors.centerIn: parent
 
-            AnimatedImage {
+            Image {
                 id: imageItem
+                sourceSize.width: 4096
+                sourceSize.height: 4096
                 fillMode: Image.PreserveAspectFit
                 smooth: false
                 anchors.fill: parent

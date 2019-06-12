@@ -243,6 +243,14 @@ BackgroundItem {
                                                    "filename": filename
                                                });
                                 break;
+                            case ".gif":
+                                pageStack.push(Qt.resolvedUrl("../pages/GifViewPage.qml"),
+                                               {
+                                                   "imgUrl": imgUrl,
+                                                   "thumbUrl": thumbUrl,
+                                                   "filename": filename
+                                               });
+                                break;
 
                             default:
                                 pageStack.push(Qt.resolvedUrl("../pages/ImageViewPage.qml"),
