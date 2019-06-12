@@ -43,7 +43,8 @@ AbstractPage {
 
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("GalleryImageViewer.qml"), {
-                                      imagePosts: imagePosts
+                                       imagePosts: imagePosts,
+                                       selectedImageIndex: index
                                    })
                 }
             }
@@ -69,7 +70,8 @@ AbstractPage {
                     imagePosts.append({
                                           "thumbUrl": posts.get(i)['thumbUrl'],
                                           "imgUrl": posts.get(i)['imgUrl'],
-                                          "filename": posts.get(i)['filename']
+                                          "filename": posts.get(i)['filename'],
+                                          "ext": posts.get(i)['ext']
                                       })
                 }
             }
