@@ -81,7 +81,7 @@ BackgroundItem {
                         fillMode: Image.PreserveAspectFit
                         visible: sticky ? true : false
                         cache: true
-                        anchors{
+                        anchors {
                             right: closedImg.left
                             rightMargin: padding
                             verticalCenter: parent.verticalCenter
@@ -95,7 +95,7 @@ BackgroundItem {
                         width: height
                         fillMode: Image.PreserveAspectFit
                         visible: closed ? true : false
-                        anchors{
+                        anchors {
                             right: postNoText.left
                             rightMargin: padding
                             verticalCenter: parent.verticalCenter
@@ -107,20 +107,21 @@ BackgroundItem {
                         text: mode === "pinned" ? "<b>/"+post_board+"/</b>"+no : no
                         font.pixelSize: infoFontSize
                         color: infoFontColor
-                        anchors{
+                        anchors {
                             right: parent.right
                         }
                     }
                 }
             }
         }
+
         Item {
             width: parent.width;
             height: {
                 switch(mode) {
                 case "post":
-                    if(has_file) {
-                        if(contentAreaHeight < postText.contentHeight)
+                    if (has_file) {
+                        if (contentAreaHeight < postText.contentHeight)
                             postText.contentHeight
                         else
                             contentAreaHeight
@@ -128,7 +129,6 @@ BackgroundItem {
                     else {
                         postText.contentHeight
                     }
-
                     break;
                 default:
                     contentAreaHeight
@@ -151,9 +151,7 @@ BackgroundItem {
                         asynchronous : true
                         source: !has_file ? "" : thumbUrl
 
-                        anchors{
-                            fill: parent
-                        }
+                        anchors.fill: parent
                     }
 
                     Loader {
@@ -180,7 +178,7 @@ BackgroundItem {
                                 Label {
                                     anchors.centerIn: parent
                                     font.pixelSize: Theme.fontSizeSmall
-                                    text: ""//Math.round(thumbImg.progress * 100) + "%"
+                                    text: ""
                                 }
 
                                 Rectangle {
@@ -205,6 +203,7 @@ BackgroundItem {
                                 }
                             }
                         }
+
                         Component {
                             id: failedLoading;
                             Item {
@@ -263,6 +262,7 @@ BackgroundItem {
                         }
                     }
                 }
+
                 Item {
                     id: commentArea
 
@@ -271,7 +271,7 @@ BackgroundItem {
 
                     Text {
                         id: postText
-                        anchors{
+                        anchors {
                             fill: parent
                         }
 
@@ -286,12 +286,12 @@ BackgroundItem {
                         onLinkActivated: {
                             Utils.openLink(link)
                         }
+
                         Image {
                             id: dots
                             height: 32
                             width: 32
                             anchors {
-                                //left :parent.left
                                 bottom: parent.bottom
                                 right: parent.right
                             }
@@ -299,19 +299,19 @@ BackgroundItem {
                             visible: false
                         }
                         Component.onCompleted: {
-                            if(mode === "thread" && contentAreaHeight < postText.contentHeight){
+                            if (mode === "thread" && contentAreaHeight < postText.contentHeight) {
                                 postText.maximumLineCount = Math.floor(contentAreaHeight/postFontSize-1)
                                 dots.visible = true
                             }
                         }
                     }
-
-
                 }
             }
         }
+
         Item {
             width: parent.width; height: infoAreaHeight
+
             Row {
                 id: footerContentRow
                 anchors.fill: parent
@@ -321,28 +321,30 @@ BackgroundItem {
                     id: nameArea
                     width: parent.width - infoArea.width
                     height: nameText.contentHeight
-                    anchors{
+                    anchors {
                         verticalCenter: parent.verticalCenter
                         left: parent.left
                     }
-                    Label{
+
+                    Label {
                         id: nameText
                         text : name
                         font.pixelSize: infoFontSize
                         color: infoFontColor
                     }
                 }
+
                 Item {
                     id: infoArea
                     width: parent.width-nameArea.width;
                     height: parent.height;
-                    anchors{
+                    anchors {
                         verticalCenter: parent.verticalCenter
                     }
 
                     Image {
                         id: pinIndicator
-                        anchors{
+                        anchors {
                             right: imgchecker.left
                             rightMargin: imgcount.contentWidth
                             bottom: parent.bottom
@@ -366,12 +368,13 @@ BackgroundItem {
                         fillMode: Image.PreserveAspectFit
                         source: "image://theme/icon-m-image"
                         visible: mode === "post" || mode === "pinned" ? false : true
+
                         Label {
                             id: imgcount
                             anchors.right: parent.left
                             anchors.verticalCenter: parent.verticalCenter
                             text: images
-                            font.pixelSize :Theme.fontSizeTiny
+                            font.pixelSize: Theme.fontSizeTiny
                             color: infoFontColor
                             visible: imgcount.text === "0" ? false : true
                         }
@@ -379,7 +382,7 @@ BackgroundItem {
 
                     Image {
                         id: replychecker
-                        anchors{
+                        anchors {
                             right: parent.right
                             bottom: parent.bottom
                         }
@@ -454,7 +457,7 @@ BackgroundItem {
         switch(mode) {
         case "post":
             var postReplies
-            if(replies) {
+            if (replies) {
                 postReplies = postsModel.get(index).repliesList
             }
 
@@ -462,6 +465,7 @@ BackgroundItem {
                 // Fixed deeper reply level filtering bug
                 return page.objectName === "postsPage" && page._depth < 2;
             });
+
             if (pP)
                 var modelToStrip = pP.returnModel()
 

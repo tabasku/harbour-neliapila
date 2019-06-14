@@ -84,8 +84,8 @@ AbstractPage {
                     color: Theme.primaryColor
                 }
             }
-
         }
+
         Component {
             id: failedLoading;
             Label {
@@ -102,6 +102,7 @@ AbstractPage {
         contentHeight: height
         anchors.fill: parent
         pressDelay: 0
+
         function _fit() {
             fitAnimation.start()
         }
@@ -119,6 +120,7 @@ AbstractPage {
 
         PullDownMenu {
             id: imageViewMenu
+
             MenuItem {
                 text: qsTr("Open in browser")
                 onClicked: {
@@ -132,7 +134,7 @@ AbstractPage {
                 onClicked: pageStack.push(Qt.resolvedUrl("SaveFilePage.qml"), {uri: imgUrl})
             }
 
-            Label{
+            Label {
                 text: title
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeExtraSmall
@@ -153,6 +155,7 @@ AbstractPage {
                 initialWidth = picFlick.contentWidth
                 initialHeight = picFlick.contentHeight
             }
+
             onPinchUpdated: {
                 picFlick.contentX += pinch.previousCenter.x - pinch.center.x
                 picFlick.contentY += pinch.previousCenter.y - pinch.center.y
@@ -165,6 +168,7 @@ AbstractPage {
 
                 picFlick.resizeContent(newWidth, newHeight, pinch.center)
             }
+
             onPinchFinished: {
                 picFlick.returnToBounds()
             }

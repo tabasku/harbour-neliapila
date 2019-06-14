@@ -5,7 +5,6 @@ import io.thp.pyotherside 1.4
 import Nemo.Thumbnailer 1.0
 
 BackgroundItem {
-
     Item {
         anchors.fill: parent
 
@@ -22,7 +21,6 @@ BackgroundItem {
         }
     }
 
-
     id: newPostItem
     anchors.fill: parent
 
@@ -34,7 +32,6 @@ BackgroundItem {
     property string options: ""
     property string subject: subjectText.text
     property string comment: commentText.text
-    //property string file_path: selectedFile ? selectedFile : ""
     property variant captcha_token
 
     SilicaFlickable {
@@ -45,25 +42,16 @@ BackgroundItem {
 
         PullDownMenu {
             id: newPostPullDownMenu
-
             busy : busy
 
             MenuItem {
                 text: qsTr("Post")
-                //enabled: boardId ? true: false
-                //enabled: comment.lenght ? true : false
-
-
 
                 onClicked: {
                     pageStack.push("../pages/Captcha2Page.qml");
-                    //py.post()
                 }
             }
-
         }
-
-
 
         // Place our content in a Column.  The PageHeader is always placed at the top
         // of the page, followed by our content.
@@ -74,7 +62,7 @@ BackgroundItem {
             height: parent.contentHeight
             spacing: Theme.paddingSmall
 
-            anchors{
+            anchors {
                 left:parent.left
                 right:parent.right
                 leftMargin: pageMargin
@@ -85,11 +73,11 @@ BackgroundItem {
                 title: "New Post"
             }
 
-            Row{
+            Row {
                 spacing: 0
                 //spacing: Theme.paddingSmall
 
-                Rectangle{
+                Rectangle {
                     //spacing: Theme.paddingSmall
                     width: column.width/3
                     height: width
@@ -108,42 +96,34 @@ BackgroundItem {
                         sourceSize.height: selectedImageThumb.height
                         asynchronous: true
 
-                        MouseArea{
+                        MouseArea {
                             anchors.fill: parent
                             onClicked: pageStack.push(filePickerPage)
                         }
-
                     }
                 }
 
-                Column{
+                Column {
                     height: commentText.contentHeight < column.width/3 ? column.width/3 : commentText.contentHeight
 
-                    //Column{
+                    TextField{
+                        id: subjectText
+                        width: column.width/3*2
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.primaryColor
+                        clip: true
+                        focus: false
+                        label: 'Subject'
+                        placeholderText: 'Subject'
+                        text: subject
+                    }
 
-                        TextField{
-                            id: subjectText
-                            width: column.width/3*2
-                            //wrapMode: Text.WordWrap
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.primaryColor
-                            //text: content
-                            //x: Theme.paddingSmall
-                            clip: true
-                            focus: false
-                            label: 'Subject'
-                            placeholderText: 'Subject'
-                            text: subject
-                        }
-                    //}
-
-                    TextArea{
+                    TextArea {
                         id: commentText
                         width: column.width/3*2
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
-                        //x: Theme.paddingSmall
                         clip: false
                         focus: false
                         wrapMode: TextEdit.Wrap
@@ -155,142 +135,50 @@ BackgroundItem {
                 }
             }
 
-            Rectangle{
+            Rectangle {
+                width: column.width
+                height: nameText.height + optionsText.height
+                color: "transparent"
 
-                    //spacing: Theme.paddingSmall
-                    width: column.width
-                    height: nameText.height + optionsText.height
-                    color: "transparent"
-/*
-                    gradient: Gradient {
-                        GradientStop { position: 0.0; color: Theme.rgba(Theme.highlightDimmerColor, 0) }
-                        GradientStop { position: 1.0; color: Theme.rgba(Theme.highlightDimmerColor, 0.6) }
-                    }
-*/
-
-                    Row {
-
-                        TextField{
-                            id: nameText
-                            width: column.width/3*2
-                            //wrapMode: Text.WordWrap
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.primaryColor
-                            //text: content
-                            //x: Theme.paddingSmall
-                            clip: true
-                            focus: false
-                            placeholderText: "Anonymous"
-                            label: 'Name'
-                            text: nickname
-                        }
-
-                        TextField{
-                            id: optionsText
-                            width: column.width/3
-                            //wrapMode: Text.WordWrap
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.primaryColor
-                            //text: content
-                            //x: Theme.paddingSmall
-                            clip: true
-                            focus: false
-                            label: 'Options'
-                            placeholderText: 'Options'
-                            text: options
-                        }
-
+                Row {
+                    TextField {
+                        id: nameText
+                        width: column.width/3*2
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.primaryColor
+                        clip: true
+                        focus: false
+                        placeholderText: "Anonymous"
+                        label: 'Name'
+                        text: nickname
                     }
 
+                    TextField {
+                        id: optionsText
+                        width: column.width/3
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.primaryColor
+                        clip: true
+                        focus: false
+                        label: 'Options'
+                        placeholderText: 'Options'
+                        text: options
+                    }
+                }
             }
-
         }
     }
 
-Component {
-    id: filePickerPage
-    FilePickerPage {
-        nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
-        onSelectedContentPropertiesChanged: {
-            newPostItem.selectedFile = selectedContentProperties.filePath
-            //newPostItem.selectedImageThumb.source = selectedContentProperties.filePath
-            selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
+    Component {
+        id: filePickerPage
+        FilePickerPage {
+            nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
+            onSelectedContentPropertiesChanged: {
+                newPostItem.selectedFile = selectedContentProperties.filePath
+                selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
+            }
         }
     }
-}
-
-/*
-Python {
-    id: py
-
-    Component.onCompleted: {
-        // Add the Python library directory to the import path
-        var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
-        //var pythonpath = Qt.resolvedUrl('.').substr('file://'.length);
-        addImportPath(pythonpath);
-        console.log(pythonpath);
-        importModule('posting', function() {});
-
-         setHandler('post_successfull', function(result) {
-             console.log("SUCCESS : "+result);
-             infoBanner.alert("SUCCESS")
-
-         });
-
-        setHandler('post_failed', function(result) {
-            console.log("FAILED : "+result);
-            infoBanner.alert("Failed to send")
-
-        });
-
-        setHandler('set_response', function(result) {
-            if(result.length === 1){
-                console.log("set_response fired"+result);
-                newPostItem.captcha_token = result[0]
-                verificationButton.enabled = false
-                verificationButton.color = "green"
-                infoBanner.alert("Verified")
-
-
-            }
-            else {
-                infoBanner.alert("Something went wrong, try reverify")
-            }
-
-        });
-
-    }
-
-
-
-    function post(){
-        if(!comment.length){infoBanner.alert("Cannot post without comment");return}
-        console.log("posting with captchatoken "+captcha_token)
-        console.log("posting with filepath "+selectedFile)
-        console.log("posting with subject "+subject)
-
-        call('posting.post', [
-                 nickname,
-                 comment,
-                 subject,
-                 selectedFile,
-                 captcha_token
-             ], function() {});
-        //(nickname="", comment="", subject="", file_attach="", captcha_response="")
-
-    }
-
-    onError: {
-        // when an exception is raised, this error handler will be called
-        console.log('python error: ' + traceback);
-    }
-    onReceived: {
-        // asychronous messages from Python arrive here
-        // in Python, this can be accomplished via pyotherside.send()
-        console.log('got message from python: ' + data);
-    }
-}*/
-
 }

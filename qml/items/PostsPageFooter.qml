@@ -1,21 +1,21 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Rectangle{
+Rectangle {
     id: pageRefresh
     color: "transparent"
     height: Screen.height*0.1
     width: parent.width
     visible : postsModel.count === 0 || busy || pageStack.depth !== 2 ? false : true
 
-    Button{
+    Button {
         id : footerRefreshButton
         height: parent.height
         width:parent.width*0.20
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
 
-        Image{
+        Image {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height*0.5
@@ -30,15 +30,11 @@ Rectangle{
                 running: busy
                 visible: busy
             }
-
         }
-        onClicked: {
-            console.log(listView.currentIndex + " / " + listView.count)
 
+        onClicked: {
             listView.scrollToBottom()
             pyp.getPosts(boardId,postNo)
         }
-
     }
-
 }

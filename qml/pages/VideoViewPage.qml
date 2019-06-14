@@ -27,7 +27,6 @@ import QtMultimedia 5.0
 Page {
     id: videoViewPage
 
-
     property string imgUrl
     property string title
     property string ext
@@ -38,10 +37,16 @@ Page {
 
     SilicaFlickable {
         id: videoFlickable
-        anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom }
+        anchors {
+            top: parent.top;
+            left: parent.left;
+            right: parent.right;
+            bottom: parent.bottom
+        }
 
         PullDownMenu {
             id: videoViewMenu
+
             MenuItem {
                 text: qsTr("Open in browser")
                 onClicked: {
@@ -53,7 +58,8 @@ Page {
                 text: qsTr("Save as")
                 onClicked: pageStack.push(Qt.resolvedUrl("SaveFilePage.qml"), {uri: imgUrl})
             }
-            Label{
+
+            Label {
                 text: title
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeExtraSmall
@@ -62,9 +68,7 @@ Page {
                 smooth: true
                 anchors.horizontalCenter: parent.horizontalCenter
             }
-
         }
-
 
         MouseArea {
             anchors.fill: parent
@@ -175,12 +179,14 @@ Page {
                         mediaPlayer.pause()
                         hideTimer.stop()
                         playPauseButton.opacity = 1
-                    } else if (mediaPlayer.playbackState === MediaPlayer.PausedState || mediaPlayer.playbackState === MediaPlayer.StoppedState) {
+                    }
+                    else if (mediaPlayer.playbackState === MediaPlayer.PausedState || mediaPlayer.playbackState === MediaPlayer.StoppedState) {
                         mediaPlayer.play()
                         hideTimer.start()
                     }
                 }
             }
+
             Behavior on opacity { NumberAnimation { duration: 200 } }
         }
     }

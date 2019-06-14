@@ -54,14 +54,14 @@ Page {
             width: parent.width
             height: contentText.contentHeight
             spacing: Theme.paddingLarge
+
             PageHeader {
                 title: title
             }
 
-            TextArea{
+            TextArea {
                 id: contentText
                 width: parent.width
-                //wrapMode: Text.WordWrap
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.primaryColor

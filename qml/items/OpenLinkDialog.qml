@@ -19,13 +19,21 @@ Dialog {
     }
 
     Column {
-        anchors { top: parent.top; left: parent.left; right: parent.right }
+        anchors {
+            top: parent.top;
+            left: parent.left;
+            right: parent.right
+        }
         spacing: Theme.paddingLarge
 
         DialogHeader { title: openLinkDialog.title }
 
         Label {
-            anchors { left: parent.left; right: parent.right; margins: Theme.paddingLarge }
+            anchors {
+                left: parent.left;
+                right: parent.right;
+                margins: Theme.paddingLarge
+            }
             horizontalAlignment: Text.AlignHCenter
             color: Theme.highlightColor
             wrapMode: Text.WrapAnywhere
@@ -37,40 +45,9 @@ Dialog {
 
     Column {
         anchors { left: parent.left; right: parent.right; bottom: parent.bottom; margins: Theme.paddingLarge }
-        Rectangle{
+        Rectangle {
             color: "blue"
             anchors.fill: parent
         }
-
-
-
-//        Image{
-//            source:thumbUrl
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            anchors.verticalCenter: parent.verticalCenter
-//        }
-
-//        Button {
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            text: "Open URL in web browser"
-//            onClicked: {
-//                Qt.openUrlExternally(url);
-//                infoBanner.alert("Launching web browser...");
-//                __buttonClickAccept = true;
-//                openLinkDialog.accept();
-//            }
-//        }
-
-//        Button {
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            text: "Copy URL"
-//            onClicked: {
-//                QMLUtils.copyToClipboard(url);
-//                infoBanner.alert("URL copied to clipboard");
-//                __buttonClickAccept = true;
-//                openLinkDialog.accept();
-//            }
-//        }
     }
-
 }

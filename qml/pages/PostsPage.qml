@@ -2,6 +2,7 @@
     Neliapila - 4chan.org client for SailfishOS
     Copyright (C) 2015-2019  Joni Kurunsaari
     Copyright (C) 2019  Jacob Gold
+    Copyright (C) 2019  szopin
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -47,6 +48,7 @@ AbstractPage {
             model: postsModel
             anchors.fill: parent
             focus: true
+
             VerticalScrollDecorator {}
 
             PushUpMenu {
@@ -67,7 +69,6 @@ AbstractPage {
                     text: "Add pin"
                     visible: !pinned && pageStack.depth === 2
                     onClicked: {
-                        //console.log("Add pin for post "+postNo +" on board "+boardId)
                         pyp.pin(postNo,boardId)
                     }
                 }
@@ -76,7 +77,6 @@ AbstractPage {
                     text: "Remove pin"
                     visible: pinned && pageStack.depth === 2
                     onClicked: {
-                        //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
                         pyp.unpin(postNo,boardId)
                     }
                 }
@@ -91,7 +91,7 @@ AbstractPage {
                 }
 
                 MenuItem {
-                    text: qsTr("Back to "+postNo )
+                    text: qsTr("Back to " + postNo )
                     visible: pageStack.depth !== 2
                     onClicked: {
                         getBackToPost()
@@ -116,7 +116,6 @@ AbstractPage {
                     text: "Add pin"
                     visible: !pinned && pageStack.depth === 2
                     onClicked: {
-                        //console.log("Add pin for post "+postNo +" on board "+boardId)
                         pyp.pin(postNo,boardId)
                     }
                 }
@@ -125,13 +124,12 @@ AbstractPage {
                     text: "Remove pin"
                     visible: pinned && pageStack.depth === 2
                     onClicked: {
-                        //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
                         pyp.unpin(postNo,boardId)
                     }
                 }
 
                 MenuItem {
-                    text: qsTr("Back to "+postNo )
+                    text: qsTr("Back to " + postNo )
                     visible: pageStack.depth !== 2
                     onClicked: {
                         getBackToPost()
@@ -325,7 +323,6 @@ AbstractPage {
                         }
                     }
                 }
-
             }
         }
 
@@ -338,12 +335,10 @@ AbstractPage {
             }
         }
 
-
     Component.onCompleted: {
         pyp.getPosts(boardId,postNo)
         hideBusyIndicator()
     }
-
 
     Python {
         id: pyp
@@ -354,7 +349,6 @@ AbstractPage {
             addImportPath(pythonpath);
 
             setHandler('posts', function(result) {
-
                 // Only append new posts
                 if (pageStack.depth === 2) {
                     for (var i=totalPosts; i<result.length; i++) {
@@ -423,7 +417,6 @@ AbstractPage {
             });
         }
 
-
         function getPosts(boardId,postNo) {
             busy = true
 
@@ -441,7 +434,6 @@ AbstractPage {
             }
         }
 
-
         function pin(postNo,boardId) {
             var com = postsModel.get(0)['com']
             var thumbUrl = postsModel.get(0)['thumbUrl']
@@ -454,7 +446,6 @@ AbstractPage {
             });
         }
 
-
         function unpin(postNo,boardId) {
             call('pinned.delete_pins', [postNo,boardId],function() {
                 pinned = false
@@ -462,9 +453,8 @@ AbstractPage {
             });
         }
 
-
         function updateItem(pinned) {
-            if (pageStack.depth === 2 && postsModel.count !== 0){
+            if (pageStack.depth === 2 && postsModel.count !== 0) {
                 var pin
                 if(pinned) {
                     pin = 1

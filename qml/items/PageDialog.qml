@@ -21,7 +21,6 @@ Dialog {
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeHuge
                 text: "<b>"+parseInt(index+1)+"</b>"
-                //anchors.verticalCenter: parent.verticalCenter
                 color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
             }
             onClicked: {
@@ -34,5 +33,4 @@ Dialog {
         }
         VerticalScrollDecorator {}
     }
-
 }

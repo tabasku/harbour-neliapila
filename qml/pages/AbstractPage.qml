@@ -23,7 +23,6 @@ Page {
 
     property bool busy: false
     property string title: ""
-    //property string singlePost;
 
     property string boardId
     property int pageNo: 1
@@ -52,7 +51,6 @@ Page {
     function setBusy(state) {
         busy = state;
         busyIndicator.running = state;
-        //console.log("busyIndicator "+busyIndicator.running)
     }
 
     function hideBusyIndicator() {
@@ -67,5 +65,4 @@ Page {
             }
         }
     }
-
 }

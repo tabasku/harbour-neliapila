@@ -1,19 +1,19 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Item{
+Item {
     id: pageNav
     height: Screen.height*0.1
     width: parent.width
 
-    Rectangle{
+    Rectangle {
         id: backButton
         color: "transparent"
         height: parent.height
         width: parent.width*0.40
         anchors.left: parent.left
 
-        Image{
+        Image {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height*0.5
@@ -31,17 +31,16 @@ Item{
                 pyt.getThreads(boardId,pageNo)
             }
         }
-
     }
 
-    Rectangle{
+    Rectangle {
         id: pageNoRect
         color: "transparent"
         anchors.right:nextButton.left
         height: parent.height
         width: parent.width*0.20
 
-        Button{
+        Button {
             text: "<b>"+threadPage.pageNo+"</b>"
             height: parent.height
             width:parent.width
@@ -55,24 +54,24 @@ Item{
         }
     }
 
-    Rectangle{
+    Rectangle {
         id: nextButton
         color: "transparent"
         height: parent.height
         width: parent.width*0.40
         anchors.right: parent.right
 
-        Image{
+        Image {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height*0.5
             source:"image://theme/icon-cover-next"
             fillMode: Image.PreserveAspectFit
             opacity: {
-                if(threadPage.pageNo < threadPage.pages){
+                if (threadPage.pageNo < threadPage.pages) {
                     1
                 }
-                else{
+                else {
                     0.1
                 }
             }
@@ -83,7 +82,7 @@ Item{
             enabled: threadPage.pageNo < threadPage.pages ? true : false
             onClicked: {
                 listView.scrollToTop()
-                if (pageNo < threadPage.pages){
+                if (pageNo < threadPage.pages) {
                     pageNo++
                 }
                 pyt.getThreads(boardId,pageNo)

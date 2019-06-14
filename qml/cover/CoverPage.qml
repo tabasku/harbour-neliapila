@@ -43,27 +43,12 @@ CoverBackground {
         opacity: 0.6
         source: pageStack.currentPage.thumbUrl ? pageStack.currentPage.thumbUrl: ""
         asynchronous : true
-        //visible: source ? true : false
-
     }
 
     CoverPlaceholder {
         text: pageStack.currentPage.title ? pageStack.currentPage.title: "Neliapila"
         icon.source: "../img/neliapila.png"
     }
-
-//    CoverActionList {
-//        id: coverAction
-
-//        CoverAction {
-//            iconSource: "image://theme/icon-cover-refresh"
-//            onTriggered: {
-//                pageStack.clear()
-//                pageStack.push(Qt.resolvedUrl("../pages/ThreadsPage.qml"))
-//                mainWindow.activate()
-//            }
-//        }
-//    }
 }
 
 

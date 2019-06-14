@@ -37,7 +37,7 @@ AbstractPage {
     }
 
     function change_board(boardId) {
-        if(helpTxt.enabled){
+        if (helpTxt.enabled) {
             helpTxt.enabled = false
         }
 
@@ -57,7 +57,6 @@ AbstractPage {
         anchors {
             fill: parent
         }
-        // quickScroll: false
 
         VerticalScrollDecorator { flickable: listView }
 
@@ -72,7 +71,6 @@ AbstractPage {
                 visible: mode === "thread"
                 onClicked: {
                     pyt.getThreads(boardId)
-                    // A function to scroll to previous location
                 }
             }
         }
@@ -151,7 +149,7 @@ AbstractPage {
 
             Image {
                 id: appIcon
-                anchors{
+                anchors {
                     left: parent.left
                     verticalCenter: parent.verticalCenter
                     leftMargin: pageMargin
@@ -161,6 +159,7 @@ AbstractPage {
                 fillMode: Image.PreserveAspectFit
                 smooth: true
                 source: "../img/neliapila.png"
+
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
@@ -215,7 +214,7 @@ AbstractPage {
                 MenuItem {
                     visible: pin ? true : false
                     text: qsTr("Remove pin")
-                    onClicked:{
+                    onClicked: {
                         pyt.unpin(index)
                     }
                 }
@@ -223,7 +222,7 @@ AbstractPage {
                 MenuItem {
                     visible: pin ? false : true
                     text: qsTr("Add pin")
-                    onClicked:{
+                    onClicked: {
                         pyt.pin(index)
                     }
                 }
@@ -250,12 +249,12 @@ AbstractPage {
     }
 
     Component.onCompleted: {
-        if(boardId) {
+        if (boardId) {
             pyt.getThreads(boardId,1)
         }
         else {
             pyt.call('threads.get_default',[],function(result) {
-                if(typeof result === 'undefined'){
+                if (typeof result === 'undefined') {
                     busy = false
                     helpTxt.enabled = true
                 }
@@ -288,7 +287,7 @@ AbstractPage {
     onStatusChanged: {
         if (status === PageStatus.Active && pageStack.depth === 1 && mode === "thread") {
             pageStack.pushAttached(Qt.resolvedUrl("NaviPage.qml"),{boardId: boardId} );
-            if(model.count != 0) {
+            if (model.count != 0) {
                 pyt.call('pinned.data.thread_this', ['get_by_board',{'board':boardId}],function() {});
             }
         }
@@ -382,21 +381,21 @@ AbstractPage {
 
             importModule('posting', function() {});
 
-             setHandler('post_successfull', function(result) {
-                 console.log("SUCCESS : "+result);
-                 newPostPanel.busy = false;
-                 newPostPanel.open = false;
-                 newPostPanel.clearFields();
-                 threadPage.forwardNavigation = true;
-                 var newPostId = result[1];
+            setHandler('post_successfull', function(result) {
+                console.log("SUCCESS : "+result);
+                newPostPanel.busy = false;
+                newPostPanel.open = false;
+                newPostPanel.clearFields();
+                threadPage.forwardNavigation = true;
+                var newPostId = result[1];
 
-                 pyt.getThreads(boardId);
-                 Remorse.popupAction(threadPage, "Post sent, opening your thread", function() {
-                     console.log("remorse fired")
-                     pageStack.push("PostsPage.qml", {postNo: newPostId, boardId: boardId, pinned: false} )
-                 })
+                pyt.getThreads(boardId);
+                Remorse.popupAction(threadPage, "Post sent, opening your thread", function() {
+                    console.log("remorse fired")
+                    pageStack.push("PostsPage.qml", {postNo: newPostId, boardId: boardId, pinned: false} )
+                })
 
-             });
+            });
 
             setHandler('post_failed', function(result) {
                 console.log("FAILED : "+result);
@@ -446,11 +445,10 @@ AbstractPage {
             if (model.count !== 0) {
                 model.clear()
             }
+
             if (currentModel === pinModel) {
                 pinModel.clear()
                 currentModel = model
-
-                console.log("Model changed to model")
             }
 
             threadPage.boardId = boardId

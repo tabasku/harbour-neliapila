@@ -34,17 +34,17 @@ AbstractPage {
 
         sourceComponent: {
             switch (imageItem.status) {
-            case Image.Ready : {
-                imagePage.busy=false
+            case Image.Ready: {
+                imagePage.busy = false
                 thumbnail_stretched.visible = false
                 return undefined
             }
 
             case Image.Loading: {
-                imagePage.busy=true
+                imagePage.busy = true
                 return busyIndicatorComponent
             }
-            case Image.Error:{
+            case Image.Error: {
                 infoBanner.alert("Image loading failed");
                 return failedLoading
             }
@@ -84,10 +84,11 @@ AbstractPage {
                     color: Theme.primaryColor
                 }
             }
-
         }
+
         Component {
             id: failedLoading;
+
             Label {
                 text: qsTr("Error")
             }
@@ -102,6 +103,7 @@ AbstractPage {
         contentHeight: height
         anchors.fill: parent
         pressDelay: 0
+
         function _fit() {
             fitAnimation.start()
         }
@@ -119,6 +121,7 @@ AbstractPage {
 
         PullDownMenu {
             id: imageViewMenu
+
             MenuItem {
                 text: qsTr("Open in browser")
                 onClicked: {
@@ -132,7 +135,7 @@ AbstractPage {
                 onClicked: pageStack.push(Qt.resolvedUrl("SaveFilePage.qml"), {uri: imgUrl})
             }
 
-            Label{
+            Label {
                 text: title
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeExtraSmall
@@ -153,6 +156,7 @@ AbstractPage {
                 initialWidth = picFlick.contentWidth
                 initialHeight = picFlick.contentHeight
             }
+
             onPinchUpdated: {
                 picFlick.contentX += pinch.previousCenter.x - pinch.center.x
                 picFlick.contentY += pinch.previousCenter.y - pinch.center.y
@@ -165,6 +169,7 @@ AbstractPage {
 
                 picFlick.resizeContent(newWidth, newHeight, pinch.center)
             }
+
             onPinchFinished: {
                 picFlick.returnToBounds()
             }

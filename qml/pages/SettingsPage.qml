@@ -19,7 +19,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-//import "../components"
 
 
 
@@ -44,20 +43,19 @@ AbstractPage {
         Column {
             id: column
 
-
             width: settingsPage.width
             spacing: Theme.paddingLarge
             PageHeader {
                 title: "Settings"
             }
 
-            Column{
+            Column {
                 id:settings_spacer
                 width: settingsPage.width
                 height: 10
             }
 
-            Column{
+            Column {
                 id: timer_settings_column
                 width: settingsPage.width
 
@@ -66,36 +64,33 @@ AbstractPage {
                     text: "Start with last used board"
                     description: "Overrides first board setting on <i>Boards</i>"
                     onCheckedChanged: {
-                        if(timer){
+                        if (timer) {
                             timer=false
-                        }else{
+                        }
+                        else {
                             timer=true
                         }
-
-
-                        console.debug(timer)
                     }
                 }
+
                 TextSwitch {
                     id: activationSwitch
                     text: "Pepe enabled"
                     description: "Shows frog when something goes wrong"
                     onCheckedChanged: {
                         autoincrement  = true
-                        //device.setStatus(checked ? DeviceState.Armed : DeviceState.Disarmed)
 
-                        if(autoincrement){
+                        if (autoincrement) {
                             weightField.opacity = 1
                         }
                         else{
                             weightField.opacity = 0
                         }
-
                     }
                 }
             }
 
-            Column{
+            Column {
                 id:auto_increment_column
                 width: settingsPage.width
 
@@ -103,61 +98,31 @@ AbstractPage {
 
 
             }
-            Column{
+
+            Column {
                 id: redownload_boards_column
                 anchors.horizontalCenter: parent.horizontalCenter
-                Button{
+
+                Button {
                     id:redownload_boards_button
                     text: "Refresh boards"
                     onClicked: {
-                        //pageStack.push("AboutPage.qml");
-
-                        console.log("redownload boards!")
-/*
-                        console.debug("Example installed = " + example)
-
-                        if(!example){
-                            console.debug("Installing default workouts")
-                            storage.installExample();
-                            example=true
-                        }
-                        else{
-                            console.debug("Removing default workouts")
-                            storage.removeExample();
-                            example=false
-                        }*/
+                        console.log("I don't work yet!")
                     }
-
                 }
-
-
             }
-            Column{
+
+            Column {
                 id: example_setting_column
                 anchors.horizontalCenter: parent.horizontalCenter
-                Button{
+
+                Button {
                     id:example_install_button
                     text: "About Neliapila"
                     onClicked: {
                         pageStack.push("AboutPage.qml");
-/*
-                        console.debug("Example installed = " + example)
-
-                        if(!example){
-                            console.debug("Installing default workouts")
-                            storage.installExample();
-                            example=true
-                        }
-                        else{
-                            console.debug("Removing default workouts")
-                            storage.removeExample();
-                            example=false
-                        }*/
                     }
-
                 }
-
-
             }
         }
     }

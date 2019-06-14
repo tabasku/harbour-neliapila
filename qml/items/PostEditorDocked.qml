@@ -5,7 +5,6 @@ import io.thp.pyotherside 1.4
 import Nemo.Thumbnailer 1.0
 
 BackgroundItem {
-
     id: newPostItem
 
     property string boardId: boardId
@@ -16,12 +15,10 @@ BackgroundItem {
     property string options: ""
     property string subject: subjectText.text
     property string comment: commentText.text
-    //property string file_path: selectedFile ? selectedFile : ""
     property variant captcha_token
     property bool optionalFieldsVisible: false
 
     anchors.fill: parent
-
 
     Item {
         anchors.fill: parent
@@ -29,7 +26,6 @@ BackgroundItem {
         Rectangle {
             anchors.fill: parent
 
-            //color: "black"
             gradient: Gradient {
                 GradientStop { position: 0.0; color: Theme.rgba(Theme.highlightDimmerColor, 1) }
                 GradientStop { position: 5.0; color: Theme.rgba(Theme.highlightDimmerColor, 0.5) }
@@ -38,16 +34,14 @@ BackgroundItem {
         }
     }
 
-    Item{
-
-        anchors{
+    Item {
+        anchors {
             fill: parent
             topMargin: pageMargin
             bottomMargin: Theme.paddingSmall
             leftMargin: pageMargin
             rightMargin: pageMargin
         }
-
 
         Column {
             id: column
@@ -58,16 +52,12 @@ BackgroundItem {
 
             anchors.fill: parent
 
-            Row{
+            Row {
                 spacing: 0
-                //spacing: Theme.paddingSmall
 
                 Rectangle{
-                    //spacing: Theme.paddingSmall
                     width: column.width/3
                     height: width
-
-                    //color: "transparent"
 
                     gradient: Gradient {
                         GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0) }
@@ -86,21 +76,20 @@ BackgroundItem {
                         sourceSize.height: selectedImageThumb.height
                         asynchronous: true
 
-                        MouseArea{
+                        MouseArea {
                             anchors.fill: parent
                             onClicked: pageStack.push(filePickerPage)
                         }
-
                     }
                 }
 
-                Column{
+                Column {
                     height: commentText.contentHeight < column.width/3
                             ? column.width/3
                             : commentText.contentHeight
                     spacing: 0
 
-                    TextArea{
+                    TextArea {
                         id: commentText
                         width: column.width/3*2
                         font.family: Theme.fontFamily
@@ -116,7 +105,7 @@ BackgroundItem {
                 }
             }
 
-            Rectangle{
+            Rectangle {
                 color: "transparent"
                 width: column.width
                 height: Theme.iconSizeMedium
@@ -128,12 +117,10 @@ BackgroundItem {
                    anchors.horizontalCenter: parent.horizontalCenter
                 }
 
-
                 IconButton {
                     id: expandOptionalButton
                     width: Theme.iconSizeMedium
                     height: width
-
 
                     anchors {
                         bottom: parent.bottom
@@ -148,43 +135,27 @@ BackgroundItem {
                         optionalFieldsVisible
                                 ? optionalFieldsVisible = false
                                 : optionalFieldsVisible = true
-
                     }
                 }
-
             }
 
-            Rectangle{
-
-                //spacing: Theme.paddingSmall
+            Rectangle {
                 width: column.width
                 height: optionalFieldsVisible
                         ? nameText.height + subjectText.height + Theme.paddingSmall
                         : 0
                 color: "red"
 
-                /*
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0) }
-                    GradientStop { position: 1.0; color: Theme.rgba(Theme.primaryColor, 0.2) }
-                }
-                */
-
-                Column{
+                Column {
                     height: contentHeight
 
-
-
-                    TextField{
+                    TextField {
                         id: subjectText
                         width: column.width/3*2
                         visible: optionalFieldsVisible
-                        //wrapMode: Text.WordWrap
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
                         color: Theme.primaryColor
-                        //text: content
-                        //x: Theme.paddingSmall
                         clip: true
                         focus: false
                         label: 'Subject'
@@ -193,17 +164,13 @@ BackgroundItem {
                     }
 
                     Row {
-
-                        TextField{
+                        TextField {
                             id: nameText
                             width: column.width/3*2
                             visible: optionalFieldsVisible
-                            //wrapMode: Text.WordWrap
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontSizeSmall
                             color: Theme.primaryColor
-                            //text: content
-                            //x: Theme.paddingSmall
                             clip: true
                             focus: false
                             placeholderText: "Anonymous"
@@ -211,41 +178,33 @@ BackgroundItem {
                             text: nickname
                         }
 
-                        TextField{
+                        TextField {
                             id: optionsText
                             width: column.width/3
                             visible: optionalFieldsVisible
-                            //wrapMode: Text.WordWrap
                             font.family: Theme.fontFamily
                             font.pixelSize: Theme.fontSizeSmall
                             color: Theme.primaryColor
-                            //text: content
-                            //x: Theme.paddingSmall
                             clip: true
                             focus: false
                             label: 'Options'
                             placeholderText: 'Options'
                             text: options
                         }
-
                     }
                 }
             }
-
         }
     }
 
-
-Component {
-    id: filePickerPage
-    FilePickerPage {
-        nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
-        onSelectedContentPropertiesChanged: {
-            newPostItem.selectedFile = selectedContentProperties.filePath
-            //newPostItem.selectedImageThumb.source = selectedContentProperties.filePath
-            selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
+    Component {
+        id: filePickerPage
+        FilePickerPage {
+            nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
+            onSelectedContentPropertiesChanged: {
+                newPostItem.selectedFile = selectedContentProperties.filePath
+                selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
+            }
         }
     }
-}
-
 }

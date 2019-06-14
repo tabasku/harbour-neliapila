@@ -5,7 +5,6 @@ import io.thp.pyotherside 1.4
 import Nemo.Thumbnailer 1.0
 
 DockedPanel {
-
     id: newPostItem
 
     property string boardId: boardId
@@ -16,12 +15,10 @@ DockedPanel {
     property string options: ""
     property string subject: subjectText.text
     property string comment: commentText.text
-    //property string file_path: selectedFile ? selectedFile : ""
     property variant captcha_token
     property bool optionalFieldsVisible: false
     property bool busy: false
 
-    //anchors.fill: parent
     width: parent.width
     height: commentRow.height + postActionButtons.height + optionalFields.height + pageMargin*2
 
@@ -32,27 +29,21 @@ DockedPanel {
         Rectangle {
             anchors.fill: parent
 
-            //color: "black"
-
             gradient: Gradient {
                 GradientStop { position: 0.0; color: Theme.rgba(Theme.highlightDimmerColor, 1) }
                 GradientStop { position: 5.0; color: Theme.rgba(Theme.highlightDimmerColor, 0.5) }
             }
-
         }
     }
 
-    Item{
-
-        anchors{
+    Item {
+        anchors {
             fill: parent
             topMargin: pageMargin
             bottomMargin: Theme.paddingSmall
             leftMargin: pageMargin
             rightMargin: pageMargin
         }
-
-
 
         BusyIndicator {
             id: postBusyIndicator;
@@ -69,26 +60,18 @@ DockedPanel {
             height: commentText.text
                     ? commentText.height
                     : commentText.height + screen.height * 0.3
-            //height: parent.contentHeight
             spacing: Theme.paddingSmall
             opacity: newPostItem.busy
                     ? 0.5
                     : 1
 
-
-            Row{
+            Row {
                 id: commentRow
-                //width: parent.width
-
                 spacing: 0
-                //spacing: Theme.paddingSmall
 
-                Rectangle{
-                    //spacing: Theme.paddingSmall
+                Rectangle {
                     width: column.width/4
                     height: width
-
-                    //color: "transparent"
 
                     gradient: Gradient {
                         GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0.1) }
@@ -114,22 +97,20 @@ DockedPanel {
                     }
                 }
 
-                Column{
+                Column {
                     height: commentText.contentHeight < column.width/3
                             ? column.width/3
                             : commentText.contentHeight
                     width: column.width/4*3
                     spacing: 0
 
-                    TextArea{
+                    TextArea {
                         id: commentText
                         enabled: !busy
-                        //width: column.width/4*3
                         width: parent.width
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
                         clip: false
-                        //focus: newPostItem.open
                         focus: false
                         wrapMode: TextEdit.Wrap
                         color: text ? Theme.primaryColor : 'red'
@@ -140,7 +121,7 @@ DockedPanel {
                 }
             }
 
-            Rectangle{
+            Rectangle {
                 id: optionalFields
                 width: column.width
                 height: optionalFieldsVisible
@@ -148,9 +129,9 @@ DockedPanel {
                         : 0
                 color: "transparent"
 
-                Column{
+                Column {
 
-                    TextField{
+                    TextField {
                         id: subjectText
                         enabled: !busy
                         width: column.width
@@ -167,8 +148,7 @@ DockedPanel {
                     }
 
                     Row {
-
-                        TextField{
+                        TextField {
                             id: nameText
                             enabled: !busy
                             //width: column.width/3*2
@@ -183,27 +163,11 @@ DockedPanel {
                             label: 'Name'
                             text: nickname
                         }
-                        /*
-                        TextField{
-                            id: optionsText
-                            enabled: !busy
-                            width: column.width/3
-                            visible: optionalFieldsVisible
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontSizeSmall
-                            color: Theme.primaryColor
-                            clip: true
-                            focus: false
-                            label: 'Options'
-                            placeholderText: 'Options'
-                            text: options
-                        }*/
-
                     }
                 }
             }
 
-            Rectangle{
+            Rectangle {
                 id: postActionButtons
                 color: "transparent"
                 width: column.width
@@ -223,13 +187,10 @@ DockedPanel {
 
                     icon.source: "image://theme/icon-m-tab-close"
                     onClicked: {
-
                         Remorse.popupAction(newPostItem, "Clearing fields", function() {
                             newPostItem.open = false
                             newPostItem.clearFields()
                         })
-
-
                     }
                 }
 
@@ -249,23 +210,23 @@ DockedPanel {
                     icon.source: "image://theme/icon-m-message"
                     onClicked: {
 
-                        if(!newPostItem.replyTo){
+                        if (!newPostItem.replyTo) {
                             console.log("new thread")
 
-                            if(!newPostItem.selectedFile){
+                            if (!newPostItem.selectedFile) {
 
                                 infoBanner.alert("Image required in new post");
                                 return;
                             }
-                            else if(!newPostItem.comment){
+                            else if (!newPostItem.comment) {
                                 infoBanner.alert("Comment required in new post");
                                 return;
                             }
                         }
-                        else{
+                        else {
                             console.log("new post")
 
-                            if(!newPostItem.comment){
+                            if (!newPostItem.comment) {
                                 infoBanner.alert("Comment required in reply");
                                 return;
                             }
@@ -277,25 +238,6 @@ DockedPanel {
                                   "replyTo" : newPostItem.replyTo
                               })
                             : pageStack.push("../pages/Captcha2Page.qml");
-
-                        /*
-                        if(!newPostItem.replyTo && !newPostItem.comment && !newPostItem.selectedFile){
-
-                            infoBanner.alert("Comment & Image required in new post");
-                            return;
-                        }
-                        else if(!newPostItem.comment){
-                                infoBanner.alert("Comment required in reply");
-                                return;
-                        }
-                        else{
-                            newPostItem.replyTo
-                                ? pageStack.push("../pages/Captcha2Page.qml",
-                                  {
-                                      "replyTo" : newPostItem.replyTo
-                                  })
-                                : pageStack.push("../pages/Captcha2Page.qml");
-                        }*/
                     }
                 }
 
@@ -321,60 +263,44 @@ DockedPanel {
 
                     }
                 }
-
             }
-
         }
     }
 
-Component {
-    id: filePickerPage
 
-    /*
-    FilePickerPage {
-        id: filePicker
-        visible: false
-        nameFilters: [ '*.jpg', '*.png', '*.webm','*.gif' ]
-        onSelectedContentPropertiesChanged: {
-            newPostItem.selectedFile = selectedContentProperties.filePath
-            selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
+    Component {
+        id: filePickerPage
+
+        ImagePickerPage {
+            id: imagePicker
+            onSelectedContentPropertiesChanged: {
+                newPostItem.selectedFile = selectedContentProperties.filePath
+                selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
+            }
         }
     }
-*/
 
-    ImagePickerPage {
-        id: imagePicker
-        onSelectedContentPropertiesChanged: {
-            newPostItem.selectedFile = selectedContentProperties.filePath
-            //newPostItem.selectedImageThumb.source = selectedContentProperties.filePath
-            selectedImageThumb.source = "image://nemoThumbnail/" + selectedContentProperties.filePath
+    function clearFields() {
+        selectedFile = "";
+        selectedImageThumb.source = "image://theme/icon-l-image";
+
+        subjectText.text = "";
+        nameText.text = "";
+        commentText.text = "";
+
+        subjectText.focus = false;
+        nameText.focus = false;
+        commentText.focus = false;
+
+    }
+
+    function addQuote(quote) {
+        if (commentText.text.length) {
+            commentText.text += "\n"+quote
+        }
+        else {
+            console.log("Field empty")
+            commentText.text += quote
         }
     }
-}
-
-function clearFields(){
-    selectedFile = "";
-    selectedImageThumb.source = "image://theme/icon-l-image";
-
-    subjectText.text = "";
-    nameText.text = "";
-    //optionsText.text = "";
-    commentText.text = "";
-
-    subjectText.focus = false;
-    nameText.focus = false;
-    //optionsText.focus = false;
-    commentText.focus = false;
-
-}
-
-function addQuote(quote){
-    if(commentText.text.length){
-        commentText.text += "\n"+quote
-    }else{
-        console.log("Field empty")
-        commentText.text += quote
-    }
-}
-
 }

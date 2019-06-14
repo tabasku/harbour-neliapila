@@ -12,8 +12,6 @@ MouseArea {
 
     anchors.top :parent.top
     width: Screen.width
-    //height: messageText.height + 2 * Theme.paddingMedium
-    //height: 110
     height: messageText.height + Theme.paddingLarge * 2
     visible: opacity > 0.0
     opacity: 0.0
