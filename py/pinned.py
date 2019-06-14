@@ -35,6 +35,7 @@ def get_pins_db(post_no=None,board=None):
             short_com = short_com.replace("&#8221;","”")
             short_com = short_com.replace("&#8216;","‘")
             short_com = short_com.replace("&#8217;","’")
+            short_com = short_com.replace("&#8222;","„")
             if len(re.findall(r'\d+s.jpg',pin['THUMB_URL'])) != 0:
                 filename = database.get_thumb_dir() + "/" + re.findall(r'\d+s.jpg',pin['THUMB_URL'])[0]
             else:
@@ -117,6 +118,7 @@ def add_pin(post_no,board,short_com,thumb_url,time_created,replies_count):
     short_com = short_com.replace("”","&#8221;")
     short_com = short_com.replace("‘","&#8216;")
     short_com = short_com.replace("’","&#8217;")
+    short_com = short_com.replace("„","&#8222;")
 
     short_com = short_com.encode()
 
