@@ -30,7 +30,7 @@ def get_pins_db(post_no=None,board=None):
 
         for pin in pins:
             short_com = pin['SHORT_COM'][2:-1].replace("&#039;","'")
-            short_com = pin['SHORT_COM'][2:-1].replace("&#034;","\"")
+            short_com = short_com.replace("&#034;","\"")
             if len(re.findall(r'\d+s.jpg',pin['THUMB_URL'])) != 0:
                 filename = database.get_thumb_dir() + "/" + re.findall(r'\d+s.jpg',pin['THUMB_URL'])[0]
             else:
