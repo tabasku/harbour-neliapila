@@ -107,6 +107,7 @@ def add_pin(post_no,board,short_com,thumb_url,time_created,replies_count):
         short_com = short_com[0:100]
 
     short_com = short_com.replace("'","&#039;")
+    short_com = short_com.replace("\"","&#034;")
 
     short_com = short_com.encode()
 
