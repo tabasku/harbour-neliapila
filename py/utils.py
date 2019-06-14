@@ -73,7 +73,8 @@ def parse_posts(list,post_replies=None):
         #If someone has been lazy, lets fix
         for untagged_url in fixlist:
             fixed_url = re.sub(re.compile(uri, re.MULTILINE),r'<a href="\1">\1</a>',str(untagged_url))
-            com = com.replace(untagged_url, fixed_url)
+            if "boards.4chan" not in untagged_url:
+                com = com.replace(untagged_url, fixed_url)
 
         #Make greentext green
         com = re.sub(r'\<span class=\"quote\"\>\>(.*?)\<\/span\>', r'<font color="#32CD32">>\1</font>',com)
