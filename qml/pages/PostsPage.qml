@@ -26,15 +26,17 @@ AbstractPage {
     property string mode: "post";
     property string singlePost;
     property var postsToShow;
+    property int totalPosts: 0
     property var modelToStrip;
     property bool pinned;
     property int replyTo: postNo
+    property int reloadTime: 40 // This can be a setting later
 
-    function getBackToPost(){
+    function getBackToPost() {
         pageStack.pop(pageStack.find( function(page){ return(page._depth === 1)} ), PageStackAction.Immediate)
     }
 
-    function returnModel(){
+    function returnModel() {
         return postsModel
     }
 
@@ -45,7 +47,6 @@ AbstractPage {
             model: postsModel
             anchors.fill: parent
             focus: true
-            // quickScroll: false
             VerticalScrollDecorator {}
 
             PushUpMenu {
@@ -58,7 +59,42 @@ AbstractPage {
                     visible: pageStack.depth === 2
                     onClicked: {
                         pyp.getPosts(boardId,postNo)
-                        // TODO: A function to scroll to previous location
+                        infoBanner.alert("Fetching new posts...")
+                    }
+                }
+
+                MenuItem {
+                    text: "Add pin"
+                    visible: !pinned && pageStack.depth === 2
+                    onClicked: {
+                        //console.log("Add pin for post "+postNo +" on board "+boardId)
+                        pyp.pin(postNo,boardId)
+                    }
+                }
+
+                MenuItem {
+                    text: "Remove pin"
+                    visible: pinned && pageStack.depth === 2
+                    onClicked: {
+                        //console.log("REMOVE pin for post "+postNo +" on board "+boardId)
+                        pyp.unpin(postNo,boardId)
+                    }
+                }
+
+                MenuItem {
+                    text: qsTr("Reply")
+                    enabled: !replyPostPanel.open
+                    visible: pageStack.depth === 2
+                    onClicked: {
+                        replyPostPanel.open = !replyPostPanel.open
+                    }
+                }
+
+                MenuItem {
+                    text: qsTr("Back to "+postNo )
+                    visible: pageStack.depth !== 2
+                    onClicked: {
+                        getBackToPost()
                     }
                 }
             }
@@ -84,6 +120,7 @@ AbstractPage {
                         pyp.pin(postNo,boardId)
                     }
                 }
+
                 MenuItem {
                     text: "Remove pin"
                     visible: pinned && pageStack.depth === 2
@@ -92,10 +129,10 @@ AbstractPage {
                         pyp.unpin(postNo,boardId)
                     }
                 }
+
                 MenuItem {
-                    id: backToPost
                     text: qsTr("Back to "+postNo )
-                    visible: false
+                    visible: pageStack.depth !== 2
                     onClicked: {
                         getBackToPost()
                     }
@@ -115,12 +152,12 @@ AbstractPage {
                     visible: pageStack.depth === 2
                     onClicked: {
                         pyp.getPosts(boardId,postNo)
-                        infoBanner.alert("Reloading...")
+                        infoBanner.alert("Fetching new posts...")
                     }
                 }
             }
 
-            Button{
+            Button {
                 id: moreInfoButton
                 visible: false
                 text: "More info"
@@ -234,7 +271,7 @@ AbstractPage {
                 }
             }
 
-            delegate: PostItem{
+            delegate: PostItem {
                 id: delegate
             }
 
@@ -244,6 +281,51 @@ AbstractPage {
 
             populate: Transition {
                 NumberAnimation { property: "opacity"; easing.type: Easing.OutBounce; from: 0; to: 1.0; duration: 500 }
+            }
+
+            footer: Rectangle {
+                color: "transparent"
+                height: Screen.height*0.1
+                width: parent.width
+                visible : (pageStack.depth !== 2) ? false : true
+
+                Label {
+                        id: postCountFooterLabel
+                        text: postsModel.count + " posts total"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 22
+                }
+
+                Label {
+                    id: countDownFooterLabel
+                    property int timeUntilReload: reloadTime
+                    text: {
+                        if (busy)
+                            return "Working..."
+                        return "reloading in " + timeUntilReload
+                    }
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: postCountFooterLabel.bottom
+                }
+
+                Timer {
+                    property int counter: reloadTime
+                    interval: 1000; running: true; repeat: true
+                    onTriggered: {
+                        if (!busy && pageStack.depth === 2) {
+                            if (counter == 0) {
+                                counter = reloadTime
+                                pyp.getPosts(boardId,postNo)
+                            }
+
+                            countDownFooterLabel.timeUntilReload = counter
+                            counter = counter - 1
+                        }
+                    }
+                }
+
             }
         }
 
@@ -259,10 +341,7 @@ AbstractPage {
 
     Component.onCompleted: {
         pyp.getPosts(boardId,postNo)
-
-        if (1 < pageStack.depth) {
-            backToPost.visible = true
-        }
+        hideBusyIndicator()
     }
 
 
@@ -275,8 +354,12 @@ AbstractPage {
             addImportPath(pythonpath);
 
             setHandler('posts', function(result) {
-                for (var i=0; i<result.length; i++) {
-                    postsModel.append(result[i]);
+
+                // Only append new posts
+                if (pageStack.depth === 2) {
+                    for (var i=totalPosts; i<result.length; i++) {
+                        postsModel.append(result[i]);
+                    }
                 }
 
                 busy = false
@@ -344,9 +427,7 @@ AbstractPage {
         function getPosts(boardId,postNo) {
             busy = true
 
-            if(postsModel.count !== 0) {
-                postsModel.clear()
-            }
+            postsPage.totalPosts = postsModel.count
 
             postsPage.boardId = boardId
             postsPage.postNo = postNo
