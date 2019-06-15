@@ -43,7 +43,7 @@ def get_posts(board_id,postno):
             post_values['no'] = post.post_id
 
             if post.post_id == postno :
-                post_values['replies'] = len(thread.posts)
+                post_values['replies'] = len(thread.posts)-1
                 post_values['sticky'] = int(thread.sticky)
             else:
                 post_values['replies'] = 0
@@ -93,7 +93,7 @@ def get_new_posts_count(board_id,postno,replies_count):
     if thread is None:
         return None
     else:
-        updated_replies_count = len(thread.posts)
+        updated_replies_count = len(thread.posts)-1
 
         total = updated_replies_count - replies_count
 
