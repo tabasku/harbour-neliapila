@@ -104,7 +104,7 @@ def add_pin(post_no,board,short_com,thumb_url,time_created,replies_count):
         short_com = short_com[0:100]
 
     html.escape(short_com).encode('ascii', 'xmlcharrefreplace')
-
+    short_com = short_com.replace("\"","&#034;")
     try:
         thumb_url
     except NameError:
