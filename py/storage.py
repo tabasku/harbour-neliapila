@@ -12,7 +12,6 @@ class Storage:
     def __init__(self):
         pass
 
-
     def get_thumb_dir(self):
         home = None
         if sys.platform is 'win32':
@@ -24,7 +23,6 @@ class Storage:
             makedirs(home)
 
         return home
-
 
     def get_dir(self):
         home = None
@@ -46,7 +44,6 @@ class Storage:
             d[col[0].lower()] = row[idx]
         return d
 
-
     def db_commit(self, cmd, script=False):
         con = None
         home = self.get_dir()
@@ -64,10 +61,10 @@ class Storage:
             sys.exit(1)
 
         finally:
+
             if con:
                 con.commit()
                 con.close()
-
 
     def db_query(self,query,fetch,get_dict=False):
         con = None
@@ -92,10 +89,10 @@ class Storage:
             sys.exit(1)
 
         finally:
+
             if con:
                 con.close()
                 return data
-
 
     def table_exist(self,table):
         query = "SELECT name FROM sqlite_master WHERE type='table';"
@@ -108,8 +105,8 @@ class Storage:
 
         return t_exists
 
-
     def get_default(self):
+
         if self.table_exist("BOARDS"):
             query = "select BOARD from BOARDS WHERE DEFAULT_BOARD = 1;"
             default_board = self.db_query(query,"one")
@@ -123,7 +120,6 @@ class Storage:
 
         return default_board
 
-
     def get_pages(self,board):
 
         if self.table_exist("BOARDS"):
@@ -135,7 +131,6 @@ class Storage:
 
         return pages
 
-
     def fetch_favorites(self):
         query = "select BOARD from BOARDS WHERE FAVORITE = 1;"
         favorites = self.db_query(query,"all")
@@ -144,18 +139,15 @@ class Storage:
             favorite_list.append(fav[0])
         return favorite_list
 
-
     def fetch_boards_old(self):
         query = "select BOARD,TITLE,FAVORITE,DEFAULT_BOARD from BOARDS;"
         boards = self.db_query(query,"all")
         return boards
 
-
     def fetch_boards(self):
         query = "select BOARD,TITLE,PAGES,FAVORITE,DEFAULT_BOARD,LAST_USED from BOARDS ORDER BY BOARD ASC;"
         boards = self.db_query(query,"all",True)
         return boards
-
 
     def create_boards_table(self):
         cmd = '''CREATE TABLE IF NOT EXISTS  BOARDS
@@ -166,7 +158,6 @@ class Storage:
         DEFAULT_BOARD           INT     DEFAULT 0,
         LAST_USED         INT     DEFAULT 0);'''
         self.db_commit(cmd)
-
 
     def default_settings(self):
         defaults = ["INSERT OR IGNORE INTO SETTINGS(SETTING,VALUE) VALUES('default_board','g');",
@@ -183,8 +174,8 @@ class Storage:
         self.db_commit(cmd)
         self.default_settings()
 
-
     def fetch_settings(self,value=None):
+
         #Make sure settings table exists before query
         if not self.table_exist("SETTINGS"):
             self.create_settings_table()
@@ -198,8 +189,8 @@ class Storage:
 
         return settings
 
-
     def insert_boards(self,boards_data):
+
         if not self.table_exist('BOARDS'):
             self.create_boards_table()
             table_exists_already = False
@@ -233,8 +224,8 @@ class Storage:
 
         self.db_commit(cmd,True)
 
-
     def favorite(self,board):
+
         query = 'select BOARD,FAVORITE from BOARDS WHERE BOARD = "{board}";'.format(board=board)
         board_found = self.db_query(query,"one")[1]
 
@@ -246,14 +237,13 @@ class Storage:
         self.db_commit(cmd)
         #print(self.get_favorites())
 
-
     def set_default(self,board):
+
         self.db_commit('UPDATE BOARDS SET DEFAULT_BOARD="0";')
 
         cmd = 'UPDATE BOARDS SET DEFAULT_BOARD="1" WHERE BOARD ="{board}";'.format(board=board)
 
         self.db_commit(cmd)
-
 
     def create_pinned_table(self):
         cmd = '''CREATE TABLE IF NOT EXISTS  PINNED
@@ -267,8 +257,8 @@ class Storage:
         REPLIES_COUNT      INT         NOT NULL);'''
         self.db_commit(cmd)
 
-
     def add_pin(self,post_no,board,short_com,thumb_url,time,time_created,replies_count):
+
         if not self.table_exist('PINNED'):
             self.create_pinned_table()
 
@@ -283,27 +273,14 @@ class Storage:
               '''("{post_no}","{board}","{short_com}","{thumb_url}","{time_added}","{time_read}","{time_created}","{replies_count}");'''\
             .format(post_no=post_no,board=board,short_com=short_com,thumb_url=thumb_url,time_added=time,time_read=time,time_created=time_created,replies_count=replies_count)
 
-        home = self.get_dir()
-
-        try:
-            con = lite.connect(home)
-            cursor = con.cursor()
-            cursor.execute(cmd)
-
-        except lite.Error as err:
-            pyotherside.send('DBERR',str(err.__dict__))
-            return("SQLite error {}:".format(err))
-            sys.exit(1)
-
-        finally:
-            if con:
-                con.commit()
-                con.close()
+        self.db_commit(cmd)
 
         dir = self.get_thumb_dir()
 
 
+
     def update_pin(self,post_no,board,time,replies_count):
+
         if not self.table_exist('PINNED'):
             self.create_pinned_table()
 
@@ -313,8 +290,8 @@ class Storage:
 
         self.db_commit(cmd)
 
-
     def get_pins(self,post_no=None,board=None):
+
         if not self.table_exist('PINNED'):
             self.create_pinned_table()
 
@@ -330,8 +307,8 @@ class Storage:
 
         return pins
 
-
     def delete_pins(self,post_no=None,board=None):
+
         if not self.table_exist('PINNED'):
             self.create_pinned_table()
 
