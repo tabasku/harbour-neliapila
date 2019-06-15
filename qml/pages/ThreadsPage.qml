@@ -365,9 +365,8 @@ AbstractPage {
                     var updateItem
                     updateItem = pinModel.get(i)
 
-                  //  for (var j=0; j<result.length; j++) {
-                        updateItem.postCount = result[i]['postCount']
-                  //  }
+                    updateItem.postCount = result[i]['postCount']
+
                 }
             });
 
