@@ -1,7 +1,9 @@
 /*
 Neliapila - client for browsing 4chan image board.
-2015 Joni Kurunsaari
-Contact: Joni Kurunsaari <joni.kurunsaari@gmail.com>
+2015-2019 Joni Kurunsaari
+2019- Jacob Gold
+2019- szopin
+Issues: https://github.com/tabasku/harbour-neliapila/issues
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,15 +21,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-
-
+import "../js/settingsStorage.js" as SettingsStore
 
 AbstractPage {
     id: settingsPage
 
-    property bool autoincrement : false;
-    property bool example;
-    property bool timer;
     title: "Settings"
     busy: false
 
@@ -37,6 +35,15 @@ AbstractPage {
 
         // Tell SilicaFlickable the height of its content.
         contentHeight: column.height
+
+        Component.onCompleted: {
+            // Initialize the database
+            SettingsStore.initialize();
+            // Sets a value in the database
+            SettingsStore.setSetting("testValue","first test");
+
+            console.log("The value of mySetting is:\n" + SettingsStore.getSetting("testValue"))
+        }
 
         // Place our content in a Column.  The PageHeader is always placed at the top
         // of the page, followed by our content.

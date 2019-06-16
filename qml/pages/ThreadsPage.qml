@@ -80,12 +80,12 @@ AbstractPage {
             busy : busy
 
             // Soon...
-//            MenuItem {
-//                text: qsTr("Settings")
-//                onClicked: {
-//                    pageStack.push("SettingsPage.qml");
-//                }
-//            }
+            MenuItem {
+                text: qsTr("Settings")
+                onClicked: {
+                    pageStack.push("SettingsPage.qml");
+                }
+            }
 
             MenuItem {
                 text: qsTr("About")

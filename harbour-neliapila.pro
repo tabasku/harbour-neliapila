@@ -401,4 +401,5 @@ DISTFILES += \
     py/savefile.py \
     py/storage.py \
     py/threads.py \
-    py/utils.py
+    py/utils.py \
+    qml/js/settingsStorage.js
