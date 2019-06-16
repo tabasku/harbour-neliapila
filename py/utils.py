@@ -32,18 +32,6 @@ def strip_tags(html):
     return s.get_data()
 
 def parse_posts(list,post_replies=None):
-
- #   if post_replies:
-  #      values_to_keys = defaultdict(set)
-
-  #      for key, value in post_replies:
-    #        values_to_keys[value].add(key)
-
-    #post_replies = {}
-    #list['com'] = html.unescape(list['com'])
-    #print(html.unescape(list[1]['com']))
-    #parser = Parser()
-
     def comp(all, tagged):
         fixlist = []
         for val in all:
@@ -122,5 +110,4 @@ def collect_replies(com):
     quotelink = r'<a[^>]* href="#p([^"]*)" class="quotelink">\>.*?\<\/a\>'
     com = html.unescape(com)
     replies = re.findall(quotelink,com)
-    #print(replies)
     return replies
