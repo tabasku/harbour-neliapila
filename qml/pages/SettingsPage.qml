@@ -48,14 +48,17 @@ Page {
             PageHeader { title: "Settings" }
 
             ExpandingSectionGroup {
+                id: settingsExpandingGroup
+                currentIndex: 2
+
                 ExpandingSection {
-                    id: section
+                    id: behaviourSection
 
                     property int sectionIndex: 0
                     title: "Behaviour"
 
                     content.sourceComponent: Column {
-                        width: section.width
+                        width: settingsExpandingGroup.width
 
                         ComboBox {
                             label: "Thread refresh time"
@@ -84,16 +87,16 @@ Page {
                             }
                         }
                     }
-                }
+                } // End of Behaviour Settings section
 
                 ExpandingSection {
-                    id: section2
+                    id: mediaSection
 
                     property int sectionIndex: 1
                     title: "Media"
 
                     content.sourceComponent: Column {
-                        width: section.width
+                        width: settingsExpandingGroup.width
 
                         TextSwitch {
                             text: "Automatically start webm videos"
@@ -125,38 +128,71 @@ Page {
                             }
                         }
                     }
-                }
+                } // End of Media Settings section
 
 
-                // This is just appended.
-                // Probably better to attach a little summary section
-                // Check Clover on Android as a template
-                Button {
-                    id: aboutButton
-                    text: "About Neliapila"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    onClicked: {
-                        pageStack.push("AboutPage.qml");
+                // This part could look better
+                // Should be worked on in the future
+                ExpandingSection {
+                    id: aboutSection
+
+                    property int sectionIndex: 2
+                    title: "About"
+
+                    content.sourceComponent: Column {
+                        width: settingsExpandingGroup.width
+
+                        ListItem {
+                            id: aboutListItem
+                            anchors.margins: 15
+
+                            Label {
+                                id: aboutListItemPrimaryLabel
+                                text: "About Neliapila..."
+                            }
+
+                            Label {
+                                anchors.top: aboutListItemPrimaryLabel.bottom
+
+                                text: "Version 0.4"
+                                font.pixelSize: Theme.fontSizeExtraSmall
+                            }
+
+                            onClicked: {
+                                pageStack.push("AboutPage.qml");
+                            }
+                        }
+
+                        ListItem {
+                            id: returnDefaultSettingListItem
+                            anchors.margins: 15
+
+                            Label {
+                                id: returnToDefaultLabel
+                                text: "Reset Settings to default"
+                            }
+
+                            Label {
+                                anchors.top: returnToDefaultLabel.bottom
+
+                                text: "This action cannot be undone once performed!"
+                                font.pixelSize: Theme.fontSizeExtraSmall
+                            }
+
+                            onClicked: {
+                                settingClearedRemorse.execute("Clearing Settings", function() {
+                                    SettingsStore.resetSettingsDB()
+                                    Qt.quit()
+                                })
+                            }
+
+                            Rectangle {
+                                anchors.fill: parent
+                                color: "#33FF0000"
+                            }
+                        }
                     }
-                }
-
-
-                // This should be here for troubleshooting if something goes wrong with
-                // a user's settings. Additionally, good for dev troubleshooting
-                Button {
-                    id: resetSettingsButton
-                    text: "Reset Settings to default"
-                    anchors.horizontalCenter: parent.horizontalCenter
-
-                    color: "red" // Dangerous button
-
-                    onClicked: {
-                        settingClearedRemorse.execute("Clearing Settings", function() {
-                            SettingsStore.resetSettingsDB()
-                            Qt.quit()
-                        })
-                    }
-                }
+                } // End of About section
             }
         }
     }
