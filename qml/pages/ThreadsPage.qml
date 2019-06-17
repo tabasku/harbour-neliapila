@@ -19,6 +19,7 @@ import Sailfish.Silica 1.0
 import "../items"
 import io.thp.pyotherside 1.4
 import "../js/utils.js" as Utils
+import "../js/settingsStorage.js" as SettingsStore
 
 AbstractPage {
     id: threadPage
@@ -57,6 +58,9 @@ AbstractPage {
         anchors {
             fill: parent
         }
+
+        // Quickscroll being enabled is a user setting
+        quickScroll: SettingsStore.getSetting("QuickscrollEnabled") == 1 ? true : false
 
         VerticalScrollDecorator { flickable: listView }
 
