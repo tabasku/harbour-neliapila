@@ -92,13 +92,6 @@ AbstractPage {
             }
 
             MenuItem {
-                text: qsTr("About")
-                onClicked: {
-                    pageStack.push("AboutPage.qml");
-                }
-            }
-
-            MenuItem {
                 id: showPinnedMenu
                 text: qsTr("Pinned posts");
                 visible: mode === "thread" ? true: false
