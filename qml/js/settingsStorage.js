@@ -24,6 +24,7 @@ function getDatabase() {
 // At the start of the application, we can initialize the settings table if it hasn't been created yet
 function initialize() {
     var db = getDatabase();
+
     db.transaction(
         function(tx) {
             // Create the settings table if it doesn't already exist
@@ -75,4 +76,15 @@ function getSetting(setting, defaultValue) {
   // We return “Unknown” if the setting was not found in the database
   // Handling error codes should be implemented in the future
   return res
+}
+
+function resetSettingsDB() {
+    var db = getDatabase();
+
+    db.transaction(
+        function(tx) {
+            // Drop the Settings table
+            // Used for clearing user settings and testing reasons
+            tx.executeSql('DROP TABLE IF EXISTS settings');
+    });
 }
