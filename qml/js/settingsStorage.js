@@ -1,11 +1,16 @@
 // settingsStorage.js
+
 // Based on http://developer.nokia.com/community/wiki/How-to_create_a_persistent_settings_database_in_Qt_Quick_(QML)
 // Use webarchive if this URL is broken
+// Additional pointers here:
+// https://fecub.wordpress.com/2016/01/08/save-your-qt-quick-app-settings-easily-with-localstorage/
+
 
 // ~ Brief ~
 // JS helper file to allow reading and writing of settings from a
 // local DB. Settings themselves are explored more in SettingsPage.qml
 // ````````````````````````
+
 
 // Necessary import, allows access to openDatabaseSync
 .import QtQuick.LocalStorage 2.0 as Storage
@@ -52,7 +57,7 @@ function setSetting(setting, value) {
 
 
 // Retrieve a setting from the database
-function getSetting(setting) {
+function getSetting(setting, defaultValue) {
     var db = getDatabase();
     var res="";
 
@@ -63,7 +68,7 @@ function getSetting(setting) {
             res = rs.rows.item(0).value;
         }
         else {
-            res = "Unknown";
+            res = defaultValue || "Unknown";
         }
   })
 
