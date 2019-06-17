@@ -20,6 +20,7 @@ import Sailfish.Silica 1.0
 import "../items"
 import io.thp.pyotherside 1.4
 import "../js/utils.js" as Utils
+import "../js/settingsStorage.js" as SettingsStore
 
 AbstractPage {
     id: postsPage
@@ -31,7 +32,18 @@ AbstractPage {
     property var modelToStrip;
     property bool pinned;
     property int replyTo: postNo
-    property int reloadTime: 40 // This can be a setting later
+    property int reloadTime: {
+        switch( SettingsStore.getSetting("ThreadRefreshTime") ) {
+        case "0" :
+            return 60
+        case "1" :
+            return 45
+        case "2" :
+            return 30
+        default :
+            return -1
+        }
+    }
 
     function getBackToPost() {
         pageStack.pop(pageStack.find( function(page){ return(page._depth === 1)} ), PageStackAction.Immediate)
@@ -49,6 +61,8 @@ AbstractPage {
             anchors.fill: parent
             focus: true
 
+            // Quickscroll being enabled is a user setting
+            quickScroll: SettingsStore.getSetting("QuickscrollEnabled") == 1 ? true : false
             VerticalScrollDecorator {}
 
             PushUpMenu {
@@ -309,9 +323,15 @@ AbstractPage {
                 }
 
                 Timer {
+                    id: postFetchingCounter
                     property int counter: reloadTime
                     interval: 1000; running: true; repeat: true
                     onTriggered: {
+                        if (reloadTime === -1) {
+                            postFetchingCounter.running = false
+                            countDownFooterLabel.text = "Automatic post fetching is disabled"
+                        }
+
                         if (!busy && pageStack.depth === 2) {
                             if (counter == 0) {
                                 counter = reloadTime

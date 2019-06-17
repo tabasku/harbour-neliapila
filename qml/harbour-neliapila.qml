@@ -1,6 +1,5 @@
 /*
-  Copyright (C) 2013 Jolla Ltd.
-  Contact: Thomas Perl <thomas.perl@jollamobile.com>
+  Copyright (C) 2019 Joni, Jacob, szopin.
   All rights reserved.
 
   You may use this file under the terms of BSD license as follows:
@@ -32,13 +31,59 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
 import "items"
+import "js/settingsStorage.js" as SettingsStore
 
-ApplicationWindow
-{
+ApplicationWindow {
     initialPage: Component { ThreadsPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 
     InfoBanner { id: infoBanner }
+
+    Component.onCompleted: {
+        // Initialize the settings database and standard settings
+        // Doesn't do anything if settings already exist
+        SettingsStore.initialize();
+        initialiseSettings()
+    }
+
+    function initialiseSettings() {
+        //~ Appearance
+        // None implemented yet
+
+        //~ Behaviour
+        // Thread Refresh Time
+        // Combobox where options [0] = 60s, [1] = 45s, [2] = 30s, [3] = off
+        // Default is 45s
+        SettingsStore.setSetting( "ThreadRefreshTime",
+                                 SettingsStore.getSetting("ThreadRefreshTime", 1) )
+
+        // Quickscroll Active
+        // 0 if disabled, 1 is enabled
+        SettingsStore.setSetting( "QuickscrollEnabled",
+                                 SettingsStore.getSetting("QuickscrollEnabled", 1) )
+
+        //////////////////////////
+        //~ Media
+        // Automatically start webm videos
+        // 0 if disabled, 1 is enabled
+        SettingsStore.setSetting( "VideosAutomaticallyStart",
+                                 SettingsStore.getSetting("VideosAutomaticallyStart", 1) )
+
+        // Automatically loop webm videos
+        // 0 if disabled, 1 is enabled
+        SettingsStore.setSetting( "VideosAutomaticallyLoops",
+                                 SettingsStore.getSetting("VideosAutomaticallyLoops", 1) )
+
+        // Start videos muted
+        // 0 if disabled, 1 is enabled
+        SettingsStore.setSetting( "VideosAutomaticallyMuted",
+                                 SettingsStore.getSetting("VideosAutomaticallyMuted", 0) )
+
+
+        //////////////////////////
+        //~ About
+        // None implemented yet
+    }
 }
 
 

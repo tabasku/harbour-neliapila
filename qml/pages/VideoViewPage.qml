@@ -22,6 +22,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import QtMultimedia 5.0
+import "../js/settingsStorage.js" as SettingsStore
 
 
 Page {
@@ -86,8 +87,12 @@ Page {
                 id: mediaPlayer
                 autoPlay: false
                 onDurationChanged: loops = 1
+                muted: SettingsStore.getSetting("VideosAutomaticallyMuted") == 1 ? true : false
+
                 onStopped: {
-                    play()
+                    if (SettingsStore.getSetting("VideosAutomaticallyLoops") == 1) {
+                        play()
+                    }
                     playPauseButton.opacity = 1
                 }
                 onError: {
@@ -96,13 +101,11 @@ Page {
                 }
 
                 onBufferProgressChanged: {
-                    if (bufferProgress > 0.90)
+                    if (bufferProgress > 0.90 && SettingsStore.getSetting("VideosAutomaticallyStart") == 1)
                         play();
                     else if (bufferProgress < 0.10)
                         pause();
                 }
-
-                onSourceChanged: console.log("media player source url: " + source)
             }
 
             Item {
@@ -188,6 +191,27 @@ Page {
             }
 
             Behavior on opacity { NumberAnimation { duration: 200 } }
+        }
+
+        // Mute button control
+        Image {
+            id: muteButton
+            source: "image://theme/icon-m-speaker-" + (mediaPlayer.muted === true ? "mute" : "on")
+            opacity: playPauseButton.opacity
+
+            anchors {
+                left: playPauseButton.right
+                leftMargin: 35
+                verticalCenter: playPauseButton.verticalCenter
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                enabled: muteButton.opacity > 0
+                onClicked: {
+                    mediaPlayer.muted = !mediaPlayer.muted
+                }
+            }
         }
     }
 
