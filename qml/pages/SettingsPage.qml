@@ -23,111 +23,130 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../js/settingsStorage.js" as SettingsStore
 
-AbstractPage {
-    id: settingsPage
 
-    title: "Settings"
-    busy: false
+Page {
+    id: settingsPage
 
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
 
         // Tell SilicaFlickable the height of its content.
-        contentHeight: column.height
+        contentHeight: column.height + Theme.paddingLarge
 
-        Component.onCompleted: {
-            // Initialize the database
-            SettingsStore.initialize();
-            // Sets a value in the database
-            SettingsStore.setSetting("testValue","first test");
+        VerticalScrollDecorator {}
 
-            console.log("The value of mySetting is:\n" + SettingsStore.getSetting("testValue"))
-        }
+        RemorsePopup { id: settingClearedRemorse }
 
         // Place our content in a Column.  The PageHeader is always placed at the top
         // of the page, followed by our content.
         Column {
             id: column
-
-            width: settingsPage.width
             spacing: Theme.paddingLarge
-            PageHeader {
-                title: "Settings"
-            }
+            width: parent.width
 
-            Column {
-                id:settings_spacer
-                width: settingsPage.width
-                height: 10
-            }
+            PageHeader { title: "Settings" }
 
-            Column {
-                id: timer_settings_column
-                width: settingsPage.width
+            ExpandingSectionGroup {
+                ExpandingSection {
+                    id: section
 
-                TextSwitch {
-                    id: timerSwitch
-                    text: "Start with last used board"
-                    description: "Overrides first board setting on <i>Boards</i>"
-                    onCheckedChanged: {
-                        if (timer) {
-                            timer=false
+                    property int sectionIndex: 0
+                    title: "Behaviour"
+
+                    content.sourceComponent: Column {
+                        width: section.width
+                        anchors.bottomMargin: 20
+
+                        ComboBox {
+                            label: "Thread refresh time"
+                            description: "Set the time (in seconds) between fetching new posts in a thread or, optionally, disable auto-refresh"
+                            currentIndex: SettingsStore.getSetting("ThreadRefreshTime")
+
+                            menu: ContextMenu {
+                                MenuItem { text: "60 seconds" }
+                                MenuItem { text: "45 seconds" }
+                                MenuItem { text: "30 seconds" }
+                                MenuItem { text: "off" }
+                            }
+
+                            onCurrentIndexChanged: {
+                                SettingsStore.setSetting("ThreadRefreshTime", currentIndex)
+                            }
                         }
-                        else {
-                            timer=true
+
+                        TextSwitch {
+                            text: "Quickscroll active"
+                            description: "Disable or enable quickscroll funtionality"
+                            checked: SettingsStore.getSetting("QuickscrollEnabled") == 1 ? true : false
+
+                            onCheckedChanged: {
+                                SettingsStore.setSetting("QuickscrollEnabled", checked ? 1 : 0)
+                            }
                         }
                     }
                 }
 
-                TextSwitch {
-                    id: activationSwitch
-                    text: "Pepe enabled"
-                    description: "Shows frog when something goes wrong"
-                    onCheckedChanged: {
-                        autoincrement  = true
+                ExpandingSection {
+                    id: section2
 
-                        if (autoincrement) {
-                            weightField.opacity = 1
+                    property int sectionIndex: 1
+                    title: "Media"
+
+                    content.sourceComponent: Column {
+                        width: section.width
+                        anchors.bottomMargin: 20
+
+                        TextSwitch {
+                            text: "Automatically loop webm videos"
+                            description: "Disable or enable Automatic looping of webms"
+                            checked: SettingsStore.getSetting("VideosAutomaticallyLoops") == 1 ? true : false
+
+                            onCheckedChanged: {
+                                SettingsStore.setSetting("VideosAutomaticallyLoops", checked ? 1 : 0)
+                            }
                         }
-                        else{
-                            weightField.opacity = 0
+
+                        TextSwitch {
+                            text: "Start videos muted"
+                            description: "Toggle videos automatically playing muted or not"
+                            checked: SettingsStore.getSetting("VideosAutomaticallyMuted") == 1 ? true : false
+
+                            onCheckedChanged: {
+                                SettingsStore.setSetting("VideosAutomaticallyMuted", checked ? 1 : 0)
+                            }
                         }
                     }
                 }
-            }
-
-            Column {
-                id:auto_increment_column
-                width: settingsPage.width
 
 
-
-
-            }
-
-            Column {
-                id: redownload_boards_column
-                anchors.horizontalCenter: parent.horizontalCenter
-
+                // This is just appended.
+                // Probably better to attach a little summary section
+                // Check Clover on Android as a template
                 Button {
-                    id:redownload_boards_button
-                    text: "Refresh boards"
-                    onClicked: {
-                        console.log("I don't work yet!")
-                    }
-                }
-            }
-
-            Column {
-                id: example_setting_column
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Button {
-                    id:example_install_button
+                    id: aboutButton
                     text: "About Neliapila"
+                    anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: {
                         pageStack.push("AboutPage.qml");
+                    }
+                }
+
+
+                // This should be here for troubleshooting if something goes wrong with
+                // a user's settings. Additionally, good for dev troubleshooting
+                Button {
+                    id: resetSettingsButton
+                    text: "Reset Settings to default"
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    color: "red" // Dangerous button
+
+                    onClicked: {
+                        settingClearedRemorse.execute("Clearing Settings", function() {
+                            SettingsStore.resetSettingsDB()
+                            Qt.quit()
+                        })
                     }
                 }
             }
