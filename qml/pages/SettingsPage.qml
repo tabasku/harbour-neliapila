@@ -56,7 +56,6 @@ Page {
 
                     content.sourceComponent: Column {
                         width: section.width
-                        anchors.bottomMargin: 20
 
                         ComboBox {
                             label: "Thread refresh time"
@@ -95,7 +94,16 @@ Page {
 
                     content.sourceComponent: Column {
                         width: section.width
-                        anchors.bottomMargin: 20
+
+                        TextSwitch {
+                            text: "Automatically start webm videos"
+                            description: "Disable or enable Automatic playing of webms"
+                            checked: SettingsStore.getSetting("VideosAutomaticallyStart") == 1 ? true : false
+
+                            onCheckedChanged: {
+                                SettingsStore.setSetting("VideosAutomaticallyStart", checked ? 1 : 0)
+                            }
+                        }
 
                         TextSwitch {
                             text: "Automatically loop webm videos"

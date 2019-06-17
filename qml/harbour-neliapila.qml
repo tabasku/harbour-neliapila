@@ -64,6 +64,11 @@ ApplicationWindow {
 
         //////////////////////////
         //~ Media
+        // Automatically start webm videos
+        // 0 if disabled, 1 is enabled
+        SettingsStore.setSetting( "VideosAutomaticallyStart",
+                                 SettingsStore.getSetting("VideosAutomaticallyStart", 1) )
+
         // Automatically loop webm videos
         // 0 if disabled, 1 is enabled
         SettingsStore.setSetting( "VideosAutomaticallyLoops",
@@ -72,7 +77,7 @@ ApplicationWindow {
         // Start videos muted
         // 0 if disabled, 1 is enabled
         SettingsStore.setSetting( "VideosAutomaticallyMuted",
-                                 SettingsStore.getSetting("VideosAutomaticallyMuted", 1) )
+                                 SettingsStore.getSetting("VideosAutomaticallyMuted", 0) )
 
 
         //////////////////////////
