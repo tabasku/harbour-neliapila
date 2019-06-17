@@ -438,7 +438,7 @@ AbstractPage {
             var com = postsModel.get(0)['com']
             var thumbUrl = postsModel.get(0)['thumbUrl']
             var time = postsModel.get(0)['time']
-            var replies = postsModel.get(0)['replies_count']
+            var replies = postsModel.count-1
 
             call('pinned.add_pin', [postNo,boardId,com,thumbUrl,time,replies],function() {
                 pinned = true
