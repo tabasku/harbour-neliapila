@@ -83,7 +83,6 @@ AbstractPage {
             id: mainPullDownMenu
             busy : busy
 
-            // Soon...
             MenuItem {
                 text: qsTr("Settings")
                 onClicked: {
@@ -272,6 +271,7 @@ AbstractPage {
             mode = "thread"
             title ="<b>/"+boardId+"/</b>"
             currentModel = model
+            listView.scrollToTop()
         }
     }
 
