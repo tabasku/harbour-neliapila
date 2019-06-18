@@ -17,7 +17,7 @@ class Storage:
         if sys.platform is 'win32':
             home = expanduser("~")+"\\.Neliapila\\pinned_thumbs"
         else:
-            home = expanduser("~")+"/.local/share/neliapila/pinned_thumbs"
+            home = expanduser("~")+"/.local/share/harbour-neliapila/pinned_thumbs"
 
         if not exists(home):
             makedirs(home)
@@ -29,7 +29,7 @@ class Storage:
         if sys.platform is 'win32':
             home = expanduser("~")+"\\.Neliapila\\"
         else:
-            home = expanduser("~")+"/.local/share/neliapila/"
+            home = expanduser("~")+"/.local/share/harbour-neliapila/"
 
 
         if not exists(home):
@@ -173,6 +173,16 @@ class Storage:
         VALUE            TEXT     NOT NULL);'''
         self.db_commit(cmd)
         self.default_settings()
+
+    def delete_tables(self):
+
+        drop_defaults = ["DROP TABLE IF EXISTS PINNED;",
+                    "DROP TABLE IF EXISTS BOARDS;"]
+
+        for cmd in drop_defaults:
+            self.db_commit(cmd)
+
+        pyotherside.send('legacy_db_empty')
 
     def fetch_settings(self,value=None):
 
@@ -338,3 +348,5 @@ class Storage:
             cmd = 'DELETE FROM PINNED WHERE POSTNO = "{post_no}" AND BOARD = "{board}";'.format(post_no=post_no,board=board)
 
         self.db_commit(cmd)
+
+legacy_db = Storage()
