@@ -21,8 +21,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import io.thp.pyotherside 1.4
 import "../js/settingsStorage.js" as SettingsStore
-
 
 Page {
     id: settingsPage
@@ -181,8 +181,7 @@ Page {
 
                             onClicked: {
                                 settingClearedRemorse.execute("Clearing Settings", function() {
-                                    SettingsStore.resetSettingsDB()
-                                    Qt.quit()
+                                    settings_py.delete_tables()
                                 })
                             }
 
@@ -194,6 +193,55 @@ Page {
                     }
                 } // End of About section
             }
+        }
+    }
+
+    Python {
+        id: settings_py
+
+        Component.onCompleted: {
+            // Add the Python library directory to the import path
+            var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
+
+
+
+            addImportPath(pythonpath);
+
+            importModule('storage', function () {
+                call('storage.legacy_db.get_default', [], function (value) {
+                    console.log(value)
+                });
+            });
+
+            setHandler('legacy_db_empty', function() {
+                //To silence onReceived from threads
+                SettingsStore.resetSettingsDB(
+                            Qt.quit()
+                            )
+
+            });
+
+            setHandler('DBERR', function(result) {
+                console.log("DB commit error "+result)
+                busy = false
+                boardHolder.text= "Database error :("
+                boardHolder.enabled = true
+            });
+
+        }
+
+        function delete_tables() {
+            settings_py.call('storage.legacy_db.delete_tables', [],function() {});
+        }
+
+        onError: {
+            // when an exception is raised, this error handler will be called
+            Utils.tracebackCatcher(traceback,'Settings not deleted.')
+        }
+        onReceived: {
+            // asychronous messages from Python arrive here
+            // in Python, this can be accomplished via pyotherside.send()
+            //console.log('boards got message from python: ' + data);
         }
     }
 }
