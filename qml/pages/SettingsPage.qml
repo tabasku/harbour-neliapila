@@ -175,7 +175,7 @@ Page {
                             Label {
                                 anchors.top: returnToDefaultLabel.bottom
 
-                                text: "This action cannot be undone once performed!"
+                                text: "Neliapila will exit after this (irreversible) action!"
                                 font.pixelSize: Theme.fontSizeExtraSmall
                             }
 
