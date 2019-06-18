@@ -175,12 +175,12 @@ Page {
                             Label {
                                 anchors.top: returnToDefaultLabel.bottom
 
-                                text: "This action cannot be undone once performed!"
+                                text: "Neliapila will exit after this (irreversible) action!"
                                 font.pixelSize: Theme.fontSizeExtraSmall
                             }
 
                             onClicked: {
-                                settingClearedRemorse.execute("Clearing Settings", function() {
+                                settingClearedRemorse.execute("Clearing settings and restarting app", function() {
                                     SettingsStore.resetSettingsDB()
                                     Qt.quit()
                                 })
