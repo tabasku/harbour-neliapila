@@ -3,12 +3,13 @@ import Sailfish.Silica 1.0
 import io.thp.pyotherside 1.4
 import "../items"
 import "../js/utils.js" as Utils
+import "../js/settingsStorage.js" as SettingsStore
 
 AbstractPage {
     id: naviPage
-    property variant show_model : boardModel
+    property variant show_model: SettingsStore.getSetting("ModelToDisplayOnNavipage", 0) == 0 ? boardModel : favoriteModel
     property bool show_pinned_model: true
-    property variant pinModel : ListModel {id: pinModel }
+    property variant pinModel: ListModel {id: pinModel }
 
     title: "Boards"
 
@@ -28,20 +29,18 @@ AbstractPage {
                     py.refresh()
                 }
             }
-
         }
 
         header: PageHeader {
             width: parent.width
 
-            Label{
-
+            Label {
                 id: boardsHeaderLabel
                 text: "Boards"
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeLarge
 
-                anchors{
+                anchors {
                     margins: Theme.paddingMedium
                     right: parent.right
                     verticalCenter: parent.verticalCenter
@@ -51,13 +50,13 @@ AbstractPage {
 
             Image {
                 source: {
-                    if(show_model === boardModel)
+                    if (show_model === boardModel)
                         "image://theme/icon-m-favorite"
                     else
                         "image://theme/icon-m-favorite-selected"
                 }
 
-                width: parent.height*0.6
+                width: parent.height * 0.6
                 height: width
                 anchors {
                     verticalCenter: parent.verticalCenter
@@ -115,7 +114,7 @@ AbstractPage {
             interval: 400; running: false; repeat: false
             onTriggered: py.favorite(index,board)
 
-            function run(i,b){
+            function run(i,b) {
                 index = i
                 board = b
                 smoother.start()

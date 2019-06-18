@@ -61,6 +61,21 @@ Page {
                         width: settingsExpandingGroup.width
 
                         ComboBox {
+                            label: "Boards list"
+                            description: "Which boards to display by default, all boards (with favourites pinned to the top) or only favourites"
+                            currentIndex: SettingsStore.getSetting("ModelToDisplayOnNavipage")
+
+                            menu: ContextMenu {
+                                MenuItem { text: "All Boards" }
+                                MenuItem { text: "Favourites" }
+                            }
+
+                            onCurrentIndexChanged: {
+                                SettingsStore.setSetting("ModelToDisplayOnNavipage", currentIndex)
+                            }
+                        }
+
+                        ComboBox {
                             label: "Thread refresh time"
                             description: "Set the time (in seconds) between fetching new posts in a thread or, optionally, disable auto-refresh"
                             currentIndex: SettingsStore.getSetting("ThreadRefreshTime")
