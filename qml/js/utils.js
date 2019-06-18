@@ -42,46 +42,6 @@ function tracebackCatcher(traceback,holder){
     }
 }
 
-//function parseLinks(com){
-
-//    com = com.replace(/\&\#039\;|\<wbr\>/gi,
-
-//                      function replaceWith(x){
-
-//                          switch (x)
-//                          {
-//                          case "&#039;":
-
-//                              return "'"
-//                          case "<wbr>":
-
-//                              return ""
-//                          //case "&quot;":
-//                          //    return '"'
-//                          }
-//                      });
-
-//    com = com.replace(/\<a[^>]* href="([^"]*)"\>.*?\<\/a\>|\b((?:[a-z][\w\-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]|\((?:[^\s()<>]|(?:\([^\s()<>]+\)))*\))+(?:\((?:[^\s()<>]|(?:\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:".,<>?«»“”‘’]))/g,
-//                      function replaceWith(x){
-
-//                          if(x.match(htmlTag)){
-//                              return x
-//                          }
-//                          else if(!x.match(htmlTag) && x.match(wwwAddress)){
-//                              var uri = x.match(wwwAddress)[0]
-//                              var wwwPattern = "<a href='"+uri+"'>"+uri+"</a>";
-//                              var wwwText = x.replace(wwwAddress,wwwPattern);
-//                              return wwwText
-//                          }
-//                          else{
-//                              infoBanner.alert("URL parsing failed, text might miss urls.");
-//                              console.log("Did not catch anything..")
-//                          }
-//                      }
-//                      );
-//    return com
-//}
-
 function openLink(link) {
     var wwwAddress = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi)
     var httplink = new RegExp(/^http/)
@@ -124,25 +84,6 @@ function openLink(link) {
                            postsToShow:postsToShow,
                            singlePostNo: singlePostNo
                        } )
-
-        //        if(typeof modelToStrip !== 'undefined'){
-        //            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
-        //                               postNo: postNo,
-        //                               boardId: boardId,
-        //                               modelToStrip: modelToStrip,
-        //                               postsToShow:postsToShow,
-        //                               singlePostNo: singlePostNo
-        //                           } )
-        //        }
-        //        else{
-        //            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
-        //                               postNo: postNo,
-        //                               boardId: boardId,
-        //                               modelToStrip: postsModel,
-        //                               postsToShow:postsToShow,
-        //                               singlePostNo: singlePostNo
-        //                           } )
-        //        }
     }
 
     else{
