@@ -62,6 +62,11 @@ ApplicationWindow {
         SettingsStore.setSetting( "QuickscrollEnabled",
                                  SettingsStore.getSetting("QuickscrollEnabled", 1) )
 
+        // Boards to display on NaviPage
+        // 0 if boardModel, 1 is favouriteModel
+        SettingsStore.setSetting( "ModelToDisplayOnNavipage",
+                                 SettingsStore.getSetting("ModelToDisplayOnNavipage", 0) )
+
         //////////////////////////
         //~ Media
         // Automatically start webm videos
