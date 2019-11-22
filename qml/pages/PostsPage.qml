@@ -31,6 +31,7 @@ AbstractPage {
     property int totalPosts: 0
     property var modelToStrip;
     property bool pinned;
+    property int repscount;
     property int replyTo: postNo
     property int reloadTime: {
         switch( SettingsStore.getSetting("ThreadRefreshTime") ) {
@@ -133,7 +134,15 @@ AbstractPage {
                         pyp.pin(postNo,boardId)
                     }
                 }
-
+                
+                MenuItem {
+                    text: "Scroll to last loaded"
+                    visible: pinned && repscount !== 0
+                    onClicked: {
+                        listView.positionViewAtIndex(postsModel.count - repscount, ListView.Beginning);
+                    }
+                }
+                
                 MenuItem {
                     text: "Remove pin"
                     visible: pinned && pageStack.depth === 2
