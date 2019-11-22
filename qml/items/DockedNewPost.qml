@@ -108,6 +108,7 @@ DockedPanel {
                         id: commentText
                         enabled: !busy
                         width: parent.width
+                        height: 400
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSizeSmall
                         clip: false
