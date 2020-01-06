@@ -262,10 +262,10 @@ BackgroundItem {
                         }
                     }
                 }
-
+}
                 Item {
                     id: commentArea
-
+                    anchors.fill: parent
                     width: has_file ? parent.width-thumbNailArea.width : parent.width;
                     height: mode === "post" ? postText.contentHeight :  contentAreaHeight;
 
@@ -286,7 +286,12 @@ BackgroundItem {
                         onLinkActivated: {
                             Utils.openLink(link)
                         }
-
+                        onLineLaidOut: {
+                            if (line.y < thumbNailArea.height && has_file) {
+                                line.x = line.x + thumbNailArea.width +5
+                                line.width = line.width - (thumbNailArea.width + 5)
+                            }
+                        }
                         Image {
                             id: dots
                             height: 32
@@ -306,7 +311,7 @@ BackgroundItem {
                         }
                     }
                 }
-            }
+            
         }
 
         Item {
