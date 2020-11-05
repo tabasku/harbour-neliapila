@@ -2,17 +2,17 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../js/utils.js" as Utils
 
-BackgroundItem {
+GridItem {
     id: delegate
-    width: parent.width
-    height: menuOpen ? contextMenu.height + post.height : post.height
+    width: !isPortrait && mode !== 'post' ? parent.width /2 : parent.width
+    contentHeight: mode === 'post' && menuOpen  ? contextMenu.height + post.height : mode ==='post' ? post.height : isPortrait ? parent.width/2: parent.width/4
 
     property Item contextMenu
     property bool menuOpen: contextMenu != null && contextMenu.parent === delegate
 
-    property int ratio: mode === "pinned" ? Math.round(parent.width/5):Math.round(parent.width/3)
+    property int ratio: Math.round(parent.width/3)
     property int infoAreaHeight: Math.round(Theme.paddingLarge*2)
-    property int contentAreaHeight: ratio
+    property int contentAreaHeight: isPortrait ? ratio :Math.round(parent.width/5)
 
     Item {
         anchors.fill: parent
@@ -20,7 +20,7 @@ BackgroundItem {
         Rectangle {
             anchors.bottom: parent.bottom
             width: parent.width
-            height: parent.height
+            height: post.height + infoAreaHeight
 
             gradient: Gradient {
                 GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0) }
@@ -38,16 +38,16 @@ BackgroundItem {
             rightMargin: pageMargin
         }
 
-        spacing: padding
+        //spacing: padding
 
         Item {
-            width: parent.width;
-            height: infoAreaHeight;
+            width: !isPortrait && mode !== 'post' ? parent.width / 2 : parent.width;
+            height: !isPortrait && mode !== 'post' ? infoAreaHeight  : infoAreaHeight;
 
             Row {
                 id: headerContentRow
                 anchors.fill: parent
-                spacing: padding
+                //spacing: padding
 
                 Item {
                     id: timeArea
@@ -67,7 +67,7 @@ BackgroundItem {
 
                 Item {
                     id: postNoArea
-                    width: parent.width-timeArea.width-padding
+                    width: !isPortrait && mode !== 'post' ? parent.width*2-timeArea.width-padding : parent.width-timeArea.width-padding
                     height: postNoText.contentHeight
                     anchors {
                         verticalCenter: parent.verticalCenter
@@ -77,8 +77,8 @@ BackgroundItem {
                         id:stickyImg
                         source: "image://theme/icon-s-high-importance"
                         height:postNoText.contentHeight
-                        width: height
-                        fillMode: Image.PreserveAspectFit
+                        width: !isPortrait && mode !== 'post' ? height /2: height
+                      fillMode: Image.PreserveAspectFit
                         visible: sticky ? true : false
                         cache: true
                         anchors {
@@ -131,8 +131,8 @@ BackgroundItem {
                     }
                     break;
                 default:
-                    contentAreaHeight
-                }
+                    !isPortrait && mode !== 'post' ? postText.height - padding*1.5: contentAreaHeight
+                                   }
             }
 
             Row {
@@ -142,8 +142,8 @@ BackgroundItem {
 
                 Item {
                     id: thumbNailArea
-                    width: has_file ? ratio : 0;
-                    height: ratio
+                    width: has_file ? (!isPortrait && mode !== 'post' ? ratio /2 : contentAreaHeight) : 0;
+                    height: !isPortrait && mode !=='post' ? parent.height: contentAreaHeight
 
                     Image {
                         id: thumbImg
@@ -267,7 +267,7 @@ BackgroundItem {
                     id: commentArea
 
                     width: has_file ? parent.width-thumbNailArea.width : parent.width;
-                    height: mode === "post" ? postText.contentHeight :  contentAreaHeight;
+                    height:isPortrait ? (mode === 'post' ? post.height + infoAreaHeight : contentAreaHeight) :ratio/2
 
                     Text {
                         id: postText
@@ -299,7 +299,7 @@ BackgroundItem {
                             visible: false
                         }
                         Component.onCompleted: {
-                            if (mode === "thread" && contentAreaHeight < postText.contentHeight) {
+                            if (mode !== "post" && contentAreaHeight < postText.contentHeight) {
                                 postText.maximumLineCount = Math.floor(contentAreaHeight/postFontSize-1)
                                 dots.visible = true
                             }
@@ -475,7 +475,7 @@ BackgroundItem {
 
         default:
             contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
-            contextMenu.open(delegate)
+          //  contextMenu.open(delegate)
         }
     }
 }
