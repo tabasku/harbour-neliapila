@@ -52,8 +52,10 @@ AbstractPage {
         infoBanner.alert("Reload");
     }
 
-    SilicaListView {
+    SilicaGridView {
         id: listView
+        cellWidth: isPortrait ? width : width / 2
+        cellHeight: isPortrait ? width /2 : width/4
         model: currentModel
         anchors {
             fill: parent
@@ -198,6 +200,8 @@ AbstractPage {
 
         delegate: PostItem {
             id: delegate
+            menu: delegate.contextMenu
+
         }
 
         Component {
