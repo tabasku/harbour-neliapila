@@ -122,6 +122,14 @@ AbstractPage {
             id: imageViewMenu
 
             MenuItem {
+                text: qsTr("Yandex Image Search")
+                onClicked: {
+                    infoBanner.alert("Launching external web browser...");
+                    Qt.openUrlExternally('https://yandex.com/images/search?rpt=imageview&url=' + imgUrl)
+                }
+            }
+            
+            MenuItem {
                 text: qsTr("Open in browser")
                 onClicked: {
                     infoBanner.alert("Launching external web browser...");
