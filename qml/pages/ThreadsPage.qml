@@ -69,6 +69,7 @@ AbstractPage {
         PushUpMenu {
             id: mainPushUpMenu
             busy: busy
+            visible: mode === "thread"
 
             MenuItem {
                 id:menuBottomRefresh
