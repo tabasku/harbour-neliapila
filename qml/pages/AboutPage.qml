@@ -35,7 +35,7 @@ Page {
             Label {
                 id: appName
                 anchors.top: appIcon.bottom
-                text: "Neliapila 0.4"
+                text: "Neliapila 0.6"
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeLarge
@@ -54,7 +54,7 @@ Page {
                 color: Theme.primaryColor
                 wrapMode: Text.Wrap
                 text: "4chan image board browser for Sailfish OS\n" +
-                      "Copyright (c) tabasku\nLicensed under GNU GPLv3+\n";
+                      "Licensed under GNU GPLv3+\n";
             }
 
             Text {

@@ -1,7 +1,7 @@
 # harbour-neliapila
 Neliapila 4chan.org browser for SailfishOS
 
-![](https://openrepos.net/sites/default/files/packages/4542/screenshot-screenshot-15-11-18-20-33-59.png)
+![](https://openrepos.net/sites/default/files/packages/13234/screenshot-screenshot-15-11-18-20-33-59.png)
 
 
 Uses 4chan.org read-only API with BASC-py4chan.
@@ -31,6 +31,6 @@ Features
 TODO
 --------
 - ~Replying posts~
-- Settings
+- ~Settings~
 - 4chan pass
 - destroy bugs
