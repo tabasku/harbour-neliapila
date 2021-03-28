@@ -1,11 +1,12 @@
 # Changelog
 
-## [Unreleased](https://github.com/tabasku/harbour-neliapila/tree/HEAD)
+## [0.6](https://github.com/tabasku/harbour-neliapila/tree/0.6) (2021-03-28)
 
-[Full Changelog](https://github.com/tabasku/harbour-neliapila/compare/0.6...HEAD)
+[Full Changelog](https://github.com/tabasku/harbour-neliapila/compare/0.6...0.6)
 
 **Merged pull requests:**
 
+- SFOS 4.x fix [\#54](https://github.com/tabasku/harbour-neliapila/pull/54) ([szopin](https://github.com/szopin))
 - Yandex Image Search option [\#53](https://github.com/tabasku/harbour-neliapila/pull/53) ([szopin](https://github.com/szopin))
 - Grid view [\#52](https://github.com/tabasku/harbour-neliapila/pull/52) ([szopin](https://github.com/szopin))
 - Removes the ugly indent on long posts with image [\#51](https://github.com/tabasku/harbour-neliapila/pull/51) ([szopin](https://github.com/szopin))
