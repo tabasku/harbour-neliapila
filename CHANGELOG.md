@@ -2,31 +2,7 @@
 
 ## [Unreleased](https://github.com/tabasku/harbour-neliapila/tree/HEAD)
 
-[Full Changelog](https://github.com/tabasku/harbour-neliapila/compare/ac640f4a13661872a52fbcb0e8c085d0f5149515...HEAD)
-
-**Implemented enhancements:**
-
-- Settings page [\#20](https://github.com/tabasku/harbour-neliapila/issues/20)
-- \[feature request\] add ability to post [\#2](https://github.com/tabasku/harbour-neliapila/issues/2)
-
-**Closed issues:**
-
-- Captcha no longer loads on 2.1.0.x [\#50](https://github.com/tabasku/harbour-neliapila/issues/50)
-- \[feature request\] Scroll to last viewed [\#49](https://github.com/tabasku/harbour-neliapila/issues/49)
-- Posting from neliapila results in ban [\#47](https://github.com/tabasku/harbour-neliapila/issues/47)
-- No way to scroll text in new post/reply panel [\#43](https://github.com/tabasku/harbour-neliapila/issues/43)
-- New post count sometimes shows negative numbers [\#41](https://github.com/tabasku/harbour-neliapila/issues/41)
-- Reset settings closes the app [\#38](https://github.com/tabasku/harbour-neliapila/issues/38)
-- Quickscroll missing from threadsview [\#37](https://github.com/tabasku/harbour-neliapila/issues/37)
-- \>\>\> not handled correctly [\#27](https://github.com/tabasku/harbour-neliapila/issues/27)
-- Pinned threads show incorrect 'new replies' number [\#24](https://github.com/tabasku/harbour-neliapila/issues/24)
-- Thread duplication [\#21](https://github.com/tabasku/harbour-neliapila/issues/21)
-- \[feature request\] Add option to browse catalog \(non-paged thread listing\) [\#12](https://github.com/tabasku/harbour-neliapila/issues/12)
-- Is the project still maintained? [\#10](https://github.com/tabasku/harbour-neliapila/issues/10)
-- Threads with “”„ \(and single one that is not on jolla keyboard\) get substituted for \x\*\*\x\*\*\x\*\* after pinning [\#9](https://github.com/tabasku/harbour-neliapila/issues/9)
-- If first post in a thread contains " it cannot be pinned [\#8](https://github.com/tabasku/harbour-neliapila/issues/8)
-- Number of replies just counts replies returned on the page view [\#6](https://github.com/tabasku/harbour-neliapila/issues/6)
-- Improve replies handling [\#4](https://github.com/tabasku/harbour-neliapila/issues/4)
+[Full Changelog](https://github.com/tabasku/harbour-neliapila/compare/0.6...HEAD)
 
 **Merged pull requests:**
 
@@ -54,6 +30,34 @@
 - Fixes replies count [\#13](https://github.com/tabasku/harbour-neliapila/pull/13) ([szopin](https://github.com/szopin))
 - Add posting ability [\#5](https://github.com/tabasku/harbour-neliapila/pull/5) ([tabasku](https://github.com/tabasku))
 - Support for webm within the app \(video player mostly copied from quickddit\) [\#1](https://github.com/tabasku/harbour-neliapila/pull/1) ([szopin](https://github.com/szopin))
+
+## [0.6](https://github.com/tabasku/harbour-neliapila/tree/0.6) (2021-03-28)
+
+[Full Changelog](https://github.com/tabasku/harbour-neliapila/compare/ac640f4a13661872a52fbcb0e8c085d0f5149515...0.6)
+
+**Implemented enhancements:**
+
+- Settings page [\#20](https://github.com/tabasku/harbour-neliapila/issues/20)
+- \[feature request\] add ability to post [\#2](https://github.com/tabasku/harbour-neliapila/issues/2)
+
+**Closed issues:**
+
+- Captcha no longer loads on 2.1.0.x [\#50](https://github.com/tabasku/harbour-neliapila/issues/50)
+- \[feature request\] Scroll to last viewed [\#49](https://github.com/tabasku/harbour-neliapila/issues/49)
+- Posting from neliapila results in ban [\#47](https://github.com/tabasku/harbour-neliapila/issues/47)
+- No way to scroll text in new post/reply panel [\#43](https://github.com/tabasku/harbour-neliapila/issues/43)
+- New post count sometimes shows negative numbers [\#41](https://github.com/tabasku/harbour-neliapila/issues/41)
+- Reset settings closes the app [\#38](https://github.com/tabasku/harbour-neliapila/issues/38)
+- Quickscroll missing from threadsview [\#37](https://github.com/tabasku/harbour-neliapila/issues/37)
+- \>\>\> not handled correctly [\#27](https://github.com/tabasku/harbour-neliapila/issues/27)
+- Pinned threads show incorrect 'new replies' number [\#24](https://github.com/tabasku/harbour-neliapila/issues/24)
+- Thread duplication [\#21](https://github.com/tabasku/harbour-neliapila/issues/21)
+- \[feature request\] Add option to browse catalog \(non-paged thread listing\) [\#12](https://github.com/tabasku/harbour-neliapila/issues/12)
+- Is the project still maintained? [\#10](https://github.com/tabasku/harbour-neliapila/issues/10)
+- Threads with “”„ \(and single one that is not on jolla keyboard\) get substituted for \x\*\*\x\*\*\x\*\* after pinning [\#9](https://github.com/tabasku/harbour-neliapila/issues/9)
+- If first post in a thread contains " it cannot be pinned [\#8](https://github.com/tabasku/harbour-neliapila/issues/8)
+- Number of replies just counts replies returned on the page view [\#6](https://github.com/tabasku/harbour-neliapila/issues/6)
+- Improve replies handling [\#4](https://github.com/tabasku/harbour-neliapila/issues/4)
 
 
 
