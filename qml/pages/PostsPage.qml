@@ -29,6 +29,7 @@ AbstractPage {
     property string singlePost;
     property var postsToShow;
     property int totalPosts: 0
+    property int pageCount;
     property var modelToStrip;
     property bool pinned;
     property int repscount;
@@ -47,7 +48,7 @@ AbstractPage {
     }
 
     function getBackToPost() {
-        pageStack.pop(pageStack.find( function(page){ return(page._depth === 1)} ), PageStackAction.Immediate)
+        pageStack.pop(pageStack.find( function(page){ return(page.pageCount !== 1)} ), PageStackAction.Immediate)
     }
 
     function returnModel() {
@@ -296,6 +297,7 @@ AbstractPage {
                                     'postsToShow': postsToShow,
                                     'modelToStrip': modelToStrip
                                 });
+                                pageCount = 1;
                 }
             }
 

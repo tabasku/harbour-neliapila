@@ -70,3 +70,5 @@ desktop-file-install --delete-original       \
 %{_datadir}/icons/hicolor/86x86/apps/%{name}.png
 # >> files
 # << files
+
+%define __requires_exclude python3dist.pyopenssl
