@@ -4,12 +4,12 @@ name: SailfishOS build
 on:
   push:
     branches:
-      - gh-actions
+      - master
     tags:
       - '*'
   pull_request:
     branches:
-      - gh-actions
+      - master
 
 jobs:
   build:
