@@ -427,7 +427,7 @@ GridItem {
         default:
             var pP = pageStack.find(function(page) {
                 // This should stop the bug relating to deeper reply levels
-                return page.objectName === "postsPage" && page._depth < 2;
+                return page.objectName === "postsPage" && page.pageCount !== 1;
             });
 
             if (pP)
@@ -468,7 +468,7 @@ GridItem {
 
             var pP = pageStack.find(function(page) {
                 // Fixed deeper reply level filtering bug
-                return page.objectName === "postsPage" && page._depth < 2;
+                return page.objectName === "postsPage" && page.pageCount !== 1;
             });
 
             if (pP)
