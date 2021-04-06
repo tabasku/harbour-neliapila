@@ -50,6 +50,7 @@ def get_posts(board_id,postno):
                 post_values['sticky'] = 0
 
             post_values['closed'] = int(thread.closed)
+            post_values['poster_id'] = post.poster_id
             post_values['name'] = post.name
             post_values['time'] = post.timestamp
             post_values['semantic_url'] = post.semantic_url
