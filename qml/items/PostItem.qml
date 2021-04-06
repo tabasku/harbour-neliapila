@@ -333,7 +333,7 @@ GridItem {
 
                     Label {
                         id: nameText
-                        text : name
+                        text : mode !== 'post' ? name : poster_id == "" ? name : name + " (" + poster_id + ")"
                         font.pixelSize: infoFontSize
                         color: infoFontColor
                     }
