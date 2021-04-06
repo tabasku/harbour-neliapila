@@ -13,7 +13,7 @@ class Post(object):
 
     Attributes:
         post_id (int): ID of this post. Eg: ``123123123``, ``456456456``.
-        poster_id (int): Poster ID.
+        poster_id (string): Poster ID.
         name (string): Poster's name.
         email (string): Poster's email.
         tripcode (string): Poster's tripcode.
