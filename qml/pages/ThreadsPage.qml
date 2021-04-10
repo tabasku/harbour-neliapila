@@ -365,11 +365,24 @@ AbstractPage {
             setHandler('posts_status', function(result) { });
 
             setHandler('pinned_board', function(result) {
-                for (var i=0; i<currentModel.count; i++) {
-                    var no = currentModel.get(i)['no']
+                for (var i=0; i<model.count; i++) {
+                    var no = model.get(i)['no']
 
                     var updateItem
-                    updateItem = currentModel.get(i)
+                    updateItem = model.get(i)
+
+                    if (result.indexOf(no) >= 0) {
+                        updateItem.pin = 1
+                    }
+                    else {
+                        updateItem.pin = 0
+                    }
+                }
+                for (var j=0; j<searchModel.count; j++) {
+                    var no = searchModel.get(j)['no']
+
+                    var updateItem
+                    updateItem = searchModel.get(j)
 
                     if (result.indexOf(no) >= 0) {
                         updateItem.pin = 1
