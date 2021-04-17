@@ -66,7 +66,8 @@ def parse_posts(list,post_replies=None):
 
         #Make greentext green
         com = re.sub(r'\<span class=\"quote\"\>\>(.*?)\<\/span\>', r'<font color="#32CD32">>\1</font>',com)
-
+        #Make spoilers blue
+        com = re.sub(r'\<s\>(.*?)\<\/s\>', r'<font color="#00CDFF">\1</font>',com)
         return com
 
     for post in list:
