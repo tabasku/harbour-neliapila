@@ -46,7 +46,7 @@ AbstractPage {
     
     function search(filter){
         for (var j=0; j < model.count; j++){
-            if (model.get(j).com.indexOf(filter) > 0){
+            if (model.get(j).com.indexOf(filter) >= 0){
                 searchModel.append(model.get(j))
             }
         }
