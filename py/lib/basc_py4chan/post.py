@@ -13,8 +13,9 @@ class Post(object):
 
     Attributes:
         post_id (int): ID of this post. Eg: ``123123123``, ``456456456``.
-        poster_id (int): Poster ID.
+        poster_id (string): Poster ID.
         name (string): Poster's name.
+        country_name (string): Poster's country name.
         email (string): Poster's email.
         tripcode (string): Poster's tripcode.
         subject (string): Subject of this post.
@@ -57,6 +58,10 @@ class Post(object):
     def poster_id(self):
         return self._data.get('id')
 
+    @property
+    def country_name(self):
+        return self._data.get('country_name')
+    
     @property
     def name(self):
         return self._data.get('name')

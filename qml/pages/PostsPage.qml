@@ -27,6 +27,8 @@ AbstractPage {
     objectName: "postsPage"
     property string mode: "post";
     property string singlePost;
+    property string poster_id;
+    property string country_name;
     property var postsToShow;
     property int totalPosts: 0
     property int pageCount;
