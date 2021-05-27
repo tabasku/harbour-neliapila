@@ -28,6 +28,7 @@ AbstractPage {
             height: parent.height
             spacing: Theme.paddingLarge
             PageHeader {
+                id: header
                 title: "Verification"
             }
 
@@ -53,8 +54,8 @@ AbstractPage {
                 Image {
                     id: captchaImage
                     opacity: captchaPage.busy ? 0 : 1
-                    height:column.width
-                    width: column.width
+                    height: isPortrait ? column.width : column.height - captchaTextRow.height - header.height - Theme.paddingLarge*2
+                    width: isPortrait ? column.width : column.height - captchaTextRow.height - header.height - Theme.paddingLarge*2
 
                     fillMode: Image.PreserveAspectFit
                     visible: true
@@ -102,14 +103,25 @@ AbstractPage {
 
                                         if (captchaInput.length) {
                                             captchaSubmit.enabled = true
+                                            captchaSubmit2.enabled = true
                                         }
                                         else {
                                             captchaSubmit.enabled = false
+                                            captchaSubmit2.enabled = false
                                         }
                                     }
                                 }
                             }
                         }
+                    }
+                }
+                Button {
+                    visible: !isPortrait
+                    id: captchaSubmit2
+                    text: "Submit"
+                    enabled: captchaInput.length
+                    onClicked: {
+                        py.submitCaptcha(captchaInput)
                     }
                 }
             }
@@ -120,6 +132,7 @@ AbstractPage {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Button {
+                    visible: isPortrait
                     id: captchaSubmit
                     text: "Submit"
                     enabled: captchaInput.length
@@ -157,6 +170,7 @@ AbstractPage {
                   repeater.itemAt(element).selected = false
                 });
                 captchaSubmit.enabled = false
+                captchaSubmit2.enabled = false
                 captchaInput = []
                 captchaPage.busy = false
             });
@@ -176,6 +190,7 @@ AbstractPage {
 
         function submitCaptcha(value) {
             captchaSubmit.enabled = false
+            captchaSubmit2.enabled = false
             var string = value.toString().replace(/\,/g, "");
             call('captcha.get_response', [captchaId,string,replyTo], function() {});
 
