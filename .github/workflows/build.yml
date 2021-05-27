@@ -26,6 +26,7 @@ jobs:
       uses: coderus/github-sfos-build@master
       with:
         release: 3.4.0.24
+        arch: aarch64
 
     - name: Build armv7hl
       id: build_armv7hl
