@@ -1,5 +1,3 @@
-__author__ = 'joni, szopin, jacques'
-
 from getdata import req
 #from threads import get_threads
 import json

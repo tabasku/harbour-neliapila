@@ -1,4 +1,3 @@
-__author__ = 'Joni Kurunsaari'
 import html,re
 #from collections import defaultdict
 import datetime

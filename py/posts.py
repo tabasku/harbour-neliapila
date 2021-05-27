@@ -1,4 +1,3 @@
-__author__ = 'joni'
 # -*- coding: utf-8 -*
 
 from getdata import req
