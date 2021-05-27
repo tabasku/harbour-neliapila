@@ -262,10 +262,8 @@ GridItem {
                         }
                     }
                 }
-}
                 Item {
                     id: commentArea
-                    anchors.fill: parent
                     width: has_file ? parent.width-thumbNailArea.width : parent.width;
                     height:isPortrait ? (mode === 'post' ? post.height + infoAreaHeight : contentAreaHeight) :ratio/2
 
@@ -287,9 +285,9 @@ GridItem {
                             Utils.openLink(link)
                         }
                         onLineLaidOut: {
-                            if (line.y < thumbNailArea.height && has_file) {
-                                line.x = line.x + thumbNailArea.width +5
-                                line.width = line.width - (thumbNailArea.width + 5)
+                            if (line.y > thumbNailArea.height && has_file && mode === 'post') {
+                                line.x = line.x - (thumbNailArea.width + 5)
+                                line.width = line.width + (thumbNailArea.width + 5)
                             }
                         }
                         Image {
@@ -311,7 +309,7 @@ GridItem {
                         }
                     }
                 }
-            
+            }
         }
 
         Item {

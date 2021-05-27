@@ -249,7 +249,7 @@ AbstractPage {
             id: pinModel
         }
 
-        delegate: PostItem {
+        delegate: PostItemThread {
             id: delegate
             menu: delegate.contextMenu
 
