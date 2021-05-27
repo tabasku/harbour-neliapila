@@ -36,7 +36,25 @@ AbstractPage {
     function replacePage() {
         showPinnedPage = true
     }
-
+    
+    function resetSearch(){
+        searchModel.clear()
+        filterField.text = ""
+        currentModel = model
+        listView.scrollToTop()
+    }
+    
+    function search(filter){
+        for (var j=0; j < model.count; j++){
+            if (model.get(j).com.toLowerCase().indexOf(filter) >= 0){
+                searchModel.append(model.get(j))
+            }
+        }
+        filterField.focus = false
+        currentModel = searchModel
+        listView.scrollToTop()
+    }
+    
     function change_board(boardId) {
         if (helpTxt.enabled) {
             helpTxt.enabled = false
@@ -130,6 +148,34 @@ AbstractPage {
                     pyt.getThreads(boardId)
                 }
             }
+            
+            MenuItem {
+                id: clearFilter
+                text: qsTr("Clear filter")
+                visible: filterField.text !== ""
+                onClicked: {
+                    resetSearch()
+                }
+            }
+            
+            Item {
+                visible: mode === "thread"
+                height: Theme.itemSizeMedium
+                width: parent.width
+                TextField {
+                    id: filterField
+                    width: parent.width
+                    height: Theme.itemSizeMedium
+                    horizontalAlignment: Text.AlignHCenter
+                    placeholderText: qsTr("Filter")
+                    EnterKey.enabled: text.length > 0
+                    EnterKey.onClicked: {
+                        searchModel.clear()
+                        search(text.toLowerCase())
+                        mainPullDownMenu.close()
+                        }
+                    }
+                }
 
             Label {
                 text: boardTitle
@@ -195,6 +241,10 @@ AbstractPage {
             id: model
         }
 
+        ListModel {
+            id: searchModel
+        }
+        
         ListModel {
             id: pinModel
         }
@@ -328,6 +378,19 @@ AbstractPage {
                         updateItem.pin = 0
                     }
                 }
+                for (var j=0; j<searchModel.count; j++) {
+                    var no = searchModel.get(j)['no']
+
+                    var updateItem
+                    updateItem = searchModel.get(j)
+
+                    if (result.indexOf(no) >= 0) {
+                        updateItem.pin = 1
+                    }
+                    else {
+                        updateItem.pin = 0
+                    }
+                }
             });
 
             setHandler('threads', function(result) {
@@ -447,8 +510,9 @@ AbstractPage {
                 model.clear()
             }
 
-            if (currentModel === pinModel) {
+            if (currentModel === pinModel || currentModel === searchModel) {
                 pinModel.clear()
+                resetSearch()
                 currentModel = model
             }
 
