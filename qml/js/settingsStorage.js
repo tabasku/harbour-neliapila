@@ -30,6 +30,7 @@ function initialize() {
             // Create the settings table if it doesn't already exist
             // If the table exists, this is skipped
             tx.executeSql('CREATE TABLE IF NOT EXISTS settings(setting TEXT UNIQUE, value TEXT)');
+            setSetting("ModelToDisplayOnNavipage", 0) // "All Boards"
     });
 }
 
@@ -69,11 +70,11 @@ function getSetting(setting, defaultValue) {
             res = rs.rows.item(0).value;
         }
         else {
-            res = defaultValue || "Unknown";
+            res = defaultValue || 0
         }
   })
 
-  // We return “Unknown” if the setting was not found in the database
+  // We return “0” if the setting was not found in the database
   // Handling error codes should be implemented in the future
   return res
 }
