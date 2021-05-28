@@ -22,6 +22,7 @@ Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-neliapila.yaml
 Requires:   sailfishsilica-qt5
 Requires:   libsailfishapp-launcher
+Requires:   pyotherside-qml-plugin-python3-qt5
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
