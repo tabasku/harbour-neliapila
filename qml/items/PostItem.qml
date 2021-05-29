@@ -357,7 +357,7 @@ GridItem {
                         cache: true
                         fillMode: Image.PreserveAspectFit
                         visible: countrycode !== "" || board_flag !== ""
-                        source: countrycode !== "" ? "https://s.4cdn.org/image/country/" + countrycode.toLowerCase() + ".gif" : "https://s.4cdn.org/image/flags/" +  boardId + "/" + board_flag.toLowerCase() + ".gif";
+                        source: countrycode !== "" ? "https://s.4cdn.org/image/country/" + countrycode.toLowerCase() + ".gif" : board_flag !== "" ? "https://s.4cdn.org/image/flags/" +  boardId + "/" + board_flag.toLowerCase() + ".gif" : ""
                      }
                     
                     Image {
