@@ -93,4 +93,6 @@ function resetSettingsDB() {
             // Used for clearing user settings and testing reasons
             tx.executeSql('DROP TABLE IF EXISTS settings');
     });
+    // Reset default board view
+    initialize()
 }
