@@ -7,7 +7,7 @@ import "../js/settingsStorage.js" as SettingsStore
 
 AbstractPage {
     id: naviPage
-    property variant show_model: SettingsStore.getSetting("ModelToDisplayOnNavipage", "0") !== "0" ? favoriteModel : boardModel
+    property variant show_model: SettingsStore.getSetting("ModelToDisplayOnNavipage") !== "1" ?  boardModel : favoriteModel 
     property bool show_pinned_model: true
     property variant pinModel: ListModel {id: pinModel }
 
