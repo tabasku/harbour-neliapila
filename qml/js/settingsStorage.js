@@ -29,7 +29,6 @@ function initialize() {
         function(tx) {
             // Create the settings table if it doesn't already exist
             // If the table exists, this is skipped
-            console.log("run initialize")
             tx.executeSql('CREATE TABLE IF NOT EXISTS settings(setting TEXT UNIQUE, value TEXT);');
             // Set default Board view to "All boards"
             tx.executeSql('INSERT OR IGNORE INTO settings VALUES ("ModelToDisplayOnNavipage",0);');
@@ -82,8 +81,6 @@ function getSetting(setting, defaultValue) {
 
   // We return “Unknown” if the setting was not found in the database
   // Handling error codes should be implemented in the future
-  console.log(res)
-    console.log(typeof(res))
   return res
 }
 
