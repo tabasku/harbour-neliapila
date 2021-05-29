@@ -15,6 +15,8 @@ class Post(object):
         poster_id (string): Poster ID.
         name (string): Poster's name.
         country_name (string): Poster's country name.
+        countrycode (string): Poster's country code.
+        board_flag (string): Board flag used.
         email (string): Poster's email.
         tripcode (string): Poster's tripcode.
         subject (string): Subject of this post.
@@ -60,6 +62,14 @@ class Post(object):
     @property
     def country_name(self):
         return self._data.get('country_name')
+   
+    @property
+    def countrycode(self):
+        return self._data.get('country')
+    
+    @property
+    def board_flag(self):
+        return self._data.get('board_flag')
     
     @property
     def name(self):
