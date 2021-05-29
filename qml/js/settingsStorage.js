@@ -29,7 +29,9 @@ function initialize() {
         function(tx) {
             // Create the settings table if it doesn't already exist
             // If the table exists, this is skipped
-            tx.executeSql('CREATE TABLE IF NOT EXISTS settings(setting TEXT UNIQUE, value TEXT)');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS settings(setting TEXT UNIQUE, value TEXT);');
+            // Set default Board view to "All boards"
+            tx.executeSql('INSERT OR IGNORE INTO settings VALUES ("ModelToDisplayOnNavipage",0);');
     });
 }
 
@@ -60,18 +62,22 @@ function setSetting(setting, value) {
 // Retrieve a setting from the database
 function getSetting(setting, defaultValue) {
     var db = getDatabase();
-    var res="";
+    var res = "";
 
-    db.transaction(function(tx) {
-        var rs = tx.executeSql('SELECT value FROM settings WHERE setting=?;', [setting]);
-
-        if (rs.rows.length > 0) {
-            res = rs.rows.item(0).value;
-        }
-        else {
-            res = defaultValue || "Unknown";
-        }
-  })
+    try {
+        db.transaction(function(tx) {
+            var rs = tx.executeSql('SELECT value FROM settings WHERE setting=?;', [setting]);
+    
+            if (rs.rows.length > 0) {
+                res = rs.rows.item(0).value;
+            }
+            else {
+                res = defaultValue || "Unknown";
+            }
+      });
+    } catch(error) {
+        res = "error";
+    }
 
   // We return “Unknown” if the setting was not found in the database
   // Handling error codes should be implemented in the future
@@ -87,4 +93,6 @@ function resetSettingsDB() {
             // Used for clearing user settings and testing reasons
             tx.executeSql('DROP TABLE IF EXISTS settings');
     });
+    // Reset default board view
+    initialize()
 }
