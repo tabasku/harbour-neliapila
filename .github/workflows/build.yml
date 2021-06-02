@@ -21,17 +21,24 @@ jobs:
     - name: Prepare
       run: mkdir output
 
+    - name: Build aarch64
+      id: build_aarch64
+      uses: coderus/github-sfos-build@master
+      with:
+        release: 3.4.0.24
+        arch: aarch64
+
     - name: Build armv7hl
       id: build_armv7hl
       uses: coderus/github-sfos-build@master
       with:
-        release: 3.4.0.22
+        release: 3.4.0.24
 
     - name: Build i486
       id: build_i486
       uses: coderus/github-sfos-build@master
       with:
-        release: 3.4.0.22
+        release: 3.4.0.24
         arch: i486
       
     - name: Upload build result

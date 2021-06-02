@@ -331,7 +331,7 @@ GridItem {
 
                     Label {
                         id: nameText
-                        text : mode !== 'post' ? name : poster_id == "" && country_name == "" ? name : poster_id == "" ? name + " [" + country_name + "]" : country_name == "" ? name + " (" + poster_id + ")" : name + " (" + poster_id + ") [" + country_name + "]"
+                        text : mode !== 'post' ? name : poster_id == "" ? name : name + " (" + poster_id + ")"
                         font.pixelSize: infoFontSize
                         color: infoFontColor
                     }
@@ -344,7 +344,22 @@ GridItem {
                     anchors {
                         verticalCenter: parent.verticalCenter
                     }
-
+                    
+                    Image {
+                        id: flag
+                        anchors {
+                            right: pinIndicator.left
+                            rightMargin: imgcount.contentWidth
+                            bottom: parent.bottom
+                        }
+                        height:parent.height
+                        width:parent.height/2
+                        cache: true
+                        fillMode: Image.PreserveAspectFit
+                        visible: countrycode !== "" || board_flag !== ""
+                        source: countrycode !== "" ? "https://s.4cdn.org/image/country/" + countrycode.toLowerCase() + ".gif" : board_flag !== "" ? "https://s.4cdn.org/image/flags/" +  boardId + "/" + board_flag.toLowerCase() + ".gif" : ""
+                     }
+                    
                     Image {
                         id: pinIndicator
                         anchors {

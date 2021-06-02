@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # 4chan URL generator. Inherit and override this for derivative classes  (e.g. 420chan API, 8chan/vichan API)

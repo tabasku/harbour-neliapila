@@ -1,4 +1,3 @@
-__author__ = 'joni'
 # -*- coding: utf-8 -*
 
 from getdata import req
@@ -52,6 +51,8 @@ def get_posts(board_id,postno):
             post_values['closed'] = int(thread.closed)
             post_values['poster_id'] = post.poster_id
             post_values['country_name'] = post.country_name
+            post_values['countrycode'] = post.countrycode
+            post_values['board_flag'] = post.board_flag
             post_values['name'] = post.name
             post_values['time'] = post.timestamp
             post_values['semantic_url'] = post.semantic_url
