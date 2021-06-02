@@ -1,8 +1,22 @@
 # Changelog
 
-## [0.7](https://github.com/tabasku/harbour-neliapila/tree/0.7) (2021-05-27)
+## [0.7release](https://github.com/tabasku/harbour-neliapila/tree/0.7release) (2021-06-02)
 
-[Full Changelog](https://github.com/tabasku/harbour-neliapila/compare/0.6release...0.7)
+[Full Changelog](https://github.com/tabasku/harbour-neliapila/compare/0.7harbour...0.7release)
+
+**Closed issues:**
+
+- Meme-flags not working [\#69](https://github.com/tabasku/harbour-neliapila/issues/69)
+
+**Merged pull requests:**
+
+- Meme flags [\#70](https://github.com/tabasku/harbour-neliapila/pull/70) ([szopin](https://github.com/szopin))
+- Initialize settings with ModelToDisplayOnNavipage=Allboards [\#68](https://github.com/tabasku/harbour-neliapila/pull/68) ([tabasku](https://github.com/tabasku))
+- 0.7 [\#67](https://github.com/tabasku/harbour-neliapila/pull/67) ([tabasku](https://github.com/tabasku))
+
+## [0.7harbour](https://github.com/tabasku/harbour-neliapila/tree/0.7harbour) (2021-05-27)
+
+[Full Changelog](https://github.com/tabasku/harbour-neliapila/compare/0.6release...0.7harbour)
 
 **Closed issues:**
 
