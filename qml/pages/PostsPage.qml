@@ -33,6 +33,7 @@ AbstractPage {
     property string board_flag;
     property var postsToShow;
     property int totalPosts: 0
+    property bool highlight_post: false
     property int pageCount;
     property var modelToStrip;
     property bool pinned;
@@ -51,6 +52,15 @@ AbstractPage {
         }
     }
 
+    function highbyid(filter){
+        for (var j=0; j < postsModel.count; j++){
+            if (postsModel.get(j).poster_id.indexOf(filter) >= 0){
+                postsModel.setProperty(j, "highlight_post", 1)
+            } else postsModel.setProperty(j, "highlight_post", 0)
+        }
+
+    }
+    
     function getBackToPost() {
         pageStack.pop(pageStack.find( function(page){ return(page.pageCount !== 1)} ), PageStackAction.Immediate)
     }
@@ -232,6 +242,7 @@ AbstractPage {
                 id: contextMenuComponent
 
                 ContextMenu {
+                    property string poster_id
                     property string postReplies
                     property string com
                     property var quote
@@ -265,6 +276,16 @@ AbstractPage {
                         }
                     }
 
+                    MenuItem {
+                        visible: poster_id && pageStack.depth === 2
+                        text: qsTr("Highlight posts by ID")
+                        onClicked: {
+
+                            highbyid(poster_id)
+
+                        }
+                    }
+                    
                     MenuItem {
                         text: qsTr("Quote")
                         onClicked: {
