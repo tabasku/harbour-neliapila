@@ -64,6 +64,7 @@ def get_posts(board_id,postno):
                 post_values['thumbUrl'] = post.thumbnail_url
                 post_values['imgUrl'] = post.file_url
                 post_values['filename'] = post.filename
+                post_values['filename_original'] = post.filename_original
                 post_values['file_deleted'] = int(post.file_deleted)
 
             if post.comment:
