@@ -13,6 +13,7 @@ class Post(object):
     Attributes:
         post_id (int): ID of this post. Eg: ``123123123``, ``456456456``.
         poster_id (string): Poster ID.
+        filename_original (string): OP's filename.
         name (string): Poster's name.
         country_name (string): Poster's country name.
         countrycode (string): Poster's country code.
@@ -135,7 +136,14 @@ class Post(object):
             return None
         board = self._thread._board
         return self.file1.filename
-
+    
+    @property
+    def filename_original(self):
+        if not self.has_file:
+            return None
+        board = self._thread._board
+        return self.file1.filename_original
+    
     @property
     def file_url(self):
         if not self.has_file:
