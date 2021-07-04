@@ -45,6 +45,7 @@ def get_threads(board_id):
         thread_values['post_board'] = board_id
         thread_values['replies'] = int(thread.num_replies)
         thread_values['sticky'] = int(thread.sticky)
+        thread_values['filename_original'] = thread.filename_original
         thread_values['closed'] = int(thread.closed)
         thread_values['name'] = topic.name
         thread_values['time'] = topic.timestamp
