@@ -55,6 +55,7 @@ def get_posts(board_id,postno):
             post_values['board_flag'] = post.board_flag
             post_values['name'] = post.name
             post_values['time'] = post.timestamp
+            post_values['spoiler'] = post.spoiler
             post_values['semantic_url'] = post.semantic_url
             post_values['images'] = int(post.has_file)
             post_values['has_file'] = int(post.has_file)
