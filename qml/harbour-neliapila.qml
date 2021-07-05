@@ -84,7 +84,10 @@ ApplicationWindow {
         SettingsStore.setSetting( "VideosAutomaticallyMuted",
                                  SettingsStore.getSetting("VideosAutomaticallyMuted", 0) )
 
-
+        // Show image spoilers
+        // 0 if disabled, 1 is enabled
+        SettingsStore.setSetting( "SpoilerImages",
+                                 SettingsStore.getSetting("SpoilerImages", 0) )
         //////////////////////////
         //~ About
         // None implemented yet
