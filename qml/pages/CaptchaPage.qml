@@ -91,8 +91,8 @@ import Sailfish.Silica 1.0
                         SearchField {
                 id: searchField
                 width: parent.width
-                anchors.top: parent.bottom
-                placeholderText:  qsTr("Search in all threads")                                              
+                anchors.bottom: imgbg.top
+                                           
                 EnterKey.enabled: text.length > 2
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept"
                 EnterKey.onClicked: {
@@ -101,24 +101,14 @@ import Sailfish.Silica 1.0
                     }
                     
 
-               // onTextChanged: if (!text) _reset()
             }
         
 
-                    /*        Button {
-                    id: captchaSubmit
-                    text: "Submit"
-                                anchors.top: searchField.bottom
-                    enabled: page.response.length
-                    onClicked: {
-                        page.postCaptcha();
-                    }*/
-            
-        //}
+
         
             Slider {
             id: bgslider
-            anchors.bottom: page.bottom
+            anchors.top: imgfg.bottom
             minimumValue: 0
             maximumValue: 200
             stepSize: 2
