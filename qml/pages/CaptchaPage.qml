@@ -92,7 +92,7 @@ import Sailfish.Silica 1.0
                 id: searchField
                 width: parent.width
                 anchors.bottom: imgbg.top
-                                           
+                placeholderText: "Enter CAPTCHA"                           
                 EnterKey.enabled: text.length > 2
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept"
                 EnterKey.onClicked: {
