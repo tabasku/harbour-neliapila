@@ -4,7 +4,7 @@ import "../items"
 import io.thp.pyotherside 1.4
 
 
-        Page {
+    Page {
         id: page
         property string imgdata: ""
         property string bgdata: ""
@@ -45,7 +45,15 @@ import io.thp.pyotherside 1.4
 
         }
 
+    Flickable {
+        id: flick
+        anchors.fill: parent
         
+        PageHeader {
+                id: header
+                title: "Captcha"
+                }
+                
         Item{
             y: screen.height/2 - page.img_height /2
 
@@ -53,7 +61,7 @@ import io.thp.pyotherside 1.4
                 height: page.img_height *2
             Image {
                 id: imgfg
-                anchors.top: parent.top
+                anchors.top: header.bottom
                 width: page.bg_width *2 
                 height: page.img_height *2
                 x: 100 - bgslider.value    
@@ -61,7 +69,7 @@ import io.thp.pyotherside 1.4
             }
             Image {
                 id: imgbg
-                anchors.top: parent.top
+                anchors.top: header.bottom
                 width: page.img_width *2 
                 height: page.img_height *2
                 source: !page.loaded ? page.bgdata : "data:image/png;base64," + page.imgdata  
@@ -75,7 +83,7 @@ import io.thp.pyotherside 1.4
               TextField {
                 id: captchaInput
                 width: parent.width
-                anchors.bottom: imgbg.top
+                anchors.top: imgbg.bottom
                 placeholderText: "Enter CAPTCHA"                          
                 EnterKey.enabled: text.length > 2
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept"
@@ -92,7 +100,7 @@ import io.thp.pyotherside 1.4
         
             Slider {
             id: bgslider
-            anchors.top: imgfg.bottom
+            anchors.top: captchaInput.bottom
             minimumValue: 0
             maximumValue: 200
             stepSize: 2
@@ -105,6 +113,7 @@ import io.thp.pyotherside 1.4
         }
     Component.onCompleted: {
             page.getCaptcha();
+        }
         }
 }
                 Python {
