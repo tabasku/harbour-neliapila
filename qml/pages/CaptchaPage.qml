@@ -1,5 +1,7 @@
 import QtQuick 2.2
 import Sailfish.Silica 1.0
+import "../items"
+import io.thp.pyotherside 1.4
 
 //ApplicationWindow{
 
@@ -9,9 +11,13 @@ import Sailfish.Silica 1.0
     id: page
         property string imgdata: ""
         property string bgdata: ""
+            property string nickname
+            property string subject 
+            property string selectedFile
         property string challenge
         property string replyTo
         property string boardId
+        property string url: replyTo ? "https://sys.4channel.org/captcha?board=" + boardId + "&thread_id=" + replyTo : "https://sys.4channel.org/captcha?board=" + boardId
         property string comment
         property string response
         property int img_width
@@ -20,10 +26,10 @@ import Sailfish.Silica 1.0
         property bool loaded: false
                        function getCaptcha(){
             var xhr = new XMLHttpRequest;
-        xhr.open("GET",  "https://sys.4channel.org/captcha?board=" + boardId + "&thread_id=" + replyTo);// + thread_id);
+        xhr.open("GET",  url);//"https://sys.4channel.org/captcha?board=" + boardId + "&thread_id=" + replyTo);// + thread_id);
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
-                    console.log(boardId, replyTo);
+                    console.log(boardId, replyTo, url);
                 var data = JSON.parse(xhr.responseText);
                     loaded = true;
                 challenge = data.challenge;
@@ -44,11 +50,11 @@ import Sailfish.Silica 1.0
         function postCaptcha(text){
             var xhr = new XMLHttpRequest;
             var url = "https://sys.4channel.org/" + boardId + "/post";
-            var params = encodeURI("MAX_FILE_SIZE=4194304&mode=regist&resto=" + replyTo + "&name=&email=&com=" + comment + "&t-response=" + text + "&t-challenge=" + challenge); //!|\nContent-Disposition: form-data; name=\"MAX_FILE_SIZE\"\n\n4194304\n!|\nContent-Disposition: form-data; name=\"mode\"\n\nregist\n!|\nContent-Disposition: form-data; name=\"resto\"\n\n4644876\n!|\nContent-Disposition: form-data; name=\"name\"\n\n\n!|\nContent-Disposition: form-data; name=\"email\"\n\n\n!|\nContent-Disposition: form-data; name=\"com\"\n\nTeStA\n!|\nContent-Disposition: form-data; name=\"t-response\"\n\n" + text + "\n!|\nContent-Disposition: form-data; name=\"t-challenge\"\n\n" + challenge + "\n!|--";
+            var params = encodeURI("MAX_FILE_SIZE=4194304&mode=regist&resto=" + replyTo + "&name=&email=&com=" + comment + "&t-response=" + text + "&t-challenge=" + challenge);
             console.log(params, url);
         xhr.open("POST",  url, true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            //multipart/form-data; boundary=!|");
+ 
             xhr.setRequestHeader("Content-length", params.length);
             xhr.setRequestHeader("Connection", "close");
             xhr.onreadystatechange = function() {
@@ -67,7 +73,7 @@ import Sailfish.Silica 1.0
     Image {
                 id: imgfg
                 anchors.top: parent.top
-                                width: page.bg_width *2 
+                width: page.bg_width *2 
                 height: page.img_height *2
                 x: 100 - bgslider.value
                 
@@ -78,7 +84,7 @@ import Sailfish.Silica 1.0
             Image {
                 id: imgbg
                 anchors.top: parent.top
-                                width: page.img_width *2 
+                width: page.img_width *2 
                 height: page.img_height *2
         source: !page.loaded ? page.bgdata : "data:image/png;base64," + page.imgdata  
             }
@@ -92,11 +98,11 @@ import Sailfish.Silica 1.0
                 id: searchField
                 width: parent.width
                 anchors.bottom: imgbg.top
-                placeholderText: "Enter CAPTCHA"                           
+                 placeholderText: "Enter CAPTCHA"                          
                 EnterKey.enabled: text.length > 2
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept"
                 EnterKey.onClicked: {
-                        page.postCaptcha(text);
+                   replyTo ? py.postpost(text) : py.postthread(text);
                         pageStack.navigateBack();
                     }
                     
@@ -122,5 +128,55 @@ import Sailfish.Silica 1.0
     Component.onCompleted: {
             page.getCaptcha();
         }
+}
+                Python {
+        id: py
+
+        Component.onCompleted: {
+            // Add the Python library directory to the import path
+            var pythonpath = Qt.resolvedUrl('../../py/').substr('file://'.length);
+            addImportPath(pythonpath);
+            importModule('posting', function() {});
+                }
+            function postpost(response) {
+            console.log("Replying to "+replyTo)
+            console.log("posting with captchatoken "+challenge)
+            console.log("posting with filepath "+selectedFile)
+            console.log("posting with subject "+subject)
+            console.log("posting with comment "+comment)
+            console.log("posting to board "+boardId)
+                    console.log(response)
+
+            call('posting.post', [
+                     nickname,
+                     comment,
+                     subject,
+                     selectedFile,
+                     response,
+                     boardId,
+                     challenge,
+                     replyTo
+                 ], function() {});
+                    }
+                
+           function postthread(response) {
+            console.log("Replying to "+replyTo)
+            console.log("posting with captchatoken "+challenge)
+            console.log("posting with filepath "+selectedFile)
+            console.log("posting with subject "+subject)
+            console.log("posting with comment "+comment)
+            console.log("posting to board "+boardId)
+                    console.log(response)
+
+            call('posting.post', [
+                     nickname,
+                     comment,
+                     subject,
+                     selectedFile,
+                     response,
+                     boardId,
+                     challenge                     
+                 ], function() {});
+                }
 }
 }
