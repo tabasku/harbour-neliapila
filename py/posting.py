@@ -22,7 +22,7 @@ bp = None
 
 user_agent = 'Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0'
 
-def post(nickname="", comment="", subject="", file_attach="", captcha_response="", board="",threadno=""):
+def post(nickname="", comment="", subject="", file_attach="", captcha_response="", board="", challenge="",threadno=""):
     '''
     file_attach: (/path/to/file.ext) will be uploaded as "file" + extension
     '''
@@ -65,7 +65,8 @@ def post(nickname="", comment="", subject="", file_attach="", captcha_response="
                     'resto' : (None, str(threadno)),
                     # 'email' : ('', ''),
                     'com' : (None, str(comment)),
-                    'g-recaptcha-response' : (None, captcha_response),
+                    't-response' : (None, str(captcha_response)),
+                    't-challenge' : (None, str(challenge)),
                     'upfile' : (filename, filedata, content_type)
                 }
         
