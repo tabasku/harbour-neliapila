@@ -54,11 +54,7 @@ import io.thp.pyotherside 1.4
                 title: "Captcha"
                 }
                 
-        Item{
-            y: screen.height/2 - page.img_height /2
 
-                width: page.img_width *2 
-                height: page.img_height *2
             Image {
                 id: imgfg
                 anchors.top: header.bottom
@@ -76,14 +72,28 @@ import io.thp.pyotherside 1.4
             }
             Rectangle {
                 anchors.left: imgbg.right
+                anchors.top: header.bottom
                 height: page.img_height *2
                 width: screen.width - page.img_width *2 
                 color: Theme.rgba(Theme.primaryColor, 1)
             }
-              TextField {
+        
+            Slider {
+                id: bgslider
+                anchors.top: imgbg.bottom
+                minimumValue: 0
+                maximumValue: 200
+                stepSize: 2
+                enabled: true
+                width: parent.width
+                handleVisible: true
+                label: qsTr("Slide to reveal captcha")
+            }
+            
+            TextField {
                 id: captchaInput
                 width: parent.width
-                anchors.top: imgbg.bottom
+                anchors.top: bgslider.bottom
                 placeholderText: "Enter CAPTCHA"                          
                 EnterKey.enabled: text.length > 2
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept"
@@ -91,30 +101,12 @@ import io.thp.pyotherside 1.4
                    replyTo ? py.postpost(text) : py.postthread(text);
                         pageStack.navigateBack();
                     }
-                    
 
             }
-        
-
-
-        
-            Slider {
-            id: bgslider
-            anchors.top: captchaInput.bottom
-            minimumValue: 0
-            maximumValue: 200
-            stepSize: 2
-            enabled: true
-            width: parent.width
-            handleVisible: true
-            label: qsTr("Slide to reveal captcha")
-            
-        
-        }
     Component.onCompleted: {
             page.getCaptcha();
-        }
-        }
+        
+    }
 }
                 Python {
         id: py
