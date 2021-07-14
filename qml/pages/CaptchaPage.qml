@@ -3,17 +3,14 @@ import Sailfish.Silica 1.0
 import "../items"
 import io.thp.pyotherside 1.4
 
-//ApplicationWindow{
 
-    
-//initialPage: Page {
         Page {
-    id: page
+        id: page
         property string imgdata: ""
         property string bgdata: ""
-            property string nickname
-            property string subject 
-            property string selectedFile
+        property string nickname
+        property string subject 
+        property string selectedFile
         property string challenge
         property string replyTo
         property string boardId
@@ -24,81 +21,62 @@ import io.thp.pyotherside 1.4
         property int bg_width
         property int img_height
         property bool loaded: false
-                       function getCaptcha(){
+        
+        
+        function getCaptcha(){
             var xhr = new XMLHttpRequest;
-        xhr.open("GET",  url);//"https://sys.4channel.org/captcha?board=" + boardId + "&thread_id=" + replyTo);// + thread_id);
-        xhr.onreadystatechange = function() {
+            xhr.open("GET",  url);
+            xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
-                    console.log(boardId, replyTo, url);
+
                 var data = JSON.parse(xhr.responseText);
-                    loaded = true;
+                loaded = true;
                 challenge = data.challenge;
                 imgdata  = data.img;
                 img_width = data.img_width;
                 img_height = data.img_height;
                 bgdata = data.bg;
                 bg_width = data.bg_width;
-                    console.log(challenge, img_width, bg_width);                
+             
             }
                                 
         }
             xhr.send();
 
-            console.log("end", page.imgdata,page.loaded);
         }
 
-        function postCaptcha(text){
-            var xhr = new XMLHttpRequest;
-            var url = "https://sys.4channel.org/" + boardId + "/post";
-            var params = encodeURI("MAX_FILE_SIZE=4194304&mode=regist&resto=" + replyTo + "&name=&email=&com=" + comment + "&t-response=" + text + "&t-challenge=" + challenge);
-            console.log(params, url);
-        xhr.open("POST",  url, true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
- 
-            xhr.setRequestHeader("Content-length", params.length);
-            xhr.setRequestHeader("Connection", "close");
-            xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                    console.log(xhr.responseText);
-                }
-            }
-            xhr.send(params);    
-        }
         
         Item{
             y: screen.height/2 - page.img_height /2
-           // x: screen.width/2
+
                 width: page.img_width *2 
                 height: page.img_height *2
-    Image {
+            Image {
                 id: imgfg
                 anchors.top: parent.top
                 width: page.bg_width *2 
                 height: page.img_height *2
-                x: 100 - bgslider.value
-                
-                    
-            
-        source: !page.loaded ? page.imgdata : "data:image/png;base64," + page.bgdata  
+                x: 100 - bgslider.value    
+                source: !page.loaded ? page.imgdata : "data:image/png;base64," + page.bgdata  
             }
             Image {
                 id: imgbg
                 anchors.top: parent.top
                 width: page.img_width *2 
                 height: page.img_height *2
-        source: !page.loaded ? page.bgdata : "data:image/png;base64," + page.imgdata  
+                source: !page.loaded ? page.bgdata : "data:image/png;base64," + page.imgdata  
             }
             Rectangle {
                 anchors.left: imgbg.right
                 height: page.img_height *2
                 width: screen.width - page.img_width *2 
-        color: Theme.rgba(Theme.primaryColor, 1)
+                color: Theme.rgba(Theme.primaryColor, 1)
             }
-                        SearchField {
-                id: searchField
+              TextField {
+                id: captchaInput
                 width: parent.width
                 anchors.bottom: imgbg.top
-                 placeholderText: "Enter CAPTCHA"                          
+                placeholderText: "Enter CAPTCHA"                          
                 EnterKey.enabled: text.length > 2
                 EnterKey.iconSource: "image://theme/icon-m-enter-accept"
                 EnterKey.onClicked: {
@@ -160,7 +138,6 @@ import io.thp.pyotherside 1.4
                     }
                 
            function postthread(response) {
-            console.log("Replying to "+replyTo)
             console.log("posting with captchatoken "+challenge)
             console.log("posting with filepath "+selectedFile)
             console.log("posting with subject "+subject)
