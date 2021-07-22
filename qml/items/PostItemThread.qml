@@ -406,14 +406,14 @@ GridItem {
     onClicked: {
         switch(mode){
         case "pinned":
-            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: true, repscount: postCount } )
+            pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, threadId: no, boardId: post_board, pinned: true, repscount: postCount } )
             break;
         case "thread":
             if(pin) {
-                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: true } )
+                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, threadId: no, boardId: post_board, pinned: true } )
             }
             else {
-                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: false} )
+                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, threadId: no, boardId: post_board, pinned: false} )
             }
             break;
 
