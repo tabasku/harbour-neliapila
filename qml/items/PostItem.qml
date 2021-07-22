@@ -433,7 +433,7 @@ GridItem {
                 pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: true } )
             }
             else {
-                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, boardId: post_board, pinned: false} )
+                pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {postNo: no, threadId: threadId, boardId: post_board, pinned: false} )
             }
             break;
 
@@ -456,7 +456,8 @@ GridItem {
                                        postNo: thisPostNo,
                                        boardId: boardId,
                                        modelToStrip : modelToStrip,
-                                       postsToShow : postsToShow
+                                       postsToShow : postsToShow,
+                                       threadId: threadId
                                    } )
                 }
                 else {
@@ -464,7 +465,8 @@ GridItem {
                                        postNo: thisPostNo,
                                        boardId: boardId,
                                        modelToStrip : postsModel,
-                                       postsToShow : postsToShow
+                                       postsToShow : postsToShow,
+                                       threadId: threadId
                                    } )
                 }
             }
