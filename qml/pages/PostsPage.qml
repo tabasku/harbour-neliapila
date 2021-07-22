@@ -430,9 +430,13 @@ AbstractPage {
                 replyPostPanel.busy = false
                 replyPostPanel.open = false
                 replyPostPanel.clearFields();
-
+                
+                if (pageStack.depth === 2){
                 infoBanner.alert("Reply sent, reloading..")
                 pyp.getPosts(boardId,postNo)
+                } else {
+                infoBanner.alert("Reply sent.")
+                }
             });
 
             setHandler('reply_failed', function(result) {
