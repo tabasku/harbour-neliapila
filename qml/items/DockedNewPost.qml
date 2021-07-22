@@ -236,7 +236,7 @@ DockedPanel {
                         newPostItem.replyTo
                             ? pageStack.push("../pages/CaptchaPage.qml",
                               {
-                                  "replyTo" : newPostItem.replyTo, "boardId": postsPage.boardId, "comment": comment, "nickname": nickname, "subject": subject, "selectedFile": selectedFile
+                                  "replyTo" : threadId, "boardId": postsPage.boardId, "comment": comment, "nickname": nickname, "subject": subject, "selectedFile": selectedFile
                               })
                             : pageStack.push("../pages/CaptchaPage.qml", {"boardId": threadPage.boardId, "comment": comment, "nickname": nickname, "subject": subject, "selectedFile": selectedFile});
                     }
