@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "../js/utils.js" as Utils
+import "../js/settingsStorage.js" as SettingsStore
 
 GridItem {
     id: delegate
@@ -163,7 +164,7 @@ GridItem {
                         id: thumbImg
                         fillMode: Image.PreserveAspectCrop
                         asynchronous : true
-                        source: !has_file ? "" : thumbUrl
+                        source: !has_file ? "" : SettingsStore.getSetting("SpoilerImages") == 1 && spoiler ? https://s.4cdn.org/image/spoiler.png : thumbUrl
 
                         anchors.fill: parent
                     }
