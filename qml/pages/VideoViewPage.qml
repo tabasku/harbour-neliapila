@@ -32,7 +32,8 @@ Page {
     property string title
     property string ext
     property string filename
-    title : filename
+    property string filename_original
+    title : filename_original
 
     property bool error: false
 
