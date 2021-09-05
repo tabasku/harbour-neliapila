@@ -25,6 +25,7 @@ AbstractPage {
     property string thumbUrl
     property string ext
     property string filename
+    property string filename_original
 
     busy : false
 
@@ -95,7 +96,7 @@ AbstractPage {
         }
     }
 
-    title : filename
+    title : filename_original
 
     SilicaFlickable {
         id: picFlick

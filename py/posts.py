@@ -54,17 +54,28 @@ def get_posts(board_id,postno):
             post_values['country_name'] = post.country_name
             post_values['countrycode'] = post.countrycode
             post_values['board_flag'] = post.board_flag
+            
+            if post.has_flag:
+                post_values['country_name'] = post.country_name
+                post_values['countrycode'] = post.countrycode
+                
+            if post.has_memeflag:    
+                post_values['board_flag'] = post.board_flag
+
             post_values['name'] = post.name
             post_values['time'] = post.timestamp
             post_values['semantic_url'] = post.semantic_url
             post_values['images'] = int(post.has_file)
             post_values['has_file'] = int(post.has_file)
-
+            post_values['has_memeflag'] = int(post.has_memeflag)
+            post_values['has_flag'] = int(post.has_flag)
+            
             if post.has_file:
                 post_values['ext'] = post.file_extension
                 post_values['thumbUrl'] = post.thumbnail_url
                 post_values['imgUrl'] = post.file_url
                 post_values['filename'] = post.filename
+                post_values['filename_original'] = post.filename_original
                 post_values['file_deleted'] = int(post.file_deleted)
 
             if post.comment:
