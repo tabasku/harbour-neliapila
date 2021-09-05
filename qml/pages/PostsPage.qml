@@ -26,6 +26,7 @@ AbstractPage {
     id: postsPage
     objectName: "postsPage"
     property string mode: "post";
+    property string threadId;
     property string singlePost;
     property string poster_id;
     property string country_name;
@@ -121,7 +122,7 @@ AbstractPage {
                 }
 
                 MenuItem {
-                    text: qsTr("Back to " + postNo )
+                    text: qsTr("Back to " + threadId )
                     visible: pageStack.depth !== 2
                     onClicked: {
                         getBackToPost()
@@ -174,7 +175,7 @@ AbstractPage {
                 }
 
                 MenuItem {
-                    text: qsTr("Back to " + postNo )
+                    text: qsTr("Back to " + threadId )
                     visible: pageStack.depth !== 2
                     onClicked: {
                         getBackToPost()
@@ -450,9 +451,13 @@ AbstractPage {
                 replyPostPanel.busy = false
                 replyPostPanel.open = false
                 replyPostPanel.clearFields();
-
+                
+                if (pageStack.depth === 2){
                 infoBanner.alert("Reply sent, reloading..")
                 pyp.getPosts(boardId,postNo)
+                } else {
+                infoBanner.alert("Reply sent.")
+                }
             });
 
             setHandler('reply_failed', function(result) {

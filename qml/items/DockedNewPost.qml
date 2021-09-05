@@ -234,11 +234,11 @@ DockedPanel {
                         }
 
                         newPostItem.replyTo
-                            ? pageStack.push("../pages/Captcha2Page.qml",
+                            ? pageStack.push("../pages/CaptchaPage.qml",
                               {
-                                  "replyTo" : newPostItem.replyTo
+                                  "replyTo" : threadId, "boardId": postsPage.boardId, "comment": comment, "nickname": nickname, "subject": subject, "selectedFile": selectedFile
                               })
-                            : pageStack.push("../pages/Captcha2Page.qml");
+                            : pageStack.push("../pages/CaptchaPage.qml", {"boardId": threadPage.boardId, "comment": comment, "nickname": nickname, "subject": subject, "selectedFile": selectedFile});
                     }
                 }
 

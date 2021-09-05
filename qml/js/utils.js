@@ -120,6 +120,7 @@ function openLink(link) {
         pageStack.push(Qt.resolvedUrl("../pages/PostsPage.qml"), {
                            postNo: postNo,
                            boardId: boardId,
+                           threadId: threadId,
                            modelToStrip: model,
                            postsToShow:postsToShow,
                            singlePostNo: singlePostNo
