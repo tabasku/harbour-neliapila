@@ -5,23 +5,23 @@ import "../js/settingsStorage.js" as SettingsStore
 
 GridItem {
     id: delegate
-    width: !isPortrait && mode !== 'post' ? parent.width /2 : parent.width
-    contentHeight: mode === 'post' && menuOpen  ? contextMenu.height + post.height : mode ==='post' ? post.height : isPortrait ? parent.width/2: parent.width/4
+    width: !isPortrait && mode !== 'post' ? parent.width /2 : parent.width;
+    contentHeight: mode === 'post' && menuOpen  ? contextMenu.height + post.height : mode ==='post' ? post.height : isPortrait ? parent.width/2: parent.width/4;
 
     property Item contextMenu
-    property bool menuOpen: contextMenu != null && contextMenu.parent === delegate
+    property bool menuOpen: contextMenu != null && contextMenu.parent === delegate;
 
-    property int ratio: Math.round(parent.width/3)
-    property int infoAreaHeight: Math.round(Theme.paddingLarge*2)
-    property int contentAreaHeight: isPortrait ? ratio :Math.round(parent.width/5)
+    property int ratio: Math.round(parent.width/3);
+    property int infoAreaHeight: Math.round(Theme.paddingLarge*2);
+    property int contentAreaHeight: isPortrait ? ratio :Math.round(parent.width/5);
 
     Item {
-        anchors.fill: parent
+        anchors.fill: parent;
 
         Rectangle {
-            anchors.bottom: parent.bottom
-            width: parent.width
-            height: post.height + infoAreaHeight
+            anchors.bottom: parent.bottom;
+            width: parent.width;
+            height: post.height + infoAreaHeight;
 
             gradient: Gradient {
                 GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0) }
@@ -30,7 +30,7 @@ GridItem {
         }
     }
     Item {
-        anchors.fill: parent
+        anchors.fill: parent;
 
         Rectangle {
             visible: highlight_post
@@ -47,22 +47,19 @@ GridItem {
     Column {
         id: post
         anchors {
-            left:parent.left
-            right:parent.right
-            leftMargin: pageMargin
-            rightMargin: pageMargin
+            left:parent.left;
+            right:parent.right;
+            leftMargin: pageMargin;
+            rightMargin: pageMargin;
         }
-
-        //spacing: padding
 
         Item {
             width: !isPortrait && mode !== 'post' ? parent.width / 2 : parent.width;
             height: !isPortrait && mode !== 'post' ? infoAreaHeight  : infoAreaHeight;
 
             Row {
-                id: headerContentRow
-                anchors.fill: parent
-                //spacing: padding
+                id: headerContentRow;
+                anchors.fill: parent;
 
                 Item {
                     id: timeArea
@@ -164,9 +161,9 @@ GridItem {
                         id: thumbImg
                         fillMode: Image.PreserveAspectCrop
                         asynchronous : true
-                        source: !has_file ? "" : SettingsStore.getSetting("SpoilerImages") == 1 && spoiler ? https://s.4cdn.org/image/spoiler.png : thumbUrl
+                        source: !has_file ? "" : SettingsStore.getSetting("SpoilerImages") == 1 && spoiler ? "https://s.4cdn.org/image/spoiler.png" : thumbUrl;
 
-                        anchors.fill: parent
+                        anchors.fill: parent;
                     }
 
                     Loader {
@@ -513,7 +510,6 @@ GridItem {
 
         default:
             contextMenu = contextMenuComponent.createObject(listView, {index:index,pin:pin})
-          //  contextMenu.open(delegate)
         }
     }
 }

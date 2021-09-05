@@ -13,7 +13,7 @@ Name:       harbour-neliapila
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Neliapila 4chan.org browser
-Version:    0.7
+Version:    0.9
 Release:    1
 Group:      Qt/Qt
 License:    GPLv3+
@@ -21,7 +21,6 @@ URL:        https://github.com/tabasku/harbour-neliapila
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-neliapila.yaml
 Requires:   sailfishsilica-qt5
-Requires:   libsailfishapp-launcher
 Requires:   pyotherside-qml-plugin-python3-qt5
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)
