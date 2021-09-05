@@ -13,10 +13,13 @@ class Post(object):
     Attributes:
         post_id (int): ID of this post. Eg: ``123123123``, ``456456456``.
         poster_id (string): Poster ID.
+        filename_original (string): OP's filename.
         name (string): Poster's name.
         country_name (string): Poster's country name.
         countrycode (string): Poster's country code.
         board_flag (string): Board flag used.
+        has_memeflag (bool): post has a memeflag.
+        has_flag (bool): post has a flag.
         email (string): Poster's email.
         tripcode (string): Poster's tripcode.
         subject (string): Subject of this post.
@@ -65,10 +68,14 @@ class Post(object):
    
     @property
     def countrycode(self):
+        if not self.has_flag:
+            return None        
         return self._data.get('country')
     
     @property
     def board_flag(self):
+        if not self.has_memeflag:
+            return None        
         return self._data.get('board_flag')
     
     @property
@@ -135,7 +142,14 @@ class Post(object):
             return None
         board = self._thread._board
         return self.file1.filename
-
+    
+    @property
+    def filename_original(self):
+        if not self.has_file:
+            return None
+        board = self._thread._board
+        return self.file1.filename_original
+    
     @property
     def file_url(self):
         if not self.has_file:
@@ -206,7 +220,15 @@ class Post(object):
     @property
     def has_file(self):
         return 'filename' in self._data
-
+    
+    @property
+    def has_flag(self):
+        return 'country' in self._data
+ 
+    @property
+    def has_memeflag(self):
+        return 'board_flag' in self._data
+    
     @property
     def url(self):
         return '%s#p%i' % (self._thread.url, self.post_number)

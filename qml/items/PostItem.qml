@@ -240,7 +240,8 @@ GridItem {
                                 pageStack.push(Qt.resolvedUrl("../pages/VideoViewPage.qml"),
                                                {
                                                    "imgUrl": imgUrl,
-                                                   "filename": filename
+                                                   "filename": filename,
+                                                   "filename_original": filename_original
                                                });
                                 break;
                             case ".gif":
@@ -248,7 +249,8 @@ GridItem {
                                                {
                                                    "imgUrl": imgUrl,
                                                    "thumbUrl": thumbUrl,
-                                                   "filename": filename
+                                                   "filename": filename,
+                                                   "filename_original": filename_original
                                                });
                                 break;
 
@@ -257,7 +259,8 @@ GridItem {
                                                {
                                                    "imgUrl": imgUrl,
                                                    "thumbUrl": thumbUrl,
-                                                   "filename": filename
+                                                   "filename": filename,
+                                                   "filename_original": filename_original
                                                });
                             }
                         }
@@ -357,8 +360,8 @@ GridItem {
                         width:parent.height/2
                         cache: true
                         fillMode: Image.PreserveAspectFit
-                        visible: countrycode !== "" || board_flag !== ""
-                        source: countrycode !== "" ? "https://s.4cdn.org/image/country/" + countrycode.toLowerCase() + ".gif" : board_flag !== "" ? "https://s.4cdn.org/image/flags/" +  boardId + "/" + board_flag.toLowerCase() + ".gif" : ""
+                        visible: has_flag || has_memeflag
+                        source: has_flag ? "https://s.4cdn.org/image/country/" + countrycode.toLowerCase() + ".gif" : has_memeflag ? "https://s.4cdn.org/image/flags/" +  boardId + "/" + board_flag.toLowerCase() + ".gif" : ""
                      }
                     
                     Image {
