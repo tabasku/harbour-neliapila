@@ -1,6 +1,6 @@
 Name: harbour-neliapila
 Summary: Neliapila 4chan.org browser
-Version: 0.7
+Version: 0.9
 Release: 1
 # The contents of the Group field should be one of the groups listed here:
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
@@ -33,7 +33,6 @@ PkgConfigBR:
 # Runtime dependencies which are not automatically detected
 Requires:
   - sailfishsilica-qt5
-  - libsailfishapp-launcher
   - pyotherside-qml-plugin-python3-qt5
 
 # All installed files
