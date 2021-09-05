@@ -150,7 +150,7 @@ GridItem {
                         id: thumbImg
                         fillMode: Image.PreserveAspectCrop
                         asynchronous : true
-                        source: !has_file ? "" : mode !== 'pinned' && SettingsStore.getSetting("SpoilerImages") == 1 && spoiler ? https://s.4cdn.org/image/spoiler.png : thumbUrl
+                        source: !has_file ? "" : mode !== 'pinned' && SettingsStore.getSetting("SpoilerImages") == 1 && spoiler ? 'https://s.4cdn.org/image/spoiler.png' : thumbUrl
 
                         anchors.fill: parent
                     }
