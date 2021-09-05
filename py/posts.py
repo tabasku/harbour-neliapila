@@ -50,6 +50,10 @@ def get_posts(board_id,postno):
 
             post_values['closed'] = int(thread.closed)
             post_values['poster_id'] = post.poster_id
+            post_values['highlight_post'] = 0            
+            post_values['country_name'] = post.country_name
+            post_values['countrycode'] = post.countrycode
+            post_values['board_flag'] = post.board_flag
             
             if post.has_flag:
                 post_values['country_name'] = post.country_name
@@ -57,7 +61,7 @@ def get_posts(board_id,postno):
                 
             if post.has_memeflag:    
                 post_values['board_flag'] = post.board_flag
-                
+
             post_values['name'] = post.name
             post_values['time'] = post.timestamp
             post_values['semantic_url'] = post.semantic_url

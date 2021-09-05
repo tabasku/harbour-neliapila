@@ -28,6 +28,20 @@ GridItem {
             }
         }
     }
+    Item {
+        anchors.fill: parent
+
+        Rectangle {
+            visible: highlight_post
+            width: parent.width
+            height: post.height
+
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: Theme.rgba(Theme.primaryColor, 0.2) }
+                GradientStop { position: 1.0; color: Theme.rgba(Theme.primaryColor, 0.4) }
+            }
+        }
+    }
 
     Column {
         id: post
@@ -490,7 +504,7 @@ GridItem {
             if (pP)
                 var modelToStrip = pP.returnModel()
 
-            contextMenu = contextMenuComponent.createObject(listView, {postReplies: postReplies, thisPostNo: no, modelToStrip : modelToStrip,com: com})
+            contextMenu = contextMenuComponent.createObject(listView, {postReplies: postReplies, thisPostNo: no, modelToStrip : modelToStrip,com: com, poster_id: poster_id})
             contextMenu.open(delegate)
             break;
 
