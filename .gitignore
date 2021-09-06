@@ -57,3 +57,8 @@ fabric.properties
 
 # Old generated spec files
 rpm/harbour-neliapila.spec.*
+RPMS
+Makefile
+harbour-neliapila
+harbour-neliapila.o
+documentation.list
