@@ -14,7 +14,7 @@ Name:       harbour-neliapila
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Neliapila 4chan.org browser
 Version:    0.9
-Release:    1
+Release:    3
 Group:      Qt/Qt
 License:    GPLv3+
 URL:        https://github.com/tabasku/harbour-neliapila
@@ -67,6 +67,6 @@ desktop-file-install --delete-original       \
 %{_bindir}
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/icons/hicolor/86x86/apps/%{name}.png
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
 # >> files
 # << files
