@@ -463,11 +463,11 @@ AbstractPage {
             setHandler('reply_failed', function(result) {
                 console.log("FAILED REPLY: "+result);
 
-                if(String(result).search('banned')) {
+                if(result[1].indexOf("banned") >= 0) {
                     infoBanner.alert("You are banned ;_;");
                 }
                 else {
-                    infoBanner.alert("Failed to send");
+                    infoBanner.alert("Failed to send" + result);
                 }
                 replyPostPanel.busy = false;
             });
