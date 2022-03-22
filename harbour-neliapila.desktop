@@ -11,3 +11,5 @@ Name=Neliapila
 # a different app name in German locale (de).
 #Name[de]=Neliapila
 
+[X-Sailjail]
+Sandboxing=Disabled
