@@ -44,15 +44,15 @@ def parse_posts(list,post_replies=None):
         #com = re.sub(r'\<wbr\>', '',com)
 
         #Here are regex for matching every uri and only tagged
-        tag = r'<a[^>]* href="([^"]*)"\>.*?\<\/a\>'
+        tag = r'<a[^>]* href=\"([^\"]*)\" .*\>.*?\<\/a\>'
         ##uri = r'[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,6}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?'
-        uri = r'\b((?:[a-z][\w\-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]' \
+        uri = r'\b((?:[a-z][\w\-]+:(?:\/{1,3}|[a-z0-9%]\/)|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]' \
               r'|\((?:[^\s()<>]|(?:\([^\s()<>]+\)))*\))+(?:\((?:[^\s()<>]|(?:\([^\s()<>]+\)))*\)|[^\s`!()\[\]{}' \
               r';:".,<>?«»“”‘’]))'
 
         #Fetch em boy!
         rtag = re.findall(tag,com)
-        ruri = re.findall(uri,com)
+        ruri = set(re.findall(uri,com))
 
         #Then we compare if comment has urls without tags
         fixlist = comp(ruri,rtag)
