@@ -64,7 +64,7 @@ def parse_posts(list,post_replies=None):
             fixed_url = re.sub(re.compile(uri, re.MULTILINE),r'<a href="\1">\1</a>',str(untagged_url))
             if "boards.4chan" not in untagged_url:
 
-                com = re.sub(re.escape(untagged_url) + r'($|\s|[^a-zA-Z0-9_/?])', fixed_url + r'\1', com)
+                com = re.sub(r'(^|\s|[^\.a-zA-Z0-9_/?])' + re.escape(untagged_url) + r'($|\s|[^a-zA-Z0-9_/?])', r'\1' + fixed_url + r'\2', com)
         #Make greentext green
         com = re.sub(r'<span class="quote">&gt;(.*?)</span>', r'<font color="#32CD32">>\1</font>',com)
         #Make spoilers blue
