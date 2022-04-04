@@ -300,6 +300,9 @@ AbstractPage {
                         visible: com !== "" ? true : false
                         onClicked: {
                             var strippedComment = com.replace(/<(?:.|\n)*?>/gm, '');
+                            strippedComment = strippedComment.replace(/&gt;/gm, '>')
+                            strippedComment = strippedComment.replace(/&lt;/gm, '<')
+                            strippedComment = strippedComment.replace(/&amp;/gm, '&')
                             var quote = String(">>"+thisPostNo + "\n>"+strippedComment.replace(/>>\d+/gm, ''))
                             console.log(strippedComment)
                             replyPostPanel.open = true;

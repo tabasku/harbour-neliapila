@@ -289,6 +289,7 @@ GridItem {
                         }
 
                         text: com
+                        textFormat: Text.StyledText
                         wrapMode: Text.Wrap
                         font.pixelSize: postFontSize
                         color: Theme.primaryColor
