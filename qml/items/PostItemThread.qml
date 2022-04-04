@@ -241,7 +241,7 @@ GridItem {
                                                {
                                                    "imgUrl": imgUrl,
                                                    "filename": filename,
-                                                   "filename_original": filename_original + ext
+                                                   "filename_original": filename
                                                });
                                 break;
                             case ".gif":
@@ -250,7 +250,7 @@ GridItem {
                                                    "imgUrl": imgUrl,
                                                    "thumbUrl": thumbUrl,
                                                    "filename": filename,
-                                                   "filename_original": filename_original + ext
+                                                   "filename_original": filename
                                                });
                                 break;
 
@@ -260,7 +260,7 @@ GridItem {
                                                    "imgUrl": imgUrl,
                                                    "thumbUrl": thumbUrl,
                                                    "filename": filename,
-                                                   "filename_original": filename_original + ext
+                                                   "filename_original": filename
                                                });
                             }
                         }
