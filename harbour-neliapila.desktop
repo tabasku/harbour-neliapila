@@ -12,4 +12,6 @@ Name=Neliapila
 #Name[de]=Neliapila
 
 [X-Sailjail]
-Sandboxing=Disabled
+Permissions=Internet;WebView
+OrganizationName=harbour-neliapila
+ApplicationName=harbour-neliapila
