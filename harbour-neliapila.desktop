@@ -11,3 +11,7 @@ Name=Neliapila
 # a different app name in German locale (de).
 #Name[de]=Neliapila
 
+[X-Sailjail]
+Permissions=Internet;WebView;UserDirs;MediaIndexing;RemovableMedia;Audio
+OrganizationName=harbour-neliapila
+ApplicationName=harbour-neliapila

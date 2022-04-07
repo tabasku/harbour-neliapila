@@ -17,7 +17,7 @@ class Storage:
         if sys.platform is 'win32':
             home = expanduser("~")+"\\.Neliapila\\pinned_thumbs"
         else:
-            home = expanduser("~")+"/.local/share/neliapila/pinned_thumbs"
+            home = expanduser("~")+"/.local/share/harbour-neliapila/harbour-neliapila/pinned_thumbs"
 
         if not exists(home):
             makedirs(home)
@@ -29,7 +29,7 @@ class Storage:
         if sys.platform is 'win32':
             home = expanduser("~")+"\\.Neliapila\\"
         else:
-            home = expanduser("~")+"/.local/share/neliapila/"
+            home = expanduser("~")+"/.local/share/harbour-neliapila/harbour-neliapila/"
 
 
         if not exists(home):
