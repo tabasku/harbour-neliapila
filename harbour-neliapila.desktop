@@ -12,6 +12,6 @@ Name=Neliapila
 #Name[de]=Neliapila
 
 [X-Sailjail]
-Permissions=Internet;WebView
+Permissions=Internet;WebView;UserDirs;MediaIndexing;RemovableMedia
 OrganizationName=harbour-neliapila
 ApplicationName=harbour-neliapila
